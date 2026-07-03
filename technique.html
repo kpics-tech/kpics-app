@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>エコー手技マスター | K-PICS</title>
+<title>自主練ハンドブック | K-PICS</title>
 
 <!-- ホーム画面に追加した時の設定（PWA） -->
 <link rel="manifest" href="manifest.json">
@@ -184,7 +184,7 @@ button{font-family:inherit;}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span id="back-label">ホーム</span>
     </a>
-    <div class="top-title" id="top-title">エコー手技マスター</div>
+    <div class="top-title" id="top-title">自主練ハンドブック</div>
     <img class="top-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
   </div>
 </header>
@@ -193,8 +193,8 @@ button{font-family:inherit;}
 
   <div class="doc-hero" id="hero-block">
     <div class="doc-hero-icon">🩺</div>
-    <div class="doc-hero-title">部位ごとの手技をまとめて学べる</div>
-    <div class="doc-hero-desc">プローブの持ち方・当て方から評価項目、よくある失敗例まで。<br>部員みんなで育てていく、エコー手技の教科書です。</div>
+    <div class="doc-hero-title">自主練の時にサッと開いて確認</div>
+    <div class="doc-hero-desc">プローブ・当てる部位・見える画面を、画像中心でひと目で確認。<br>よくある失敗例やコツは部員みんなで書き足していけます。</div>
   </div>
 
   <div class="region-list" id="region-list">
@@ -207,8 +207,7 @@ button{font-family:inherit;}
   </button>
 
   <div class="doc-note">
-    <strong>使い方：</strong>部位をタップすると詳しい内容が見れます。①〜⑨は「編集」ボタンから誰でも書き込み・修正できます。
-  </div>
+    <strong>使い方：</strong>部位をタップすると詳しい内容が見れます。内容は「編集」ボタンから誰でも書き込み・修正できます。</div>
 
   <div class="footer-note">
     <img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。
@@ -299,13 +298,13 @@ function renderList(){
   if(PARENT_ID){
     const parent = ALL_REGIONS.find(r => r.id === PARENT_ID);
     targetRegions = getChildren(PARENT_ID);
-    document.getElementById('top-title').textContent = parent ? parent.name : 'エコー手技マスター';
+    document.getElementById('top-title').textContent = parent ? parent.name : '自主練ハンドブック';
     document.getElementById('back-btn').setAttribute('href', 'technique.html');
     document.getElementById('back-label').textContent = '部位一覧';
     document.getElementById('hero-block').style.display = 'none';
   } else {
     targetRegions = ALL_REGIONS.filter(r => !r.parent_id);
-    document.getElementById('top-title').textContent = 'エコー手技マスター';
+    document.getElementById('top-title').textContent = '自主練ハンドブック';
     document.getElementById('back-btn').setAttribute('href', 'index.html');
     document.getElementById('back-label').textContent = 'ホーム';
     document.getElementById('hero-block').style.display = '';
