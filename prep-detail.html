@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>自主練ハンドブック | K-PICS</title>
+<title>予習教材 | K-PICS</title>
 
 <!-- ホーム画面に追加した時の設定（PWA） -->
 <link rel="manifest" href="manifest.json">
@@ -106,45 +106,6 @@ button{font-family:inherit;}
   padding-left:36px;
 }
 .item-card-body.empty{color:var(--text-dim);font-style:italic;}
-
-/* ===== 自主練HB：見やすさ重視レイアウト ===== */
-.quickfacts-row{display:flex;gap:10px;margin-bottom:16px;}
-.quickfact-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 10px 12px;text-align:center;min-width:0;}
-.quickfact-icon{font-size:17px;margin-bottom:6px;}
-.quickfact-label{font-size:9.5px;color:var(--orange);font-weight:700;letter-spacing:.03em;margin-bottom:5px;}
-.quickfact-text{font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:var(--text);}
-.quickfact-text.empty{color:var(--text-dim);font-style:italic;}
-
-.visual-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;}
-.visual-card-head{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
-.visual-card-num{
-  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--orange);
-  background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);
-  width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.visual-card-label{font-size:14.5px;font-weight:900;}
-.visual-img-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:10px;background:var(--black);}
-.visual-img-wrap img{width:100%;display:block;max-height:340px;object-fit:cover;cursor:zoom-in;}
-.marker-badge{
-  position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;
-  background:rgba(12,12,12,.7);backdrop-filter:blur(3px);border:1.5px solid var(--orange);
-  display:flex;align-items:center;justify-content:center;pointer-events:none;
-}
-.marker-badge svg{width:18px;height:18px;color:var(--orange);}
-.visual-card-text{font-size:13px;line-height:1.85;color:var(--text);white-space:pre-wrap;word-break:break-word;}
-.visual-card-text.empty{color:var(--text-dim);font-style:italic;}
-.eval-sub{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-light);}
-.eval-sub-label{font-size:10.5px;color:var(--text-muted);font-weight:700;margin-bottom:5px;letter-spacing:.02em;}
-
-.marker-picker-label{font-size:11px;color:var(--text-muted);margin:2px 0 8px;}
-.marker-picker{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
-.marker-picker button{
-  width:34px;height:34px;border-radius:9px;background:var(--black);border:1px solid var(--border-light);
-  color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;
-}
-.marker-picker button svg{width:16px;height:16px;}
-.marker-picker button.active{border-color:var(--orange);color:var(--orange);background:var(--orange-bg);}
-.marker-picker button.none-btn{width:auto;padding:0 10px;font-size:11px;}
 
 /* ⑧⑨ 失敗例・コツ投稿セクション */
 .tip-section{margin-top:8px;}
@@ -276,11 +237,11 @@ button{font-family:inherit;}
 
 <header class="top-header">
   <div class="top-inner">
-    <a class="back-btn" id="back-btn" href="technique.html">
+    <a class="back-btn" id="back-btn" href="prep.html">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span id="back-label">部位一覧</span>
+      <span id="back-label">予習教材</span>
     </a>
-    <div class="top-title" id="top-title">自主練ハンドブック</div>
+    <div class="top-title" id="top-title">予習教材</div>
     <img class="top-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
   </div>
 </header>
@@ -293,7 +254,7 @@ button{font-family:inherit;}
 <div class="modal-overlay" id="edit-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">①〜⑦を編集</div>
+      <div class="modal-title">解剖・用語の説明を編集</div>
       <button class="modal-close" id="edit-modal-close">&times;</button>
     </div>
     <div class="modal-scroll" id="modal-fields"></div>
@@ -343,19 +304,8 @@ window.addEventListener('DOMContentLoaded', function(){
 
 // ===================== 設定 =====================
 const FIELDS = [
-  { key: 'content_probe',      num: '②', label: '使用プローブ' },
-  { key: 'content_grip',       num: '③', label: 'プローブの持ち方' },
-  { key: 'content_position',   num: '④', label: '当てる部位' },
-  { key: 'content_screen',     num: '⑤', label: '見える画面' },
-  { key: 'content_operation',  num: '⑥', label: '必要な操作（扇動走査など）' },
-  { key: 'content_evaluation', num: '⑦', label: '評価項目' }
+  { key: 'content_anatomy',    num: '①', label: '解剖や用語の説明' }
 ];
-
-// マーカーの向き：8方向。角度は「画面の上を0度」として時計回り
-const MARKER_DIRS = [0,45,90,135,180,225,270,315];
-function arrowSvg(angle){
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + angle + 'deg);"><path d="M12 20V4"/><path d="M6 10l6-6 6 6"/></svg>';
-}
 
 const REGION_ID = new URLSearchParams(window.location.search).get('id');
 let CURRENT_REGION = null;
@@ -404,77 +354,41 @@ async function loadRegion(){
 
   document.getElementById('top-title').textContent = data.name;
   if(data.parent_id){
-    document.getElementById('back-btn').setAttribute('href', 'technique.html?parent=' + data.parent_id);
+    document.getElementById('back-btn').setAttribute('href', 'prep.html?parent=' + data.parent_id);
   } else {
-    document.getElementById('back-btn').setAttribute('href', 'technique.html');
+    document.getElementById('back-btn').setAttribute('href', 'prep.html');
   }
 
   renderContent();
 }
 
 function renderContent(){
-  const qf = (key, icon, label) => {
-    const val = CURRENT_REGION[key];
-    const cls = val ? 'quickfact-text' : 'quickfact-text empty';
-    const text = val ? escapeHtml(val) : '未入力';
+  const itemsHtml = FIELDS.map(f => {
+    const val = CURRENT_REGION[f.key];
+    const bodyClass = val ? 'item-card-body' : 'item-card-body empty';
+    const bodyText = val ? escapeHtml(val) : 'まだ入力されていません';
     return (
-      '<div class="quickfact-card">' +
-        '<div class="quickfact-icon">' + icon + '</div>' +
-        '<div class="quickfact-label">' + label + '</div>' +
-        '<div class="' + cls + '">' + text + '</div>' +
+      '<div class="item-card">' +
+        '<div class="item-card-head">' +
+          '<div class="item-card-num mono">' + f.num + '</div>' +
+          '<div class="item-card-label">' + f.label + '</div>' +
+        '</div>' +
+        buildFieldImageSection(f.key, null, false) +
+        '<div class="' + bodyClass + '">' + bodyText + '</div>' +
       '</div>'
     );
-  };
-
-  const quickfactsHtml =
-    '<div class="quickfacts-row">' +
-      qf('content_probe', '🔧', '②プローブ') +
-      qf('content_grip', '✋', '③持ち方') +
-      qf('content_operation', '🎛️', '⑥操作') +
-    '</div>';
-
-  const positionImgs = ALL_IMAGES.filter(i => i.field_key === 'content_position' && !i.tip_id);
-  const firstPosImg = positionImgs[0] ? (IMAGE_URL_MAP[positionImgs[0].storage_path] || '') : '';
-  const markerBadge = (firstPosImg && CURRENT_REGION.marker_angle !== null && CURRENT_REGION.marker_angle !== undefined)
-    ? '<div class="marker-badge" title="マーカーの向き">' + arrowSvg(CURRENT_REGION.marker_angle) + '</div>'
-    : '';
-  const posVal = CURRENT_REGION.content_position;
-  const posCard =
-    '<div class="visual-card">' +
-      '<div class="visual-card-head"><div class="visual-card-num mono">④</div><div class="visual-card-label">当てる部位</div></div>' +
-      (firstPosImg ? '<div class="visual-img-wrap"><img src="' + firstPosImg + '" alt="" onclick="openLightbox(\'' + firstPosImg + '\')">' + markerBadge + '</div>' : '') +
-      '<div class="visual-card-text' + (posVal ? '' : ' empty') + '">' + (posVal ? escapeHtml(posVal) : 'まだ入力されていません') + '</div>' +
-    '</div>';
-
-  const screenImgs = ALL_IMAGES.filter(i => i.field_key === 'content_screen' && !i.tip_id);
-  const firstScreenImg = screenImgs[0] ? (IMAGE_URL_MAP[screenImgs[0].storage_path] || '') : '';
-  const screenVal = CURRENT_REGION.content_screen;
-  const evalVal = CURRENT_REGION.content_evaluation;
-  const screenCard =
-    '<div class="visual-card">' +
-      '<div class="visual-card-head"><div class="visual-card-num mono">⑤</div><div class="visual-card-label">見える画面</div></div>' +
-      (firstScreenImg ? '<div class="visual-img-wrap"><img src="' + firstScreenImg + '" alt="" onclick="openLightbox(\'' + firstScreenImg + '\')"></div>' : '') +
-      '<div class="visual-card-text' + (screenVal ? '' : ' empty') + '">' + (screenVal ? escapeHtml(screenVal) : 'まだ入力されていません') + '</div>' +
-      '<div class="eval-sub">' +
-        '<div class="eval-sub-label">⑦評価ポイント</div>' +
-        '<div class="visual-card-text' + (evalVal ? '' : ' empty') + '">' + (evalVal ? escapeHtml(evalVal) : 'まだ入力されていません') + '</div>' +
-      '</div>' +
-    '</div>';
+  }).join('');
 
   document.getElementById('main-content').innerHTML =
     '<div class="region-hero">' +
       '<div class="region-hero-title">' + escapeHtml(CURRENT_REGION.name) + '</div>' +
-      '<div class="region-hero-desc">自主練の時にサッと確認できるハンドブック。下の「編集する」からいつでも書き込み・修正できます。</div>' +
+      '<div class="region-hero-desc">セミナー前に読んでおきたい解剖・用語の解説。自主練ハンドブックとデータを共有しています。</div>' +
     '</div>' +
     '<button class="edit-fab" id="open-edit-btn">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg>' +
       '編集する' +
     '</button>' +
-    quickfactsHtml +
-    posCard +
-    screenCard +
-    buildTipSection('mistake', '⑧', 'よくある失敗例') +
-    buildTipSection('tip', '⑨', '手技のコツ') +
+    itemsHtml +
     '<div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>';
 
   document.getElementById('open-edit-btn').addEventListener('click', openEditModal);
@@ -766,12 +680,10 @@ document.getElementById('lightbox-overlay').addEventListener('click', () => {
 function openEditModal(){
   const fieldsHtml = FIELDS.map(f => {
     const val = CURRENT_REGION[f.key] || '';
-    const markerPicker = (f.key === 'content_position') ? buildMarkerPicker() : '';
     return (
       '<div class="modal-field">' +
         '<div class="modal-label"><span class="num mono">' + f.num + '</span>' + f.label + '</div>' +
         buildFieldImageSection(f.key, null, true, 'modal') +
-        markerPicker +
         '<textarea class="modal-textarea" data-key="' + f.key + '" rows="3">' + escapeHtml(val) + '</textarea>' +
       '</div>'
     );
@@ -779,29 +691,6 @@ function openEditModal(){
   document.getElementById('modal-fields').innerHTML = fieldsHtml;
   document.getElementById('edit-error').style.display = 'none';
   document.getElementById('edit-modal').classList.add('show');
-}
-
-let PENDING_MARKER_ANGLE = undefined; // undefined=未変更 / null=方向なし / 数値=角度
-
-function buildMarkerPicker(){
-  PENDING_MARKER_ANGLE = (CURRENT_REGION.marker_angle === undefined) ? null : CURRENT_REGION.marker_angle;
-  const current = CURRENT_REGION.marker_angle;
-  const btns = MARKER_DIRS.map(a =>
-    '<button type="button" class="marker-dir-btn' + (a === current ? ' active' : '') + '" data-angle="' + a + '" onclick="setMarkerAngle(' + a + ')">' + arrowSvg(a) + '</button>'
-  ).join('');
-  const noneBtn = '<button type="button" class="marker-dir-btn none-btn' + (current === null || current === undefined ? ' active' : '') + '" data-angle="none" onclick="setMarkerAngle(null)">向きなし</button>';
-  return (
-    '<div class="marker-picker-label">マーカーの向き（画像に重ねて表示）</div>' +
-    '<div class="marker-picker" id="marker-picker">' + btns + noneBtn + '</div>'
-  );
-}
-
-function setMarkerAngle(angle){
-  PENDING_MARKER_ANGLE = angle;
-  document.querySelectorAll('#marker-picker .marker-dir-btn').forEach(btn => {
-    const a = btn.dataset.angle === 'none' ? null : parseInt(btn.dataset.angle);
-    btn.classList.toggle('active', a === angle);
-  });
 }
 
 document.getElementById('edit-modal-close').addEventListener('click', () => {
@@ -812,7 +701,6 @@ document.getElementById('edit-save-btn').addEventListener('click', async () => {
   const textareas = document.querySelectorAll('#modal-fields .modal-textarea');
   const updates = {};
   textareas.forEach(ta => { updates[ta.dataset.key] = ta.value.trim(); });
-  if(PENDING_MARKER_ANGLE !== undefined){ updates.marker_angle = PENDING_MARKER_ANGLE; }
   updates.updated_at = new Date().toISOString();
 
   const btn = document.getElementById('edit-save-btn');

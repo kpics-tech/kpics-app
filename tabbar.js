@@ -1,13 +1,15 @@
 // ===================== 下部タブバー：現在地ハイライト =====================
-// 各ページ（index.html / calendar.html / documents.html / questions.html）で
-// 共通して読み込むスクリプト。今いるページに対応するタブだけ active にする。
+// 4タブ構成（ホーム／まなぶ／カレンダー／その他）。
+// 資料・質問はどちらも「その他」タブ配下として扱う。
 (function(){
   var fileToTab = {
     'index.html': 'home',
     '': 'home', // ルート直下でindex.htmlが省略された場合
+    'manabu.html': 'manabu',
     'calendar.html': 'calendar',
-    'documents.html': 'documents',
-    'questions.html': 'questions'
+    'other.html': 'other',
+    'documents.html': 'other',
+    'questions.html': 'other'
   };
 
   function highlightCurrentTab(){

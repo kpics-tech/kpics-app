@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>まなぶ | K-PICS</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C0C0C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="K-PICS">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="assets/icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://iarbwehytrdxuhyedsvi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KyOX0XzlSVLRklBmlOfi7A_sbUtfhha';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+<style>
+:root{
+  --orange:#E8A020; --orange-light:#F5B84A; --orange-dark:#B87A10; --orange-bg:rgba(232,160,32,0.08);
+  --black:#0C0C0C; --dark:#141414; --card:#1A1A1A; --card-hover:#202020;
+  --border:#2A2A2A; --border-light:#333; --text:#F0F0F0; --text-muted:#888; --text-dim:#555;
+  --spl:#D98A3D; --spl-bg:rgba(217,138,61,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--black);}
+body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+.bebas{font-family:"Bebas Neue",sans-serif;}
+.mono{font-family:"JetBrains Mono",monospace;}
+::-webkit-scrollbar{width:4px;height:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.fade-up{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;}
+#splash{position:fixed;inset:0;background:var(--black);z-index:900;display:flex;align-items:center;justify-content:center;transition:opacity .45s ease, visibility .45s ease;}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.splash-logo-img{width:110px;animation:scaleIn .5s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 8px 30px rgba(232,160,32,.25));}
+
+/* ヘッダー：発光グラデーション */
+.top-header{
+  position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 26px;overflow:hidden;
+  background:radial-gradient(ellipse 130% 90% at 50% -30%, rgba(232,160,32,.22), transparent 62%);
+  border-bottom:1px solid var(--border);
+}
+.top-header-row{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.th-title{font-family:"Bebas Neue",sans-serif;font-size:32px;letter-spacing:.04em;}
+.th-title span{color:var(--orange);}
+.th-sub{font-size:11px;color:var(--text-muted);font-family:"JetBrains Mono",monospace;letter-spacing:.03em;margin-top:2px;}
+.map-btn{
+  width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;
+  font-size:19px;cursor:pointer;flex-shrink:0;
+}
+.map-btn:active{border-color:var(--orange);background:var(--orange-bg);}
+
+.main{max-width:640px;margin:0 auto;padding:26px 20px 90px;position:relative;}
+
+/* 幹（トランク） */
+.trunk{position:relative;padding-left:6px;}
+.trunk::before{
+  content:"";position:absolute;left:37px;top:4px;width:2px;height:100%;
+  background:linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 80%, transparent 100%);
+  opacity:.5;
+}
+.tnode{position:relative;padding-left:44px;margin-bottom:16px;scroll-margin-top:20px;}
+.tnode::before{
+  content:attr(data-n);position:absolute;left:16px;top:8px;width:34px;height:34px;
+  background:var(--black);border:2px solid var(--orange);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;
+  font-size:12px;font-weight:700;color:var(--orange);
+}
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px;transition:border-color .15s;}
+.tcard.linkable{cursor:pointer;}
+.tcard.linkable:active{border-color:var(--orange);}
+.tcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.tcard h3{font-size:15.5px;font-weight:700;line-height:1.4;}
+.tcard p{font-size:12px;color:var(--text-muted);margin-top:4px;line-height:1.6;}
+.tbadge{flex-shrink:0;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);border:1px solid rgba(232,160,32,.35);border-radius:20px;padding:3px 9px;white-space:nowrap;}
+.tbadge.soon{color:var(--text-dim);border-color:var(--border-light);}
+.text-link{display:block;text-decoration:none;color:inherit;}
+
+/* 疾患辞典セクション */
+.section-gap{margin:30px 0 18px;padding-left:50px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--text-dim);letter-spacing:.04em;}
+
+/* SPL特化：スポットライトゾーン */
+.spl-zone{
+  position:relative;margin:22px 0 10px;padding:24px 20px;border-radius:20px;
+  background:radial-gradient(ellipse 120% 100% at 30% 0%, var(--spl-bg), transparent 70%), var(--card);
+  border:1.5px solid var(--spl);overflow:hidden;
+}
+.spl-zone::after{
+  content:"";position:absolute;top:-40%;right:-20%;width:70%;height:180%;
+  background:radial-gradient(circle, rgba(217,138,61,.18), transparent 70%);pointer-events:none;
+}
+.spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.12em;margin-bottom:4px;}
+.spl-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.03em;color:#fff;margin-bottom:14px;position:relative;}
+.spl-pillars{display:flex;flex-direction:column;gap:8px;position:relative;}
+.spl-pillar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(0,0,0,.28);border:1px solid rgba(217,138,61,.35);border-radius:11px;padding:12px 14px;
+  text-decoration:none;color:var(--text);
+}
+.spl-pillar-name{font-size:13.5px;font-weight:700;}
+.spl-pillar-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+
+/* 山頂：+α */
+.peak{margin:34px 0 6px;text-align:center;position:relative;}
+.peak::before{content:"";position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:1px;height:16px;background:var(--orange-dark);}
+.peak-card{
+  display:inline-block;background:linear-gradient(135deg, #2a1c05, var(--card));
+  border:1px solid var(--orange);border-radius:16px;padding:18px 28px;
+  box-shadow:0 0 34px rgba(232,160,32,.10);
+}
+.peak-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.15em;}
+.peak-title{font-family:"Bebas Neue",sans-serif;font-size:25px;letter-spacing:.03em;margin-top:5px;}
+
+/* その他コンテンツ棚 */
+.library{margin:34px -20px 0;padding:20px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.library-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;padding:0 20px;}
+.library-head h3{font-size:13.5px;font-weight:700;}
+.library-head span{font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;}
+.shelf{display:flex;gap:10px;overflow-x:auto;padding:0 20px 4px;}
+.shelf-item{flex:0 0 auto;width:118px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 10px;font-size:11.5px;color:var(--text-muted);line-height:1.5;}
+.shelf-item.add{display:flex;align-items:center;justify-content:center;color:var(--text-dim);border-style:dashed;font-size:20px;}
+
+.footer-note{text-align:center;font-size:11px;color:var(--text-dim);margin-top:36px;line-height:1.8;}
+.footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
+
+/* タブバー */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:rgba(20,20,20,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;align-items:stretch;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom);}
+.tabbar-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:9px 4px 8px;color:var(--text-dim);text-decoration:none;cursor:pointer;transition:color .15s;-webkit-tap-highlight-color:transparent;background:none;border:none;font-family:inherit;}
+.tabbar-item svg{width:21px;height:21px;}
+.tabbar-item .tb-label{font-size:10px;font-weight:700;letter-spacing:.02em;}
+.tabbar-item.active{color:var(--orange);}
+.tabbar-item:active{opacity:.7;}
+
+/* ミニマップ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500;padding:24px;}
+.overlay.show{display:flex;}
+.minimap{width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:var(--card);border:1px solid var(--orange-dark);border-radius:18px;padding:20px;}
+.minimap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.minimap-head h4{font-family:"Bebas Neue",sans-serif;font-size:21px;letter-spacing:.03em;}
+.minimap-head .close{font-size:20px;color:var(--text-dim);cursor:pointer;padding:4px;}
+.mm-node{font-size:12.5px;padding:10px 12px;background:#20190E;border-radius:9px;cursor:pointer;margin-bottom:7px;position:relative;padding-left:24px;}
+.mm-node::before{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.mm-node.spl::before{background:var(--spl);}
+.mm-node:active{background:#2a2213;}
+.mm-note{margin-top:6px;font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;text-align:center;}
+</style>
+</head>
+<body>
+
+<div id="splash"><img class="splash-logo-img" src="assets/logo-icon-dark.png" alt="K-PICS"></div>
+
+<header class="top-header">
+  <div class="top-header-row">
+    <div>
+      <div class="th-title">まな<span>ぶ</span></div>
+      <div class="th-sub">全体マップ ー どこからでも自由に</div>
+    </div>
+    <div class="map-btn" id="map-open">🗺️</div>
+  </div>
+</header>
+
+<div class="main fade-up">
+
+  <div class="trunk">
+
+    <div class="tnode" id="n1" data-n="1">
+      <div class="tcard">
+        <h3>KPICSの理念・活動紹介</h3>
+        <p>部活の目的や活動内容、アプリの使い方は、ホームの「K-PICSの部員として」から確認できます。</p>
+      </div>
+    </div>
+
+    <div class="tnode" id="n2" data-n="2">
+      <a class="text-link" href="basic.html">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>エコーの基本のキ</h3></div>
+          <p>プローブの種類、画像の見方など、ゼロからのエコー入門。全12章。</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="tnode" id="n3" data-n="3">
+      <a class="text-link" href="prep.html">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>予習教材</h3><span class="tbadge">13部位</span></div>
+          <p>セミナー前に読んでおきたい、部位ごとの解剖・用語の解説。</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="tnode" id="n4" data-n="4">
+      <div class="tcard">
+        <div class="tcard-top"><h3>セミナー</h3><span class="tbadge soon">準備中</span></div>
+        <p>各分野の実技セミナー。開催情報はカレンダーをチェック。</p>
+      </div>
+    </div>
+
+    <div class="tnode" id="n5" data-n="5">
+      <a class="text-link" href="technique.html">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>自主練ハンドブック</h3><span class="tbadge">13部位</span></div>
+          <p>プローブ・当てる部位・見える画面を画像でサッと確認できる自主練用ノート。</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="tnode" id="n6" data-n="6">
+      <a class="text-link" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>認定アプリ</h3><span class="tbadge">外部 ↗</span></div>
+          <p>撮影した画像を先生に判定してもらう自主練の記録アプリ。</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="tnode" id="n7" data-n="7">
+      <a class="text-link" href="https://www.gehealthcare.co.jp/" target="_blank" rel="noopener">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>waza-ari</h3><span class="tbadge">外部 ↗</span></div>
+          <p>異常所見や症例動画で復習。<strong style="color:var(--text);">予習にも使える良教材</strong>です。</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="tnode" id="n8" data-n="8">
+      <div class="tcard">
+        <h3>認定試験</h3>
+        <p>認定試験の案内・受験エントリーは認定アプリから。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-gap" id="n9">ここから先はPOCUSの応用ルート ―――</div>
+
+  <div class="trunk" style="padding-left:6px;">
+    <div class="tnode" data-n="9">
+      <a class="text-link" href="disease.html">
+        <div class="tcard linkable">
+          <div class="tcard-top"><h3>疾患辞典</h3><span class="tbadge">常時アクセス可</span></div>
+          <p>専門用語や疾患をいつでも調べられる、低学年向けの解説集。予習教材・自主練HBともリンク。</p>
+        </div>
+      </a>
+    </div>
+    <div class="tnode" data-n="10">
+      <div class="tcard">
+        <div class="tcard-top"><h3>ショック鑑別・JATECなど</h3><span class="tbadge soon">追加予定</span></div>
+        <p>今後も項目を増やしていく予定です。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spl-zone" id="spl">
+    <div class="spl-eyebrow">応用ルートの到達点</div>
+    <div class="spl-title">SPL特化</div>
+    <div class="spl-pillars">
+      <a class="spl-pillar text-link" href="medical-rally.html">
+        <div>
+          <div class="spl-pillar-name">POCUS特化メディカルラリー</div>
+          <div class="spl-pillar-desc">症候別プロトコル・SP台本のストック</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--spl)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="spl-pillar">
+        <div>
+          <div class="spl-pillar-name">POCUS特化臨床推論 <span class="tbadge soon" style="margin-left:4px;">検討中</span></div>
+          <div class="spl-pillar-desc">全国展開アプリ制作予定</div>
+        </div>
+      </div>
+      <a class="spl-pillar text-link" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
+        <div>
+          <div class="spl-pillar-name">工学系学習</div>
+          <div class="spl-pillar-desc">超音波の原理・各モード（POCUS-LOOP）</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--spl)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="peak" id="peak">
+    <div class="peak-card">
+      <div class="peak-eyebrow">＋α ・ 独立到達点</div>
+      <div class="peak-title">ハイレベルコース</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="library" id="library">
+  <div class="library-head"><h3>その他コンテンツ</h3><span>随時追加</span></div>
+  <div class="shelf">
+    <div class="shelf-item">非POCUS限定<br>メディカルラリー</div>
+    <div class="shelf-item">BLS</div>
+    <div class="shelf-item">災害医療</div>
+    <div class="shelf-item add">＋</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>
+</div>
+
+<nav class="tabbar" id="main-tabbar">
+  <a class="tabbar-item" data-tab="home" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    <span class="tb-label">ホーム</span>
+  </a>
+  <a class="tabbar-item" data-tab="manabu" href="manabu.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span class="tb-label">まなぶ</span>
+  </a>
+  <a class="tabbar-item" data-tab="calendar" href="calendar.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <span class="tb-label">カレンダー</span>
+  </a>
+  <a class="tabbar-item" data-tab="other" href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    <span class="tb-label">その他</span>
+  </a>
+</nav>
+
+<div class="overlay" id="mm">
+  <div class="minimap">
+    <div class="minimap-head">
+      <h4>全体マップ</h4>
+      <div class="close" id="mm-close">✕</div>
+    </div>
+    <div class="mm-node" data-jump="n1">① 理念・活動紹介</div>
+    <div class="mm-node" data-jump="n2">② 基本のキ</div>
+    <div class="mm-node" data-jump="n3">③ 予習教材</div>
+    <div class="mm-node" data-jump="n4">④ セミナー</div>
+    <div class="mm-node" data-jump="n5">⑤ 自主練ハンドブック</div>
+    <div class="mm-node" data-jump="n6">⑥ 認定アプリ</div>
+    <div class="mm-node" data-jump="n7">⑦ waza-ari</div>
+    <div class="mm-node" data-jump="n8">⑧ 認定試験</div>
+    <div class="mm-node" data-jump="n9">疾患辞典・ショック鑑別</div>
+    <div class="mm-node spl" data-jump="spl">SPL特化</div>
+    <div class="mm-node" data-jump="peak">＋αハイレベルコース</div>
+    <div class="mm-node" data-jump="library">その他コンテンツ</div>
+    <div class="mm-note">タップでその場所へジャンプ</div>
+  </div>
+</div>
+
+<script src="auth-guard.js"></script>
+<script src="tabbar.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 500);
+});
+
+document.getElementById('map-open').addEventListener('click', () => document.getElementById('mm').classList.add('show'));
+document.getElementById('mm-close').addEventListener('click', () => document.getElementById('mm').classList.remove('show'));
+document.querySelectorAll('.mm-node').forEach(el => {
+  el.addEventListener('click', () => {
+    const target = document.getElementById(el.dataset.jump);
+    document.getElementById('mm').classList.remove('show');
+    if(target) setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+  });
+});
+</script>
+</body>
+</html>
