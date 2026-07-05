@@ -2,7 +2,7 @@
 // ホーム画面に追加したときに正しく「アプリ」として認識されるために必要なファイルです。
 // 複雑なオフライン機能は持たせず、通常はネットから読み込む形にしています。
 
-const CACHE_NAME = 'kpics-shell-v1';
+const CACHE_NAME = 'kpics-shell-v2';
 const SHELL_FILES = [
   './index.html',
   './app.js',

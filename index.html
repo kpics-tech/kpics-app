@@ -55,7 +55,6 @@ button{font-family:inherit;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
-@keyframes sweep{from{transform:translateX(-130%) rotate(0deg);}to{transform:translateX(130%) rotate(0deg);}}
 @keyframes pulse-ring{0%{transform:scale(.8);opacity:.6;}100%{transform:scale(2.2);opacity:0;}}
 .fade-up{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both;}
 .fade-in{animation:fadeIn .4s ease both;}
@@ -124,80 +123,16 @@ button{font-family:inherit;}
 .auth-btn:disabled{background:var(--border);color:var(--text-dim);cursor:not-allowed;transform:none;}
 .auth-hint{font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;line-height:1.6;}
 
-/* ===================== HOME (FLIP CONTAINER) ===================== */
+/* ===================== HOME ===================== */
 #home-screen{display:none;min-height:100vh;}
 #home-screen.active{display:block;}
 
-.flip-scene{
-  position:relative;width:100%;min-height:100vh;
-  perspective:2400px;
-}
-.flip-card{
-  position:relative;width:100%;min-height:100vh;
-  transition:transform .85s cubic-bezier(.4,.1,.2,1);
-  transform-style:preserve-3d;
-}
-.flip-card.is-flipped{transform:rotateY(180deg);}
-
-.flip-face{
-  width:100%;min-height:100vh;
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
-}
-.flip-face-front{
-  position:relative;
-}
-.flip-face-back{
-  position:absolute;top:0;left:0;
-  transform:rotateY(180deg);
-  background:var(--black);
-}
-
-/* 反転中は裏面のスクロールを無効化、表示中のみ操作可
-   ※ display:none にすることで「見えてない方の面」が
-   ページの縦スクロール範囲に含まれなくなる（無限スクロール対策） */
-.flip-card.is-flipped .flip-face-front{display:none;}
-.flip-card:not(.is-flipped) .flip-face-back{display:none;}
-
-/* ===== 反転ボタン（アイコン＋テキストのピル型） ===== */
-.flip-toggle{
-  position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;z-index:120;
-  height:34px;padding:0 12px 0 10px;border-radius:17px;
-  background:var(--orange);border:1px solid rgba(232,160,32,.5);
-  display:flex;align-items:center;gap:5px;
-  cursor:pointer;transition:all .2s;
-  color:var(--black);
-  box-shadow:0 4px 14px rgba(232,160,32,.25);
-}
-.flip-toggle:hover{background:var(--orange-light);transform:translateY(-1px);}
-.flip-toggle svg{width:14px;height:14px;flex-shrink:0;}
-.flip-toggle .ft-text{
-  font-family:"Bebas Neue",sans-serif;font-size:12.5px;letter-spacing:.04em;
-  white-space:nowrap;
-}
-
-/* ===== 反転ボタンの説明吹き出し（初回のみ表示） ===== */
-.flip-hint{
-  position:fixed;top:calc(54px + env(safe-area-inset-top));right:16px;z-index:119;
-  max-width:188px;background:var(--dark);border:1px solid var(--orange);border-radius:11px;
-  padding:10px 13px;font-size:11.5px;color:var(--text);line-height:1.55;
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
-  opacity:0;transform:translateY(-6px);
-  transition:opacity .35s ease, transform .35s ease;
-  pointer-events:none;cursor:pointer;
-}
-.flip-hint.show{opacity:1;transform:translateY(0);pointer-events:auto;}
-.flip-hint::before{
-  content:"";position:absolute;top:-6px;right:18px;width:0;height:0;
-  border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--orange);
-}
-
 .home-header{
-  position:relative;padding:calc(22px + env(safe-area-inset-top)) 20px 30px;overflow:hidden;
+  position:relative;padding:calc(22px + env(safe-area-inset-top)) 20px 28px;overflow:hidden;
   background:radial-gradient(ellipse 120% 100% at 50% -20%, rgba(232,160,32,.16), transparent 60%);
   border-bottom:1px solid var(--border);
 }
-.home-header-top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;gap:8px;padding-right:104px;}
+.home-header-top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;gap:8px;}
 .brand-mark{display:flex;align-items:center;gap:9px;min-width:0;flex-shrink:0;}
 .brand-mark img{height:26px;width:auto;}
 .brand-mark span{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:.05em;color:var(--text);}
@@ -211,8 +146,6 @@ button{font-family:inherit;}
 .logout-btn:hover{border-color:var(--orange);color:var(--orange);}
 .logout-btn-icon{display:block;width:15px;height:15px;}
 .logout-btn-text{display:none;}
-
-/* PCなど横幅に余裕がある画面だけ「ログアウト」の文字も併記する */
 @media (min-width:640px){
   .logout-btn{
     padding:7px 13px;width:auto;height:auto;border-radius:6px;
@@ -222,7 +155,7 @@ button{font-family:inherit;}
   .logout-btn-icon{width:13px;height:13px;}
 }
 
-.greet{max-width:640px;margin:26px auto 0;display:flex;align-items:center;gap:14px;}
+.greet{max-width:640px;margin:24px auto 0;display:flex;align-items:center;gap:14px;}
 .greet-avatar{
   width:50px;height:50px;border-radius:50%;background:var(--orange);color:var(--black);
   display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;
@@ -231,7 +164,7 @@ button{font-family:inherit;}
 .greet-name{font-size:17px;font-weight:700;line-height:1.3;}
 .greet-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
 
-.home-main{max-width:640px;margin:0 auto;padding:28px 20px 24px;}
+.home-main{max-width:640px;margin:0 auto;padding:26px 20px 8px;}
 
 .sec-label{
   font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--orange);
@@ -274,12 +207,22 @@ button{font-family:inherit;}
   font-family:"JetBrains Mono",monospace;letter-spacing:.02em;
 }
 
-.subgroup{margin-left:14px;margin-top:8px;padding-left:14px;border-left:2px solid var(--border);display:flex;flex-direction:column;gap:8px;}
-
-.footer-note{
-  text-align:center;font-size:11px;color:var(--text-dim);margin-top:28px;line-height:1.8;
+/* セクション写真バナー（プローブ画像など） */
+.sec-banner{
+  position:relative;border-radius:12px;overflow:hidden;
+  border:1px solid var(--border);margin:24px 0 8px;
 }
-.footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
+.sec-banner img{width:100%;height:148px;object-fit:cover;}
+.sec-banner-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(12,12,12,.92) 8%, rgba(12,12,12,.25) 55%, rgba(12,12,12,.15));
+}
+.sec-banner-text{position:absolute;left:16px;right:16px;bottom:13px;}
+.sec-banner-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.18em;
+  color:var(--orange);margin-bottom:5px;
+}
+.sec-banner-title{font-size:16.5px;font-weight:900;letter-spacing:.01em;}
 
 .install-banner{
   display:flex;align-items:flex-start;gap:12px;background:var(--card);
@@ -295,6 +238,176 @@ button{font-family:inherit;}
   background:transparent;border:none;color:var(--text-dim);font-size:13px;cursor:pointer;
   padding:2px 4px;flex-shrink:0;
 }
+
+/* ===================== DNA STORY ZONE ===================== */
+.dna-zone{position:relative;margin-top:34px;}
+.dna-sticky{
+  position:sticky;top:0;height:100vh;height:100dvh;margin-bottom:-100vh;margin-bottom:-100dvh;
+  z-index:0;overflow:hidden;pointer-events:none;
+}
+.dna-glow{
+  position:absolute;left:50%;top:50%;width:120vw;max-width:760px;aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(232,160,32,.10), transparent 62%);
+}
+.dna-img{
+  position:absolute;left:50%;top:50%;
+  width:min(128vw,600px);height:auto;
+  transform:translate(-50%,-50%);
+  opacity:0;will-change:transform,opacity;
+  filter:saturate(1.05);
+}
+.dna-fade-top{
+  position:absolute;left:0;right:0;top:0;height:130px;
+  background:linear-gradient(to bottom, var(--black), transparent);
+}
+.dna-fade-bottom{
+  position:absolute;left:0;right:0;bottom:0;height:130px;
+  background:linear-gradient(to top, var(--black), transparent);
+}
+.dna-content{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 20px 40px;}
+
+/* ゾーン冒頭のヒーロー */
+.dna-hero{
+  min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:60px 0 40px;
+}
+.dna-hero-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.26em;
+  color:var(--orange);margin-bottom:18px;
+}
+.dna-hero-title{
+  font-weight:900;font-size:clamp(30px,9vw,46px);line-height:1.35;letter-spacing:.01em;
+  text-shadow:0 2px 24px rgba(0,0,0,.8);
+}
+.dna-hero-title .accent{color:var(--orange);}
+.dna-hero-sub{
+  font-size:13px;color:var(--text-muted);line-height:1.9;margin-top:18px;
+  max-width:420px;text-shadow:0 1px 12px rgba(0,0,0,.9);
+}
+.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:38px;opacity:.6;}
+.scroll-hint-label{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.22em;color:var(--text-muted);}
+.scroll-hint-line{
+  width:1px;height:26px;background:linear-gradient(to bottom, var(--orange), transparent);
+  animation:scrollHintMove 1.6s ease-in-out infinite;
+}
+@keyframes scrollHintMove{
+  0%{transform:scaleY(.4);opacity:.3;}
+  50%{transform:scaleY(1);opacity:1;}
+  100%{transform:scaleY(.4);opacity:.3;}
+}
+
+.story-section{margin-bottom:64px;}
+.story-section:last-child{margin-bottom:0;}
+.story-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  color:var(--orange);margin-bottom:10px;font-weight:600;
+}
+.story-h2{
+  font-weight:900;font-size:23px;line-height:1.4;margin-bottom:18px;letter-spacing:.01em;
+  text-shadow:0 2px 18px rgba(0,0,0,.8);
+}
+
+/* スクロールリビール */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+
+/* ストーリーゾーン内のカード（DNAが透けるよう半透明ベース） */
+.portal-card{
+  background:rgba(18,18,18,.9);border:1px solid var(--border);border-radius:12px;
+  padding:18px 18px 20px;margin-bottom:10px;position:relative;
+}
+.portal-card.disabled{opacity:.6;}
+.portal-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.portal-card-icon{
+  width:38px;height:38px;border-radius:10px;background:var(--orange-bg);
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+}
+.portal-card-title{font-size:14.5px;font-weight:700;flex:1;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.portal-card-desc{font-size:12.5px;color:var(--text-muted);line-height:1.75;}
+.portal-card-desc strong{color:var(--text);font-weight:700;}
+.portal-card-tag{
+  font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-bg);
+  border:1px solid rgba(232,160,32,.25);padding:2px 7px;border-radius:4px;
+  font-family:"JetBrains Mono",monospace;letter-spacing:.02em;white-space:nowrap;
+}
+.portal-card-link{
+  display:inline-flex;align-items:center;gap:5px;margin-top:12px;
+  font-size:12.5px;font-weight:700;color:var(--orange);text-decoration:none;
+}
+.portal-card-link:hover{color:var(--orange-light);}
+.portal-card-note{
+  margin-top:10px;font-size:11px;color:var(--text-dim);
+  background:rgba(12,12,12,.85);border:1px solid var(--border);border-radius:8px;
+  padding:8px 11px;line-height:1.6;
+}
+.philosophy-note{
+  background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.3);border-radius:10px;
+  color:var(--text);font-size:12.5px;line-height:1.9;padding:16px 16px;text-align:center;
+}
+
+/* 教育循環：DNAらせんに沿うステップ */
+.cycle-grid{display:flex;flex-direction:column;gap:0;margin-top:20px;position:relative;}
+.cycle-item{
+  display:flex;align-items:flex-start;gap:14px;background:rgba(18,18,18,.9);
+  border:1px solid var(--border);border-radius:12px;padding:15px 16px;
+  position:relative;
+}
+.cycle-item + .cycle-item{margin-top:22px;}
+.cycle-item + .cycle-item::before{
+  content:"";position:absolute;left:30px;top:-23px;width:2px;height:22px;
+  background:linear-gradient(to bottom, transparent, var(--orange));opacity:.55;
+}
+.cycle-item:nth-child(even){margin-left:16px;}
+.cycle-item:nth-child(odd){margin-right:16px;}
+.cycle-num{
+  width:30px;height:30px;border-radius:50%;background:var(--orange-bg);
+  border:1px solid rgba(232,160,32,.35);color:var(--orange);
+  font-family:"Bebas Neue",sans-serif;font-size:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.cycle-body{flex:1;}
+.cycle-title{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.cycle-desc{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
+.cycle-loop{
+  margin-top:20px;text-align:center;font-family:"JetBrains Mono",monospace;
+  font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;
+}
+
+.mini-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.mini-step{display:flex;align-items:center;gap:10px;}
+.mini-step-num{
+  width:22px;height:22px;border-radius:50%;background:rgba(12,12,12,.85);
+  border:1px solid var(--border-light);color:var(--text-muted);
+  font-family:"JetBrains Mono",monospace;font-size:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.mini-step-text{font-size:12px;color:var(--text-muted);line-height:1.5;}
+
+/* 実績（RECORDS） */
+.records-card{
+  background:rgba(18,18,18,.9);border:1px solid rgba(232,160,32,.35);border-radius:14px;
+  padding:24px 20px;text-align:center;box-shadow:0 0 40px rgba(232,160,32,.08);
+}
+.records-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange);margin-bottom:8px;}
+.records-num{
+  font-family:"Bebas Neue",sans-serif;font-size:76px;line-height:1;color:var(--text);
+  text-shadow:0 0 40px rgba(232,160,32,.35);
+}
+.records-num .unit{font-size:30px;color:var(--orange);margin-left:4px;}
+.records-label{font-size:13px;font-weight:700;margin-top:8px;}
+.records-sub{font-size:11px;color:var(--text-muted);margin-top:5px;line-height:1.7;}
+
+.footer-note{
+  text-align:center;font-size:11px;color:var(--text-dim);margin-top:44px;line-height:1.8;
+}
+.footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
 
 /* ===== 自主練 注意事項モーダル ===== */
 .guide-modal-overlay{
@@ -388,165 +501,6 @@ button{font-family:inherit;}
   font-size:11px;color:var(--text-dim);text-align:center;margin-top:6px;line-height:1.7;
 }
 
-/* ===================== BACK FACE (PORTAL STYLE) ===================== */
-.back-hero{
-  position:relative;padding:calc(64px + env(safe-area-inset-top)) 20px 40px;overflow:hidden;text-align:center;
-  background:radial-gradient(ellipse 120% 100% at 50% -10%, rgba(232,160,32,.18), transparent 65%);
-  border-bottom:1px solid var(--border);
-}
-.back-hero-logo{width:88px;margin:0 auto 22px;}
-.back-hero-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;
-  color:var(--text-muted);margin-bottom:16px;
-}
-.back-hero-title{
-  font-family:"Noto Sans JP",sans-serif;font-weight:900;
-  font-size:clamp(28px,8vw,42px);line-height:1.35;letter-spacing:.01em;
-  color:var(--text);
-}
-.back-hero-title .accent{color:var(--orange);}
-.back-hero-sub{
-  font-size:13.5px;color:var(--text-muted);line-height:1.8;margin-top:18px;
-  max-width:420px;margin-left:auto;margin-right:auto;
-}
-
-.back-main{max-width:640px;margin:0 auto;padding:36px 20px 90px;}
-
-.back-section{margin-bottom:52px;}
-.back-section:last-child{margin-bottom:0;}
-
-/* ===== スクロールリビール演出 ===== */
-.reveal{
-  opacity:0;transform:translateY(28px);
-  transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
-}
-.reveal.in-view{opacity:1;transform:translateY(0);}
-
-.back-hero-anim{opacity:0;transform:translateY(16px) scale(.97);}
-.back-hero-anim.in-view{
-  opacity:1;transform:translateY(0) scale(1);
-  transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-}
-
-.scroll-hint{
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  margin-top:34px;opacity:.55;
-}
-.scroll-hint-label{
-  font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.22em;
-  color:var(--text-muted);
-}
-.scroll-hint-line{
-  width:1px;height:26px;background:linear-gradient(to bottom, var(--orange), transparent);
-  animation:scrollHintMove 1.6s ease-in-out infinite;
-}
-@keyframes scrollHintMove{
-  0%{transform:scaleY(.4);opacity:.3;}
-  50%{transform:scaleY(1);opacity:1;}
-  100%{transform:scaleY(.4);opacity:.3;}
-}
-
-.back-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
-  color:var(--orange);margin-bottom:10px;font-weight:600;
-}
-.back-h2{
-  font-family:"Noto Sans JP",sans-serif;font-weight:900;font-size:23px;
-  line-height:1.4;margin-bottom:18px;letter-spacing:.01em;
-}
-
-/* 理念ブロック（4ステップ循環） */
-.cycle-grid{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
-.cycle-item{
-  display:flex;align-items:flex-start;gap:14px;background:var(--card);
-  border:1px solid var(--border);border-radius:12px;padding:15px 16px;
-}
-.cycle-num{
-  width:30px;height:30px;border-radius:50%;background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.3);color:var(--orange);
-  font-family:"Bebas Neue",sans-serif;font-size:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.cycle-body{flex:1;}
-.cycle-title{font-size:13.5px;font-weight:700;margin-bottom:3px;}
-.cycle-desc{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
-
-/* コンテンツカード（ポータルの各リソース） */
-.portal-card{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:18px 18px 20px;margin-bottom:10px;position:relative;
-}
-.portal-card.disabled{opacity:.6;}
-.portal-card-del{
-  position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:7px;
-  background:var(--black);border:1px solid var(--border-light);color:var(--text-dim);
-  display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;
-  transition:all .15s;
-}
-.portal-card-del:hover{border-color:#F06060;color:#F06060;}
-.menu-card-del{
-  position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:6px;
-  background:var(--black);border:1px solid var(--border-light);color:var(--text-dim);
-  display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;
-  transition:all .15s;
-}
-.menu-card-del:hover{border-color:#F06060;color:#F06060;}
-.portal-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.portal-card-icon{
-  width:38px;height:38px;border-radius:10px;background:var(--orange-bg);
-  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
-}
-.portal-card-title{font-size:14.5px;font-weight:700;flex:1;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.portal-card-desc{font-size:12.5px;color:var(--text-muted);line-height:1.75;}
-.portal-card-desc strong{color:var(--text);font-weight:700;}
-.portal-card-tag{
-  font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.25);padding:2px 7px;border-radius:4px;
-  font-family:"JetBrains Mono",monospace;letter-spacing:.02em;white-space:nowrap;
-}
-.portal-card-tag.muted{color:var(--text-dim);background:var(--black);border-color:var(--border-light);}
-.portal-card-link{
-  display:inline-flex;align-items:center;gap:5px;margin-top:12px;
-  font-size:12.5px;font-weight:700;color:var(--orange);text-decoration:none;
-}
-.portal-card-link:hover{color:var(--orange-light);}
-.portal-card-note{
-  margin-top:10px;font-size:11px;color:var(--text-dim);
-  background:var(--black);border:1px solid var(--border);border-radius:8px;
-  padding:8px 11px;line-height:1.6;
-}
-
-/* 臨床推論勉強会のミニステップ */
-.mini-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.mini-step{display:flex;align-items:center;gap:10px;}
-.mini-step-num{
-  width:22px;height:22px;border-radius:50%;background:var(--black);
-  border:1px solid var(--border-light);color:var(--text-muted);
-  font-family:"JetBrains Mono",monospace;font-size:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.mini-step-text{font-size:12px;color:var(--text-muted);line-height:1.5;}
-
-/* スケジュール */
-.schedule-list{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
-.schedule-item{
-  display:flex;align-items:center;gap:14px;background:var(--card);
-  border:1px solid var(--border);border-radius:12px;padding:13px 15px;
-}
-.schedule-date{
-  font-family:"Bebas Neue",sans-serif;text-align:center;flex-shrink:0;width:46px;
-  color:var(--orange);
-}
-.schedule-date .month{font-size:10px;letter-spacing:.06em;display:block;color:var(--text-dim);}
-.schedule-date .day{font-size:22px;line-height:1.1;display:block;}
-.schedule-body{flex:1;min-width:0;}
-.schedule-title{font-size:13px;font-weight:700;}
-.schedule-tag{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
-
-.back-footer{
-  text-align:center;font-size:11px;color:var(--text-dim);margin-top:30px;line-height:1.8;
-}
-
 /* ===================== 下部タブバー ===================== */
 .tabbar{
   position:fixed;left:0;right:0;bottom:0;z-index:300;
@@ -565,9 +519,7 @@ button{font-family:inherit;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
 
-/* タブバーがある画面では、本文の下に余白を確保してコンテンツが隠れないようにする */
-body.has-tabbar .home-main{padding-bottom:calc(58px + env(safe-area-inset-bottom));}
-body.has-tabbar .back-main{padding-bottom:calc(58px + env(safe-area-inset-bottom));}
+body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bottom));}
 
 </style>
 </head>
@@ -632,481 +584,333 @@ body.has-tabbar .back-main{padding-bottom:calc(58px + env(safe-area-inset-bottom
 <!-- ===== HOME SCREEN ===== -->
 <div id="home-screen">
 
-  <!-- 右上の反転ボタン -->
-  <button class="flip-toggle" id="flip-toggle-btn" onclick="toggleFlip()" aria-label="ポータルを見る">
-    <svg id="flip-icon-to-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="13" rx="3"/><path d="M16.5 9.2a5 5 0 0 1 4 4.8"/><path d="M21 11.3l1 3-3-.6"/></svg>
-    <span class="ft-text" id="flip-toggle-text">ポータル</span>
-  </button>
-  <div class="flip-hint" id="flip-hint" onclick="dismissFlipHint()">👆 タップすると、読み物形式の「ポータル」ページに切り替わります</div>
+  <div class="home-header">
+    <div class="home-header-top">
+      <div class="brand-mark">
+        <img src="assets/logo-icon-dark.png" alt="K-PICS">
+        <span>K-PICS</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" aria-label="ログアウト">
+        <span class="logout-btn-text">ログアウト</span>
+        <svg class="logout-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </div>
+    <div class="greet">
+      <div class="greet-avatar" id="greet-avatar">−</div>
+      <div>
+        <div class="greet-name" id="greet-name">読み込み中...</div>
+        <div class="greet-sub" id="greet-sub"></div>
+      </div>
+    </div>
+  </div>
 
-  <div class="flip-scene">
-    <div class="flip-card" id="flip-card">
+  <!-- ============ クイックアクセス ============ -->
+  <div class="home-main">
 
-      <!-- ============ 表面：ショートカット集 ============ -->
-      <div class="flip-face flip-face-front">
-        <div class="home-header">
-          <div class="home-header-top">
-            <div class="brand-mark">
-              <img src="assets/logo-icon-dark.png" alt="K-PICS">
-              <span>K-PICS</span>
-            </div>
-            <button class="logout-btn" onclick="doLogout()" aria-label="ログアウト">
-              <span class="logout-btn-text">ログアウト</span>
-              <svg class="logout-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-            </button>
+    <div id="install-banner" class="install-banner" style="display:none;" onclick="openInstallGuide()">
+      <div class="install-banner-icon">📲</div>
+      <div class="install-banner-body">
+        <div class="install-banner-title">K-PICSをホーム画面に追加できます</div>
+        <div class="install-banner-desc">タップして手順を見る</div>
+      </div>
+      <button class="install-banner-close" onclick="event.stopPropagation(); dismissInstallBanner()" aria-label="閉じる">✕</button>
+    </div>
+
+    <div class="sec-label">はじめに</div>
+    <div class="menu-group">
+      <div class="menu-card" onclick="openGuideModal()" role="button" tabindex="0">
+        <div class="menu-icon solid">📋</div>
+        <div class="menu-body">
+          <div class="menu-title">K-PICSの部員として</div>
+          <div class="menu-desc">まず最初に必ずお読みください</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+
+    <!-- 認定試験：人物写真バナー -->
+    <div class="sec-banner">
+      <img src="assets/hero-practice.jpg" alt="" style="object-position:center 56%;" loading="lazy">
+      <div class="sec-banner-shade"></div>
+      <div class="sec-banner-text">
+        <div class="sec-banner-eyebrow">CERTIFICATION</div>
+        <div class="sec-banner-title">認定試験</div>
+      </div>
+    </div>
+    <div class="menu-group">
+      <a class="menu-card primary" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">
+        <div class="menu-icon solid">🏆</div>
+        <div class="menu-body">
+          <div class="menu-title">認定試験受験予定の方はこちら <span class="badge-ext">認定アプリへ</span></div>
+          <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="sec-label">手技練習に</div>
+    <div class="menu-group">
+      <a class="menu-card" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
+        <div class="menu-icon">🎥</div>
+        <div class="menu-body">
+          <div class="menu-title">Waza-ari <span class="badge-ext">外部サイト</span></div>
+          <div class="menu-desc">GE社が提供するPOCUS動画コンテンツ。予習・復習に</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="menu-card" href="technique.html">
+        <div class="menu-icon">🩺</div>
+        <div class="menu-body">
+          <div class="menu-title">自主練ハンドブック</div>
+          <div class="menu-desc">プローブ・当てる部位・見える画面を画像でサッと確認</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="menu-card" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">
+        <div class="menu-icon">🎯</div>
+        <div class="menu-body">
+          <div class="menu-title">絵合わせアプリ</div>
+          <div class="menu-desc">超音波画像を再現してタイムを測る。SPL全国1位の種目</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <!-- プローブ画像バナー -->
+    <div class="sec-banner">
+      <img src="assets/hero-probe.jpg" alt="" loading="lazy">
+      <div class="sec-banner-shade"></div>
+      <div class="sec-banner-text">
+        <div class="sec-banner-eyebrow">PHYSICS &amp; PRINCIPLES</div>
+        <div class="sec-banner-title">超音波について詳しくなろう</div>
+      </div>
+    </div>
+    <div class="menu-group">
+      <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
+        <div class="menu-icon">⚙️</div>
+        <div class="menu-body">
+          <div class="menu-title">POCUS-LOOP</div>
+          <div class="menu-desc">超音波の原理・各モードを学ぶ。専門医試験でも問われる範囲</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
+        <div class="menu-icon">🏥</div>
+        <div class="menu-body">
+          <div class="menu-title">キャノン超音波講座</div>
+          <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
+        <div class="menu-icon">📖</div>
+        <div class="menu-body">
+          <div class="menu-title">JSUM Ultrasound Path</div>
+          <div class="menu-desc">日本超音波医学会のeラーニング</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="sec-label">POCUSを臨床で活かそう</div>
+    <div class="menu-group">
+      <a class="menu-card" href="disease.html">
+        <div class="menu-icon">📋</div>
+        <div class="menu-body">
+          <div class="menu-title">低学年向け疾患リスト</div>
+          <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="menu-card" href="medical-rally.html">
+        <div class="menu-icon">🚑</div>
+        <div class="menu-body">
+          <div class="menu-title">POCUS特化メディカルラリー</div>
+          <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="menu-card disabled">
+        <div class="menu-icon">🧠</div>
+        <div class="menu-body">
+          <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
+          <div class="menu-desc">全国展開アプリ制作予定</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">その他</div>
+    <div class="menu-group" data-section="other">
+      <a class="menu-card" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">
+        <div class="menu-icon">🧭</div>
+        <div class="menu-body">
+          <div class="menu-title">FAST Journey</div>
+          <div class="menu-desc">FASTの基本を習得する初学者向けアプリ</div>
+        </div>
+        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="menu-card disabled">
+        <div class="menu-icon">🧬</div>
+        <div class="menu-body">
+          <div class="menu-title">解剖VR <span class="badge-soon">未定</span></div>
+          <div class="menu-desc">構想段階のコンテンツです</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ DNAストーリーゾーン ============ -->
+  <div class="dna-zone" id="dna-zone">
+
+    <!-- スクロールと共に回転するDNA背景 -->
+    <div class="dna-sticky" aria-hidden="true">
+      <div class="dna-glow"></div>
+      <img class="dna-img" id="dna-img" src="assets/bg-dna.jpg" alt="" loading="lazy">
+      <div class="dna-fade-top"></div>
+      <div class="dna-fade-bottom"></div>
+    </div>
+
+    <div class="dna-content">
+
+      <!-- ゾーン冒頭 -->
+      <div class="dna-hero">
+        <div class="dna-hero-eyebrow">K-PICS — OUR DNA</div>
+        <div class="dna-hero-title">学びを、<span class="accent">次の代へ。</span></div>
+        <div class="dna-hero-sub">先輩が積み上げてきた知識・技術・経験を受け継ぎ、<br>次の世代へ確実につないでいく。<br>それがK-PICSに流れるDNA。</div>
+        <div class="scroll-hint">
+          <span class="scroll-hint-label">SCROLL</span>
+          <span class="scroll-hint-line"></span>
+        </div>
+      </div>
+
+      <!-- 理念 -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">PHILOSOPHY</div>
+        <div class="story-h2">超音波の先にある<span style="color:var(--orange);">医療人育成</span></div>
+        <div class="portal-card">
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            K-PICSは、超音波を学ぶためだけの団体ではありません。<br>
+            私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。
           </div>
-          <div class="greet">
-            <div class="greet-avatar" id="greet-avatar">−</div>
-            <div>
-              <div class="greet-name" id="greet-name">読み込み中...</div>
-              <div class="greet-sub" id="greet-sub"></div>
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            学んだことは地域へ還元します。市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。そして<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。
+          </div>
+          <div class="portal-card-desc">
+            これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。その歴史に感謝しながら、時代に合わせて進化し続けます。
+          </div>
+        </div>
+        <div class="philosophy-note">
+          超音波を学ぶために活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。
+        </div>
+      </div>
+
+      <!-- 教育循環 -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">EDUCATION CYCLE</div>
+        <div class="story-h2">受け継がれる、<span style="color:var(--orange);">教育の循環</span></div>
+        <div class="portal-card-desc" style="text-shadow:0 1px 10px rgba(0,0,0,.9);">「やってみた人が教える」学生主体の教育循環システム。この循環を回し続けることで、部のレベルが世代をまたいで積み上がっていく。</div>
+        <div class="cycle-grid">
+          <div class="cycle-item">
+            <div class="cycle-num">1</div>
+            <div class="cycle-body">
+              <div class="cycle-title">練習・学習する</div>
+              <div class="cycle-desc">このアプリのリソースを活用して技術・知識を磨く</div>
+            </div>
+          </div>
+          <div class="cycle-item">
+            <div class="cycle-num">2</div>
+            <div class="cycle-body">
+              <div class="cycle-title">認定試験を受ける</div>
+              <div class="cycle-desc">一定水準に達したと評価され、バッジが付与される</div>
+            </div>
+          </div>
+          <div class="cycle-item">
+            <div class="cycle-num">3</div>
+            <div class="cycle-body">
+              <div class="cycle-title">指導者側へまわる</div>
+              <div class="cycle-desc">バッジ取得者が後輩の指導を担い、知識を引き継ぐ</div>
+            </div>
+          </div>
+          <div class="cycle-item">
+            <div class="cycle-num">4</div>
+            <div class="cycle-body">
+              <div class="cycle-title">知見をアプリへ</div>
+              <div class="cycle-desc">発見したコツ・良問・台本をこのアプリに蓄積する</div>
             </div>
           </div>
         </div>
+        <div class="cycle-loop">↻ そしてまた、次の代へ</div>
+      </div>
 
-        <div class="home-main">
+      <!-- 認定試験制度 -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">CERTIFICATION</div>
+        <div class="story-h2">認定試験制度</div>
 
-          <div id="install-banner" class="install-banner" style="display:none;" onclick="openInstallGuide()">
-            <div class="install-banner-icon">📲</div>
-            <div class="install-banner-body">
-              <div class="install-banner-title">K-PICSをホーム画面に追加できます</div>
-              <div class="install-banner-desc">タップして手順を見る</div>
-            </div>
-            <button class="install-banner-close" onclick="event.stopPropagation(); dismissInstallBanner()" aria-label="閉じる">✕</button>
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🏆</div>
+            <div class="portal-card-title">認定試験とは？</div>
           </div>
+          <div class="portal-card-desc">エコー手技が一定水準に達したと評価されると合格し、<strong>バッジが付与される</strong>。バッジ取得者は指導者側にまわり、後輩の育成を担う。これがK-PICSの核心、<strong>学生主体の教育循環システム</strong>だ。</div>
+          <div class="portal-card-note">📅 直近の認定試験：2026年8月2日<br>試験にエントリーするには、まず認定アプリへの登録が必要です。</div>
+          <a class="portal-card-link" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">認定アプリへ登録する
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
 
-          <div class="sec-label">はじめに</div>
-          <div class="menu-group">
-            <div class="menu-card" onclick="openGuideModal()" role="button" tabindex="0">
-              <div class="menu-icon solid">📋</div>
-              <div class="menu-body">
-                <div class="menu-title">K-PICSの部員として</div>
-                <div class="menu-desc">まず最初に必ずお読みください</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">📝</div>
+            <div class="portal-card-title">自主練の進め方</div>
           </div>
-
-          <div class="sec-label">認定試験</div>
-          <div class="menu-group">
-            <a class="menu-card primary" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">
-              <div class="menu-icon solid">🏆</div>
-              <div class="menu-body">
-                <div class="menu-title">認定試験受験予定の方はこちら <span class="badge-ext">認定アプリへ</span></div>
-                <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+          <div class="portal-card-desc">認定アプリは、セミナーを<strong>受けっぱなしで終わらせない</strong>ための仕組み。受講後に自主練を積み重ねて、実際に技術を身につけてもらうことが目的だ。</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">セミナー受講日を選択</div></div>
+            <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">練習日を入力</div></div>
+            <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">最も撮れた画像をアップロード</div></div>
           </div>
-
-          <div class="sec-label">手技練習に</div>
-          <div class="menu-group">
-            <a class="menu-card" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-              <div class="menu-icon">🎥</div>
-              <div class="menu-body">
-                <div class="menu-title">Waza-ari <span class="badge-ext">外部サイト</span></div>
-                <div class="menu-desc">GE社が提供するPOCUS動画コンテンツ。予習・復習に</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a class="menu-card" href="technique.html">
-              <div class="menu-icon">🩺</div>
-              <div class="menu-body">
-                <div class="menu-title">自主練ハンドブック</div>
-                <div class="menu-desc">プローブ・当てる部位・見える画面を画像でサッと確認</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a class="menu-card" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">
-              <div class="menu-icon">🎯</div>
-              <div class="menu-body">
-                <div class="menu-title">絵合わせアプリ</div>
-                <div class="menu-desc">超音波画像を再現してタイムを測る練習ツール</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-
-          <div class="sec-label">超音波について詳しくなろう</div>
-          <div class="menu-group">
-            <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
-              <div class="menu-icon">⚙️</div>
-              <div class="menu-body">
-                <div class="menu-title">POCUS-LOOP</div>
-                <div class="menu-desc">超音波の原理・各モードを学ぶ</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
-              <div class="menu-icon">🏥</div>
-              <div class="menu-body">
-                <div class="menu-title">キャノン超音波講座</div>
-                <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
-              <div class="menu-icon">📖</div>
-              <div class="menu-body">
-                <div class="menu-title">JSUM Ultrasound Path</div>
-                <div class="menu-desc">日本超音波医学会のeラーニング</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-
-          <div class="sec-label">POCUSを臨床で活かそう</div>
-          <div class="menu-group">
-            <a class="menu-card" href="disease.html">
-              <div class="menu-icon">📋</div>
-              <div class="menu-body">
-                <div class="menu-title">低学年向け疾患リスト</div>
-                <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a class="menu-card" href="medical-rally.html">
-              <div class="menu-icon">🚑</div>
-              <div class="menu-body">
-                <div class="menu-title">POCUS特化メディカルラリー</div>
-                <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <div class="menu-card disabled">
-              <div class="menu-icon">🧠</div>
-              <div class="menu-body">
-                <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
-                <div class="menu-desc">全国展開アプリ制作予定</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sec-label">その他</div>
-          <div class="menu-group" data-section="other">
-            <a class="menu-card" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">
-              <div class="menu-icon">🧭</div>
-              <div class="menu-body">
-                <div class="menu-title">FAST Journey</div>
-                <div class="menu-desc">FASTの基本を習得する初学者向けアプリ</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <div class="menu-card disabled">
-              <div class="menu-icon">🧬</div>
-              <div class="menu-body">
-                <div class="menu-title">解剖VR <span class="badge-soon">未定</span></div>
-                <div class="menu-desc">構想段階のコンテンツです</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="portal-card" style="margin-top:4px;">
-            <div class="portal-card-head">
-              <div class="portal-card-icon">📣</div>
-              <div class="portal-card-title">新しい項目を追加したい方、大歓迎です</div>
-            </div>
-            <div class="portal-card-desc">「こんな項目があったらいいな」「自分の作ったアプリをここに追加したい」という方は、ぜひ開発者までご相談ください。開発者はプログラミング知識ゼロの状態から、このアプリとアプリ内にあるすべての機能をひとりで作り上げました。アプリを大きくしたり、改善したり、将来引き継いだりしてくれる方には、ノウハウを惜しみなくお伝えします。アプリ開発に興味のある方も募集中です。</div>
-          </div>
-
-          <div class="footer-note">
-            <img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。
+          <div class="portal-card-desc" style="margin-top:12px;">アップロードすると、多田先生やバッジ取得者が<strong>Pass / Keep</strong>を判定。Keepの場合はフィードバックがもらえるので、それを元にまた練習。<strong>全断面Passすると、認定試験の受験資格</strong>が得られる。</div>
+          <div class="portal-card-note">
+            ・異なる日に練習する場合は、同じ被検者にエコーを当ててOK<br>
+            ・同じ日にまとめて練習する場合は、別の3人に当てて撮像すること<br><br>
+            ・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK
           </div>
         </div>
       </div>
 
-      <!-- ============ 裏面：ポータル（読み物） ============ -->
-      <div class="flip-face flip-face-back">
-        <div class="back-hero">
-          <div class="back-hero-anim" id="back-hero-anim">
-            <img class="back-hero-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
-            <div class="back-hero-eyebrow">K - P I C S 　部員専用ポータル</div>
-            <div class="back-hero-title">学びを、<span class="accent">次の代へ。</span></div>
-            <div class="back-hero-sub">認定試験・エコー手技・勉強会・競技練習など<br>K-PICSの学習リソースへアクセスしよう</div>
-            <div class="scroll-hint">
-              <span class="scroll-hint-label">SCROLL</span>
-              <span class="scroll-hint-line"></span>
-            </div>
+      <!-- 実績 -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">RECORDS</div>
+        <div class="story-h2">積み重ねの、証明</div>
+        <div class="records-card">
+          <div class="records-eyebrow">STUDENT POCUS LEAGUE — 絵合わせ</div>
+          <div class="records-num bebas">99<span class="unit">SEC</span></div>
+          <div class="records-label">第4回SPL 全国1位 🥇</div>
+          <div class="records-sub">機材トラブルがありながらも99秒で全国制覇。<br>練習では1:08を記録したことも。次の記録を塗り替えるのは、あなた。</div>
+        </div>
+      </div>
+
+      <!-- 募集 -->
+      <div class="story-section reveal">
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">📣</div>
+            <div class="portal-card-title">新しい項目を追加したい方、大歓迎です</div>
           </div>
+          <div class="portal-card-desc">「こんな項目があったらいいな」「自分の作ったアプリをここに追加したい」という方は、ぜひ開発者までご相談ください。開発者はプログラミング知識ゼロの状態から、このアプリとアプリ内にあるすべての機能をひとりで作り上げました。アプリを大きくしたり、改善したり、将来引き継いだりしてくれる方には、ノウハウを惜しみなくお伝えします。アプリ開発に興味のある方も募集中です。</div>
         </div>
 
-        <div class="back-main">
-
-          <!-- このポータルの目的 -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">このポータルの目的</div>
-            <div class="back-h2">学びを<span style="color:var(--orange);">次の代へ</span>と引き継いでいく</div>
-            <div class="portal-card-desc" style="margin-bottom:4px;">先輩が積み上げてきた知識・技術・経験を、このポータルに集約し、次の世代へ確実につなぐ。K-PICSは「やってみた人が教える」学生主体の教育循環システムを目指している。</div>
-            <div class="cycle-grid">
-              <div class="cycle-item">
-                <div class="cycle-num">1</div>
-                <div class="cycle-body">
-                  <div class="cycle-title">練習・学習する</div>
-                  <div class="cycle-desc">このポータルのリソースを活用して技術・知識を磨く</div>
-                </div>
-              </div>
-              <div class="cycle-item">
-                <div class="cycle-num">2</div>
-                <div class="cycle-body">
-                  <div class="cycle-title">認定試験を受ける</div>
-                  <div class="cycle-desc">一定水準に達したと評価され、バッジが付与される</div>
-                </div>
-              </div>
-              <div class="cycle-item">
-                <div class="cycle-num">3</div>
-                <div class="cycle-body">
-                  <div class="cycle-title">指導者側へまわる</div>
-                  <div class="cycle-desc">バッジ取得者が後輩の指導を担い、知識を引き継ぐ</div>
-                </div>
-              </div>
-              <div class="cycle-item">
-                <div class="cycle-num">4</div>
-                <div class="cycle-body">
-                  <div class="cycle-title">知見をポータルへ</div>
-                  <div class="cycle-desc">発見したコツ・良問・台本をこのポータルに蓄積する</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- K-PICSの理念 -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">K-PICSの理念</div>
-            <div class="back-h2">超音波の先にある<span style="color:var(--orange);">医療人育成</span></div>
-            <div class="portal-card-desc" style="margin-bottom:14px;">
-              K-PICSは、超音波を学ぶためだけの団体ではありません。<br>
-              私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。私たちは超音波だけでなく、救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。
-            </div>
-            <div class="portal-card-desc" style="margin-bottom:14px;">
-              また、知識や資格は取得して終わりではありません。学んだことを地域へ還元し、市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。
-            </div>
-            <div class="portal-card-desc" style="margin-bottom:14px;">
-              K-PICSは大学の中だけで完結する団体ではありません。地域の医療機関、消防、行政、教育機関、企業、他大学、全国の学生団体など、多くの方々とのつながりによって成り立っています。私たちはそのつながりを大切にしながら、人と人を結ぶハブとして活動していきます。
-            </div>
-            <div class="portal-card-desc" style="margin-bottom:14px;">
-              そして、和歌山だけでなく全国にも目を向けます。<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。
-            </div>
-            <div class="portal-card-desc" style="margin-bottom:14px;">
-              これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。私たちはその歴史に感謝しながら、時代に合わせて進化し続けます。
-            </div>
-            <div class="portal-card-note" style="background:var(--orange-bg);border-color:rgba(232,160,32,.3);color:var(--text);font-size:12.5px;line-height:1.8;padding:14px 16px;text-align:center;">
-              超音波を学ぶために活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。
-            </div>
-          </div>
-
-          <!-- 01 認定試験制度 -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">01 · Certification</div>
-            <div class="back-h2">認定試験制度</div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🏆</div>
-                <div class="portal-card-title">認定試験とは？</div>
-              </div>
-              <div class="portal-card-desc">エコー手技が一定水準に達したと評価されると合格し、<strong>バッジが付与される</strong>。バッジ取得者は指導者側にまわり、後輩の育成を担う。これがK-PICSの核心、<strong>学生主体の教育循環システム</strong>だ。</div>
-              <div class="portal-card-note">📅 直近の認定試験：2026年8月2日<br>試験にエントリーするには、まず認定アプリへの登録が必要です。</div>
-              <a class="portal-card-link" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">認定アプリへ登録する
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">📝</div>
-                <div class="portal-card-title">自主練の進め方</div>
-              </div>
-              <div class="portal-card-desc">認定アプリは、セミナーを<strong>受けっぱなしで終わらせない</strong>ための仕組み。受講後に自主練を積み重ねて、実際に技術を身につけてもらうことが目的だ。</div>
-              <div class="mini-steps">
-                <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">セミナー受講日を選択</div></div>
-                <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">練習日を入力</div></div>
-                <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">最も撮れた画像をアップロード</div></div>
-              </div>
-              <div class="portal-card-desc" style="margin-top:12px;">アップロードすると、多田先生やバッジ取得者が<strong>Pass / Keep</strong>を判定。Keepの場合はフィードバックがもらえるので、それを元にまた練習。<strong>全断面Passすると、認定試験の受験資格</strong>が得られる。</div>
-              <div class="portal-card-note">
-                ・異なる日に練習する場合は、同じ被検者にエコーを当ててOK<br>
-                ・同じ日にまとめて練習する場合は、別の3人に当てて撮像すること<br><br>
-                ・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK
-              </div>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🔄</div>
-                <div class="portal-card-title">教育循環の仕組み</div>
-              </div>
-              <div class="portal-card-desc">教わる側 → 練習 → 試験合格 → 教える側。この循環を回し続けることで、部のレベルが世代をまたいで積み上がっていく。</div>
-            </div>
-          </div>
-
-          <!-- 02 手技・練習 -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">02 · Practice</div>
-            <div class="back-h2">手技練習に</div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🎥</div>
-                <div class="portal-card-title">Waza-ari <span class="portal-card-tag">外部コンテンツ</span></div>
-              </div>
-              <div class="portal-card-desc">GE社（Versana）が提供するPOCUS動画コンテンツ。「腹部領域」「心臓領域」「血管領域」「運動器/表在領域」「排泄ケア領域」について、非常に分かりやすい動画が見られる。異常所見や症例の解説もあるので、バンバン見てほしい。セミナーの予習にも復習にも最適。</div>
-              <a class="portal-card-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">Waza-ariを見る
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🩺</div>
-                <div class="portal-card-title">自主練ハンドブック</div>
-              </div>
-              <div class="portal-card-desc">部位ごとに、プローブ・当てる部位・見える画面を画像中心でまとめた自主練用のハンドブック。よくある失敗例・コツは部員みんなで書き込み・編集していく。<strong>自主練の時に最適！</strong></div>
-              <div class="portal-card-note">セミナー受講や先輩からの指導などで基本的な手技を一度学んだことがある方を対象としています。ゼロから学ぶための教材ではなく、復習や自主練習の補助として活用してください。</div>
-              <a class="portal-card-link" href="technique.html">自主練ハンドブックへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🎯</div>
-                <div class="portal-card-title">絵合わせ練習</div>
-              </div>
-              <div class="portal-card-desc">提示された超音波画像を実際に再現し、タイムを測る練習ツール。1人3枚×3人で計9枚のリレー形式。Student POCUS League（SPL）の競技種目の一つだが、<strong>出場しない人も練習に最適！</strong></div>
-              <div class="portal-card-note">第4回SPL戦績：機材トラブルありながら99秒で全国1位 🥇<br>練習では1:08を記録したことも。</div>
-              <a class="portal-card-link" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">絵合わせ練習アプリへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- 03 超音波の知識を深める -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">03 · Knowledge</div>
-            <div class="back-h2">超音波について詳しくなろう</div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">⚙️</div>
-                <div class="portal-card-title">工学系知識の学習 <span class="portal-card-tag">SPLで実績あり</span></div>
-              </div>
-              <div class="portal-card-desc">超音波とは何か？機器の原理・各モードの解説など。<strong>超音波専門医試験</strong>でも問われる範囲。これを理解するとエコーの見え方が変わる。</div>
-              <a class="portal-card-link" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">POCUS-LOOPアプリへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🏥</div>
-                <div class="portal-card-title">キャノン超音波講座</div>
-              </div>
-              <div class="portal-card-desc">キャノンメディカルによる超音波教育コンテンツ。体系的に学べる良質な無料リソース。</div>
-              <a class="portal-card-link" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">講座サイトへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">📖</div>
-                <div class="portal-card-title">JSUM Ultrasound Path</div>
-              </div>
-              <div class="portal-card-desc">日本超音波医学会によるeラーニング。専門医レベルの知識へのアクセス。</div>
-              <a class="portal-card-link" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">ULPATHへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- 04 POCUSを臨床で活かそう -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">04 · Activity</div>
-            <div class="back-h2">POCUSを臨床で活かそう</div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">📋</div>
-                <div class="portal-card-title">低学年向け疾患リスト</div>
-              </div>
-              <div class="portal-card-desc">POCUSで頻繁に扱う疾患の理解を深めるためのページ。概要・症状・POCUS所見から、関連する手技の練習ページへもジャンプできる。低学年がまず押さえておきたい疾患を部員みんなで整理していく。</div>
-              <a class="portal-card-link" href="disease.html">疾患リストへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🚑</div>
-                <div class="portal-card-title">POCUS特化メディカルラリー</div>
-              </div>
-              <div class="portal-card-desc">POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていく。</div>
-              <a class="portal-card-link" href="medical-rally.html">メディカルラリーへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🧠</div>
-                <div class="portal-card-title">臨床推論勉強会</div>
-              </div>
-              <div class="portal-card-desc">開催のお知らせ・過去の良問ストックへのアクセスはこちら。</div>
-              <div class="mini-steps">
-                <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">事前共有：症候・検査所見をメンバーに予告</div></div>
-                <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">個人ワーク：各自で鑑別疾患を挙げる</div></div>
-                <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">解説：外来での思考フロー（内科外来マニュアル参照）を解説</div></div>
-                <div class="mini-step"><div class="mini-step-num">4</div><div class="mini-step-text">グループ作問バトル：チームで作問・出題し合い、良問はアプリへ格納</div></div>
-              </div>
-              <div class="portal-card-note">問題ストックアプリ：開発予定</div>
-            </div>
-          </div>
-
-          <!-- 05 その他コンテンツ -->
-          <div class="back-section reveal">
-            <div class="back-eyebrow">05 · More</div>
-            <div class="back-h2">その他</div>
-
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🧭</div>
-                <div class="portal-card-title">FAST Journey</div>
-              </div>
-              <div class="portal-card-desc">完全初学者がFASTの基本を習得できるようになることを目標に作成したアプリ。</div>
-              <a class="portal-card-link" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">FAST Journeyへ
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-            </div>
-
-            <div class="portal-card disabled">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">🧬</div>
-                <div class="portal-card-title">解剖VR <span class="portal-card-tag muted">未定</span></div>
-              </div>
-              <div class="portal-card-desc">構想段階のコンテンツです。詳細は未定です。</div>
-            </div>
-
-          </div>
-
-          <div class="back-section reveal">
-            <div class="portal-card">
-              <div class="portal-card-head">
-                <div class="portal-card-icon">📣</div>
-                <div class="portal-card-title">新しい項目を追加したい方、大歓迎です</div>
-              </div>
-              <div class="portal-card-desc">「こんな項目があったらいいな」「自分の作ったアプリをここに追加したい」という方は、ぜひ開発者までご相談ください。開発者はプログラミング知識ゼロの状態から、このアプリとアプリ内にあるすべての機能をひとりで作り上げました。アプリを大きくしたり、改善したり、将来引き継いだりしてくれる方には、ノウハウを惜しみなくお伝えします。アプリ開発に興味のある方も募集中です。</div>
-            </div>
-          </div>
-
-          <div class="back-footer">
-            <img src="assets/logo-icon-dark.png" alt="" style="height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;">
-            © 2026 K-PICS 部員専用ポータル
-          </div>
+        <div class="footer-note">
+          <img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。<br>
+          © 2026 K-PICS 部員専用ポータル
         </div>
       </div>
 
     </div>
   </div>
+
 </div>
 
 <!-- 下部タブバー -->
@@ -1299,43 +1103,8 @@ function closeGuideModalOnOverlay(e){
   if(e.target.id === 'guide-modal-overlay') closeGuideModal();
 }
 
-// ===================== 表⇄裏 フリップ制御 =====================
-let _isFlipped = false;
-function toggleFlip(){
-  _isFlipped = !_isFlipped;
-  const card = document.getElementById('flip-card');
-  card.classList.toggle('is-flipped', _isFlipped);
-  dismissFlipHint();
-
-  // 反転後に見える面を必ず先頭から表示する
-  const targetFace = _isFlipped
-    ? card.querySelector('.flip-face-back')
-    : card.querySelector('.flip-face-front');
-  if(targetFace) targetFace.scrollTop = 0;
-  window.scrollTo(0,0);
-
-  // ボタンの見た目を、今いる面の「行き先」が分かるように切り替える
-  const btn = document.getElementById('flip-toggle-btn');
-  const btnText = document.getElementById('flip-toggle-text');
-  btn.setAttribute('aria-label', _isFlipped ? 'ホームに戻る' : 'ポータルを見る');
-  if(btnText) btnText.textContent = _isFlipped ? 'ホーム' : 'ポータル';
-
-  // 裏面（ポータル）に切り替わった時、ヒーロー演出を毎回最初から再生する
-  if(_isFlipped) playBackHeroAnim();
-}
-
-// ===================== 裏面：スクロールで順番に浮き上がる演出 =====================
+// ===================== スクロールで順番に浮き上がる演出 =====================
 let _revealObserver = null;
-function playBackHeroAnim(){
-  const hero = document.getElementById('back-hero-anim');
-  if(!hero) return;
-  hero.classList.remove('in-view');
-  // 一度クラスを外してから再度付けることで、毎回アニメーションを再生させる
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=> hero.classList.add('in-view'));
-  });
-}
-
 function setupRevealObserver(){
   const targets = document.querySelectorAll('.reveal');
   if(!targets.length) return;
@@ -1344,7 +1113,7 @@ function setupRevealObserver(){
     entries.forEach(entry=>{
       if(entry.isIntersecting){
         entry.target.classList.add('in-view');
-        _revealObserver.unobserve(entry.target); // 一度表示したら監視終了（毎回戻らないように）
+        _revealObserver.unobserve(entry.target); // 一度表示したら監視終了
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
@@ -1352,45 +1121,71 @@ function setupRevealObserver(){
 }
 window.addEventListener('DOMContentLoaded', setupRevealObserver);
 
-// ===================== ポータルボタンの説明吹き出し（初回のみ） =====================
-const FLIP_HINT_KEY = 'kpics_flip_hint_seen_v1';
-function dismissFlipHint(){
-  const hint = document.getElementById('flip-hint');
-  if(!hint) return;
-  hint.classList.remove('show');
-  try{ localStorage.setItem(FLIP_HINT_KEY, '1'); }catch(e){}
-}
-(function initFlipHint(){
-  let seen = false;
-  try{ seen = !!localStorage.getItem(FLIP_HINT_KEY); }catch(e){}
-  if(seen) return;
-  window.addEventListener('DOMContentLoaded', function(){
-    const hint = document.getElementById('flip-hint');
-    if(!hint) return;
-    setTimeout(()=> hint.classList.add('show'), 1000);
-    setTimeout(dismissFlipHint, 7000);
-  });
+// ===================== DNAスクロール演出 =====================
+// スクロール量に合わせて、背景のDNA画像が回転・拡大しながら
+// フェードイン／フェードアウトする。動きを減らす設定(OSのアクセシビリティ)の
+// 端末では回転させず、うっすら表示するだけにする。
+(function initDnaScroll(){
+  const zone = document.getElementById('dna-zone');
+  const img  = document.getElementById('dna-img');
+  if(!zone || !img) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    img.style.opacity = '.3';
+    return;
+  }
+
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const rect = zone.getBoundingClientRect();
+    const vh = window.innerHeight;
+
+    // ゾーン内をどれだけスクロールしたかの進捗（0〜1）
+    const total = Math.max(rect.height - vh, 1);
+    let p = (-rect.top) / total;
+    p = Math.min(1, Math.max(0, p));
+
+    // 回転と拡大
+    const rot = p * 220;            // ゾーンを通過する間に220度回転
+    const sc  = 1 + p * 0.28;       // 少しずつ拡大
+    img.style.transform = `translate(-50%,-50%) rotate(${rot}deg) scale(${sc})`;
+
+    // ゾーンの出入りで自然にフェード
+    const enter = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.7)));
+    const exit  = Math.min(1, Math.max(0, rect.bottom / (vh * 0.7)));
+    const op = 0.5 * Math.min(enter, exit);
+    img.style.opacity = op.toFixed(3);
+  }
+  function onScroll(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('DOMContentLoaded', update);
+  update();
 })();
 
 // ===================== 画面が必ず最上部から表示されるようにする =====================
-// PWA起動時・ホーム画面復帰時などにスクロール位置がズレてヘッダーが
-// 隠れてしまう（ログアウトボタンが押せない）問題への対策
+// PWA起動時などにスクロール位置がズレてヘッダーが隠れてしまう問題への対策。
+// （ページが長くなったため、アプリ切り替えで戻ってきた時のジャンプは
+//  起こらないよう、visibilitychangeでのリセットは行わない）
 function scrollAllToTop(){
   window.scrollTo(0,0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
 }
 window.addEventListener('load', scrollAllToTop);
-window.addEventListener('pageshow', scrollAllToTop);
-document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible') scrollAllToTop();
+window.addEventListener('pageshow', function(e){
+  // 戻る操作でのキャッシュ復帰時は位置を保持し、通常表示時のみ最上部へ
+  if(!e.persisted) scrollAllToTop();
 });
 
 // ===================== 初回起動時にロゴ画像が描画されない不具合への対策 =====================
-// iOSのPWAをスワイプで完全終了→再起動した直後、3D変換(flip-card)やアニメーション(splash)
-// が関わる要素内の画像が、最初の1回だけ描画されないことがあるWebKit側の既知の不具合がある。
-// ページ表示時に画面全体へ一瞬だけ無害なtransformを与えて戻すことで、強制的に
-// 再描画(repaint)させ、ロゴが表示されないまま固まってしまう現象を回避する。
+// iOSのPWA再起動直後、アニメーションが関わる要素内の画像が最初の1回だけ
+// 描画されないWebKit側の既知の不具合への対策。一瞬だけ無害なtransformを
+// 与えて戻すことで強制的に再描画させる。
 function forceRepaint(){
   document.body.style.transform = 'translateZ(0)';
   requestAnimationFrame(()=>{
