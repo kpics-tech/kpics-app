@@ -207,27 +207,29 @@ button{font-family:inherit;}
   font-family:"JetBrains Mono",monospace;letter-spacing:.02em;
 }
 
-/* セクション写真バナー（プローブ画像など） */
-.sec-banner{
-  position:relative;border-radius:12px;overflow:hidden;
-  border:1px solid var(--border);margin:24px 0 8px;
+/* ===== 写真をうっすら敷くゾーン（クイックアクセス内） ===== */
+.qa-photo{
+  position:relative;margin:14px -20px 0;padding:20px 20px 16px;overflow:hidden;
 }
-.sec-banner img{width:100%;height:148px;object-fit:cover;}
-.sec-banner-shade{
-  position:absolute;inset:0;
-  background:linear-gradient(to top, rgba(12,12,12,.92) 8%, rgba(12,12,12,.25) 55%, rgba(12,12,12,.15));
+.qa-photo-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:.15;pointer-events:none;
 }
-.sec-banner-text{position:absolute;left:16px;right:16px;bottom:13px;}
-.sec-banner-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.18em;
-  color:var(--orange);margin-bottom:5px;
+.qa-photo-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom, var(--black) 0%, transparent 16%, transparent 84%, var(--black) 100%);
 }
-.sec-banner-title{font-size:16.5px;font-weight:900;letter-spacing:.01em;}
+.qa-photo-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+.qa-photo-inner .sec-label:first-child{margin-top:0;}
+.qa-photo .menu-card{background:rgba(24,24,24,.88);}
+.qa-photo .menu-card:hover{background:rgba(32,32,32,.92);}
+.qa-photo .menu-card.primary{background:linear-gradient(135deg, rgba(232,160,32,.12), rgba(24,24,24,.9) 60%);}
+.qa-photo .menu-card.disabled:hover{background:rgba(24,24,24,.88);}
 
 .install-banner{
   display:flex;align-items:flex-start;gap:12px;background:var(--card);
   border:1px solid rgba(232,160,32,.3);border-radius:12px;padding:14px 14px;
-  margin-bottom:24px;cursor:pointer;transition:all .15s;
+  margin-bottom:10px;cursor:pointer;transition:all .15s;
 }
 .install-banner:hover{background:var(--card-hover);border-color:var(--orange);}
 .install-banner-icon{font-size:20px;line-height:1.3;flex-shrink:0;}
@@ -239,50 +241,51 @@ button{font-family:inherit;}
   padding:2px 4px;flex-shrink:0;
 }
 
-/* ===================== DNA STORY ZONE ===================== */
-.dna-zone{position:relative;margin-top:34px;}
-.dna-sticky{
+/* ===================== ストーリーゾーン（らせん背景） ===================== */
+.story-zone{position:relative;margin-top:30px;}
+.story-sticky{
   position:sticky;top:0;height:100vh;height:100dvh;margin-bottom:-100vh;margin-bottom:-100dvh;
   z-index:0;overflow:hidden;pointer-events:none;
 }
-.dna-glow{
+.story-glow{
   position:absolute;left:50%;top:50%;width:120vw;max-width:760px;aspect-ratio:1;
   transform:translate(-50%,-50%);
   background:radial-gradient(circle, rgba(232,160,32,.10), transparent 62%);
 }
-.dna-img{
+.story-bg-img{
   position:absolute;left:50%;top:50%;
   width:min(128vw,600px);height:auto;
   transform:translate(-50%,-50%);
   opacity:0;will-change:transform,opacity;
   filter:saturate(1.05);
 }
-.dna-fade-top{
+.story-fade-top{
   position:absolute;left:0;right:0;top:0;height:130px;
   background:linear-gradient(to bottom, var(--black), transparent);
 }
-.dna-fade-bottom{
+.story-fade-bottom{
   position:absolute;left:0;right:0;bottom:0;height:130px;
   background:linear-gradient(to top, var(--black), transparent);
 }
-.dna-content{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 20px 40px;}
+.story-content{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 20px 40px;}
 
 /* ゾーン冒頭のヒーロー */
-.dna-hero{
-  min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+.story-hero{
+  min-height:76vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:60px 0 40px;
 }
-.dna-hero-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.26em;
-  color:var(--orange);margin-bottom:18px;
+.story-hero-logo{width:84px;margin:0 auto 22px;filter:drop-shadow(0 6px 24px rgba(232,160,32,.25));}
+.story-hero-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;
+  color:var(--text-muted);margin-bottom:16px;
 }
-.dna-hero-title{
+.story-hero-title{
   font-weight:900;font-size:clamp(30px,9vw,46px);line-height:1.35;letter-spacing:.01em;
   text-shadow:0 2px 24px rgba(0,0,0,.8);
 }
-.dna-hero-title .accent{color:var(--orange);}
-.dna-hero-sub{
-  font-size:13px;color:var(--text-muted);line-height:1.9;margin-top:18px;
+.story-hero-title .accent{color:var(--orange);}
+.story-hero-sub{
+  font-size:13.5px;color:var(--text-muted);line-height:1.9;margin-top:18px;
   max-width:420px;text-shadow:0 1px 12px rgba(0,0,0,.9);
 }
 .scroll-hint{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:38px;opacity:.6;}
@@ -297,15 +300,19 @@ button{font-family:inherit;}
   100%{transform:scaleY(.4);opacity:.3;}
 }
 
-.story-section{margin-bottom:64px;}
+.story-section{margin-bottom:56px;}
 .story-section:last-child{margin-bottom:0;}
 .story-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
   color:var(--orange);margin-bottom:10px;font-weight:600;
 }
 .story-h2{
   font-weight:900;font-size:23px;line-height:1.4;margin-bottom:18px;letter-spacing:.01em;
   text-shadow:0 2px 18px rgba(0,0,0,.8);
+}
+.story-lead{
+  font-size:12.5px;color:var(--text-muted);line-height:1.75;
+  text-shadow:0 1px 10px rgba(0,0,0,.9);
 }
 
 /* スクロールリビール */
@@ -318,7 +325,7 @@ button{font-family:inherit;}
   .reveal{opacity:1;transform:none;transition:none;}
 }
 
-/* ストーリーゾーン内のカード（DNAが透けるよう半透明ベース） */
+/* ストーリーゾーン内のカード（背景がほんのり透けるよう半透明ベース） */
 .portal-card{
   background:rgba(18,18,18,.9);border:1px solid var(--border);border-radius:12px;
   padding:18px 18px 20px;margin-bottom:10px;position:relative;
@@ -337,6 +344,7 @@ button{font-family:inherit;}
   border:1px solid rgba(232,160,32,.25);padding:2px 7px;border-radius:4px;
   font-family:"JetBrains Mono",monospace;letter-spacing:.02em;white-space:nowrap;
 }
+.portal-card-tag.muted{color:var(--text-dim);background:rgba(12,12,12,.85);border-color:var(--border-light);}
 .portal-card-link{
   display:inline-flex;align-items:center;gap:5px;margin-top:12px;
   font-size:12.5px;font-weight:700;color:var(--orange);text-decoration:none;
@@ -350,9 +358,10 @@ button{font-family:inherit;}
 .philosophy-note{
   background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.3);border-radius:10px;
   color:var(--text);font-size:12.5px;line-height:1.9;padding:16px 16px;text-align:center;
+  margin-top:14px;
 }
 
-/* 教育循環：DNAらせんに沿うステップ */
+/* 教育循環：らせんに沿うように左右にずれるステップ */
 .cycle-grid{display:flex;flex-direction:column;gap:0;margin-top:20px;position:relative;}
 .cycle-item{
   display:flex;align-items:flex-start;gap:14px;background:rgba(18,18,18,.9);
@@ -389,20 +398,6 @@ button{font-family:inherit;}
   display:flex;align-items:center;justify-content:center;
 }
 .mini-step-text{font-size:12px;color:var(--text-muted);line-height:1.5;}
-
-/* 実績（RECORDS） */
-.records-card{
-  background:rgba(18,18,18,.9);border:1px solid rgba(232,160,32,.35);border-radius:14px;
-  padding:24px 20px;text-align:center;box-shadow:0 0 40px rgba(232,160,32,.08);
-}
-.records-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange);margin-bottom:8px;}
-.records-num{
-  font-family:"Bebas Neue",sans-serif;font-size:76px;line-height:1;color:var(--text);
-  text-shadow:0 0 40px rgba(232,160,32,.35);
-}
-.records-num .unit{font-size:30px;color:var(--orange);margin-left:4px;}
-.records-label{font-size:13px;font-weight:700;margin-top:8px;}
-.records-sub{font-size:11px;color:var(--text-muted);margin-top:5px;line-height:1.7;}
 
 .footer-note{
   text-align:center;font-size:11px;color:var(--text-dim);margin-top:44px;line-height:1.8;
@@ -519,7 +514,7 @@ button{font-family:inherit;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
 
-body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bottom));}
+body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bottom));}
 
 </style>
 </head>
@@ -616,100 +611,102 @@ body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bott
       <button class="install-banner-close" onclick="event.stopPropagation(); dismissInstallBanner()" aria-label="閉じる">✕</button>
     </div>
 
-    <div class="sec-label">はじめに</div>
-    <div class="menu-group">
-      <div class="menu-card" onclick="openGuideModal()" role="button" tabindex="0">
-        <div class="menu-icon solid">📋</div>
-        <div class="menu-body">
-          <div class="menu-title">K-PICSの部員として</div>
-          <div class="menu-desc">まず最初に必ずお読みください</div>
+    <!-- 人物写真をうっすら敷くゾーン：はじめに〜手技練習に -->
+    <div class="qa-photo">
+      <img class="qa-photo-img" src="assets/hero-practice.jpg" alt="" style="object-position:center 30%;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
+
+        <div class="sec-label">はじめに</div>
+        <div class="menu-group">
+          <div class="menu-card" onclick="openGuideModal()" role="button" tabindex="0">
+            <div class="menu-icon solid">📋</div>
+            <div class="menu-body">
+              <div class="menu-title">K-PICSの部員として</div>
+              <div class="menu-desc">まず最初に必ずお読みください</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
         </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+        <div class="sec-label">認定試験</div>
+        <div class="menu-group">
+          <a class="menu-card primary" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">
+            <div class="menu-icon solid">🏆</div>
+            <div class="menu-body">
+              <div class="menu-title">認定試験受験予定の方はこちら <span class="badge-ext">認定アプリへ</span></div>
+              <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="sec-label">手技練習に</div>
+        <div class="menu-group">
+          <a class="menu-card" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
+            <div class="menu-icon">🎥</div>
+            <div class="menu-body">
+              <div class="menu-title">Waza-ari <span class="badge-ext">外部サイト</span></div>
+              <div class="menu-desc">GE社が提供するPOCUS動画コンテンツ。予習・復習に</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="technique.html">
+            <div class="menu-icon">🩺</div>
+            <div class="menu-body">
+              <div class="menu-title">自主練ハンドブック</div>
+              <div class="menu-desc">プローブ・当てる部位・見える画面を画像でサッと確認</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">
+            <div class="menu-icon">🎯</div>
+            <div class="menu-body">
+              <div class="menu-title">絵合わせアプリ</div>
+              <div class="menu-desc">超音波画像を再現してタイムを測る練習ツール</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
       </div>
     </div>
 
-    <!-- 認定試験：人物写真バナー -->
-    <div class="sec-banner">
-      <img src="assets/hero-practice.jpg" alt="" style="object-position:center 56%;" loading="lazy">
-      <div class="sec-banner-shade"></div>
-      <div class="sec-banner-text">
-        <div class="sec-banner-eyebrow">CERTIFICATION</div>
-        <div class="sec-banner-title">認定試験</div>
-      </div>
-    </div>
-    <div class="menu-group">
-      <a class="menu-card primary" href="https://wj-medtech.github.io/requirements/" target="_blank" rel="noopener">
-        <div class="menu-icon solid">🏆</div>
-        <div class="menu-body">
-          <div class="menu-title">認定試験受験予定の方はこちら <span class="badge-ext">認定アプリへ</span></div>
-          <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
+    <!-- プローブ写真をうっすら敷くゾーン：超音波について詳しくなろう -->
+    <div class="qa-photo">
+      <img class="qa-photo-img" src="assets/hero-probe.jpg" alt="" style="opacity:.18;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
 
-    <div class="sec-label">手技練習に</div>
-    <div class="menu-group">
-      <a class="menu-card" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-        <div class="menu-icon">🎥</div>
-        <div class="menu-body">
-          <div class="menu-title">Waza-ari <span class="badge-ext">外部サイト</span></div>
-          <div class="menu-desc">GE社が提供するPOCUS動画コンテンツ。予習・復習に</div>
+        <div class="sec-label">超音波について詳しくなろう</div>
+        <div class="menu-group">
+          <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
+            <div class="menu-icon">⚙️</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS-LOOP</div>
+              <div class="menu-desc">超音波の原理・各モードを学ぶ</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
+            <div class="menu-icon">🏥</div>
+            <div class="menu-body">
+              <div class="menu-title">キャノン超音波講座</div>
+              <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
+            <div class="menu-icon">📖</div>
+            <div class="menu-body">
+              <div class="menu-title">JSUM Ultrasound Path</div>
+              <div class="menu-desc">日本超音波医学会のeラーニング</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="technique.html">
-        <div class="menu-icon">🩺</div>
-        <div class="menu-body">
-          <div class="menu-title">自主練ハンドブック</div>
-          <div class="menu-desc">プローブ・当てる部位・見える画面を画像でサッと確認</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">
-        <div class="menu-icon">🎯</div>
-        <div class="menu-body">
-          <div class="menu-title">絵合わせアプリ</div>
-          <div class="menu-desc">超音波画像を再現してタイムを測る。SPL全国1位の種目</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
 
-    <!-- プローブ画像バナー -->
-    <div class="sec-banner">
-      <img src="assets/hero-probe.jpg" alt="" loading="lazy">
-      <div class="sec-banner-shade"></div>
-      <div class="sec-banner-text">
-        <div class="sec-banner-eyebrow">PHYSICS &amp; PRINCIPLES</div>
-        <div class="sec-banner-title">超音波について詳しくなろう</div>
       </div>
-    </div>
-    <div class="menu-group">
-      <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
-        <div class="menu-icon">⚙️</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS-LOOP</div>
-          <div class="menu-desc">超音波の原理・各モードを学ぶ。専門医試験でも問われる範囲</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
-        <div class="menu-icon">🏥</div>
-        <div class="menu-body">
-          <div class="menu-title">キャノン超音波講座</div>
-          <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
-        <div class="menu-icon">📖</div>
-        <div class="menu-body">
-          <div class="menu-title">JSUM Ultrasound Path</div>
-          <div class="menu-desc">日本超音波医学会のeラーニング</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
 
     <div class="sec-label">POCUSを臨床で活かそう</div>
@@ -760,68 +757,48 @@ body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bott
 
   </div>
 
-  <!-- ============ DNAストーリーゾーン ============ -->
-  <div class="dna-zone" id="dna-zone">
+  <!-- ============ ストーリーゾーン（読み物ポータル） ============ -->
+  <div class="story-zone" id="story-zone">
 
-    <!-- スクロールと共に回転するDNA背景 -->
-    <div class="dna-sticky" aria-hidden="true">
-      <div class="dna-glow"></div>
-      <img class="dna-img" id="dna-img" src="assets/bg-dna.jpg" alt="" loading="lazy">
-      <div class="dna-fade-top"></div>
-      <div class="dna-fade-bottom"></div>
+    <!-- スクロールと共に回転するらせん背景 -->
+    <div class="story-sticky" aria-hidden="true">
+      <div class="story-glow"></div>
+      <img class="story-bg-img" id="story-bg-img" src="assets/bg-dna.jpg" alt="" loading="lazy">
+      <div class="story-fade-top"></div>
+      <div class="story-fade-bottom"></div>
     </div>
 
-    <div class="dna-content">
+    <div class="story-content">
 
       <!-- ゾーン冒頭 -->
-      <div class="dna-hero">
-        <div class="dna-hero-eyebrow">K-PICS — OUR DNA</div>
-        <div class="dna-hero-title">学びを、<span class="accent">次の代へ。</span></div>
-        <div class="dna-hero-sub">先輩が積み上げてきた知識・技術・経験を受け継ぎ、<br>次の世代へ確実につないでいく。<br>それがK-PICSに流れるDNA。</div>
+      <div class="story-hero">
+        <img class="story-hero-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
+        <div class="story-hero-eyebrow">K - P I C S 　部員専用ポータル</div>
+        <div class="story-hero-title">学びを、<span class="accent">次の代へ。</span></div>
+        <div class="story-hero-sub">認定試験・エコー手技・勉強会・競技練習など<br>K-PICSの学習リソースへアクセスしよう</div>
         <div class="scroll-hint">
           <span class="scroll-hint-label">SCROLL</span>
           <span class="scroll-hint-line"></span>
         </div>
       </div>
 
-      <!-- 理念 -->
+      <!-- このポータルの目的 -->
       <div class="story-section reveal">
-        <div class="story-eyebrow">PHILOSOPHY</div>
-        <div class="story-h2">超音波の先にある<span style="color:var(--orange);">医療人育成</span></div>
-        <div class="portal-card">
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            K-PICSは、超音波を学ぶためだけの団体ではありません。<br>
-            私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。
-          </div>
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            学んだことは地域へ還元します。市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。そして<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。
-          </div>
-          <div class="portal-card-desc">
-            これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。その歴史に感謝しながら、時代に合わせて進化し続けます。
-          </div>
-        </div>
-        <div class="philosophy-note">
-          超音波を学ぶために活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。
-        </div>
-      </div>
-
-      <!-- 教育循環 -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">EDUCATION CYCLE</div>
-        <div class="story-h2">受け継がれる、<span style="color:var(--orange);">教育の循環</span></div>
-        <div class="portal-card-desc" style="text-shadow:0 1px 10px rgba(0,0,0,.9);">「やってみた人が教える」学生主体の教育循環システム。この循環を回し続けることで、部のレベルが世代をまたいで積み上がっていく。</div>
+        <div class="story-eyebrow">このポータルの目的</div>
+        <div class="story-h2">学びを<span style="color:var(--orange);">次の代へ</span>と引き継いでいく</div>
+        <div class="story-lead">先輩が積み上げてきた知識・技術・経験を、このポータルに集約し、次の世代へ確実につなぐ。K-PICSは「やってみた人が教える」学生主体の教育循環システムを目指している。</div>
         <div class="cycle-grid">
           <div class="cycle-item">
             <div class="cycle-num">1</div>
             <div class="cycle-body">
-              <div class="cycle-title">練習・学習する</div>
-              <div class="cycle-desc">このアプリのリソースを活用して技術・知識を磨く</div>
+              <div class="cycle-title">学習・練習する</div>
+              <div class="cycle-desc">このポータルのリソースを活用して技術・知識を磨く</div>
             </div>
           </div>
           <div class="cycle-item">
             <div class="cycle-num">2</div>
             <div class="cycle-body">
-              <div class="cycle-title">認定試験を受ける</div>
+              <div class="cycle-title">認定試験に挑む</div>
               <div class="cycle-desc">一定水準に達したと評価され、バッジが付与される</div>
             </div>
           </div>
@@ -829,23 +806,50 @@ body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bott
             <div class="cycle-num">3</div>
             <div class="cycle-body">
               <div class="cycle-title">指導者側へまわる</div>
-              <div class="cycle-desc">バッジ取得者が後輩の指導を担い、知識を引き継ぐ</div>
+              <div class="cycle-desc">バッジ取得者が後輩の指導を担い、学びを引き継ぐ</div>
             </div>
           </div>
           <div class="cycle-item">
             <div class="cycle-num">4</div>
             <div class="cycle-body">
-              <div class="cycle-title">知見をアプリへ</div>
-              <div class="cycle-desc">発見したコツ・良問・台本をこのアプリに蓄積する</div>
+              <div class="cycle-title">学びを深め、広げる</div>
+              <div class="cycle-desc">より深い学びと経験を積み、後輩への指導、他大学との連携、地域への還元へとつなげていく</div>
             </div>
           </div>
         </div>
         <div class="cycle-loop">↻ そしてまた、次の代へ</div>
       </div>
 
-      <!-- 認定試験制度 -->
+      <!-- K-PICSの理念 -->
       <div class="story-section reveal">
-        <div class="story-eyebrow">CERTIFICATION</div>
+        <div class="story-eyebrow">K-PICSの理念</div>
+        <div class="story-h2">超音波の先にある<span style="color:var(--orange);">医療人育成</span></div>
+        <div class="portal-card">
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            K-PICSは、超音波を学ぶためだけの団体ではありません。<br>
+            私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。私たちは超音波だけでなく、救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。
+          </div>
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            また、知識や資格は取得して終わりではありません。学んだことを地域へ還元し、市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。
+          </div>
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            K-PICSは大学の中だけで完結する団体ではありません。地域の医療機関、消防、行政、教育機関、企業、他大学、全国の学生団体など、多くの方々とのつながりによって成り立っています。私たちはそのつながりを大切にしながら、人と人を結ぶハブとして活動していきます。
+          </div>
+          <div class="portal-card-desc" style="margin-bottom:14px;">
+            そして、和歌山だけでなく全国にも目を向けます。<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。
+          </div>
+          <div class="portal-card-desc">
+            これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。私たちはその歴史に感謝しながら、時代に合わせて進化し続けます。
+          </div>
+        </div>
+        <div class="philosophy-note">
+          超音波を学ぶために活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。
+        </div>
+      </div>
+
+      <!-- 01 認定試験制度 -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">01 · Certification</div>
         <div class="story-h2">認定試験制度</div>
 
         <div class="portal-card">
@@ -878,17 +882,161 @@ body.has-tabbar .dna-content{padding-bottom:calc(70px + env(safe-area-inset-bott
             ・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK
           </div>
         </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🔄</div>
+            <div class="portal-card-title">教育循環の仕組み</div>
+          </div>
+          <div class="portal-card-desc">教わる側 → 練習 → 試験合格 → 教える側。この循環を回し続けることで、部のレベルが世代をまたいで積み上がっていく。</div>
+        </div>
       </div>
 
-      <!-- 実績 -->
+      <!-- 02 手技・練習 -->
       <div class="story-section reveal">
-        <div class="story-eyebrow">RECORDS</div>
-        <div class="story-h2">積み重ねの、証明</div>
-        <div class="records-card">
-          <div class="records-eyebrow">STUDENT POCUS LEAGUE — 絵合わせ</div>
-          <div class="records-num bebas">99<span class="unit">SEC</span></div>
-          <div class="records-label">第4回SPL 全国1位 🥇</div>
-          <div class="records-sub">機材トラブルがありながらも99秒で全国制覇。<br>練習では1:08を記録したことも。次の記録を塗り替えるのは、あなた。</div>
+        <div class="story-eyebrow">02 · Practice</div>
+        <div class="story-h2">手技練習に</div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🎥</div>
+            <div class="portal-card-title">Waza-ari <span class="portal-card-tag">外部コンテンツ</span></div>
+          </div>
+          <div class="portal-card-desc">GE社（Versana）が提供するPOCUS動画コンテンツ。「腹部領域」「心臓領域」「血管領域」「運動器/表在領域」「排泄ケア領域」について、非常に分かりやすい動画が見られる。異常所見や症例の解説もあるので、バンバン見てほしい。セミナーの予習にも復習にも最適。</div>
+          <a class="portal-card-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">Waza-ariを見る
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🩺</div>
+            <div class="portal-card-title">自主練ハンドブック</div>
+          </div>
+          <div class="portal-card-desc">部位ごとに、プローブ・当てる部位・見える画面を画像中心でまとめた自主練用のハンドブック。よくある失敗例・コツは部員みんなで書き込み・編集していく。<strong>自主練の時に最適！</strong></div>
+          <div class="portal-card-note">セミナー受講や先輩からの指導などで基本的な手技を一度学んだことがある方を対象としています。ゼロから学ぶための教材ではなく、復習や自主練習の補助として活用してください。</div>
+          <a class="portal-card-link" href="technique.html">自主練ハンドブックへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🎯</div>
+            <div class="portal-card-title">絵合わせ練習</div>
+          </div>
+          <div class="portal-card-desc">提示された超音波画像を実際に再現し、タイムを測る練習ツール。1人3枚×3人で計9枚のリレー形式。Student POCUS League（SPL）の競技種目の一つだが、<strong>出場しない人も練習に最適！</strong></div>
+          <div class="portal-card-note">第4回SPL戦績：機材トラブルありながら99秒で全国1位 🥇<br>練習では1:08を記録したことも。</div>
+          <a class="portal-card-link" href="https://wj-medtech.github.io/-/" target="_blank" rel="noopener">絵合わせ練習アプリへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 03 超音波の知識を深める -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">03 · Knowledge</div>
+        <div class="story-h2">超音波について詳しくなろう</div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">⚙️</div>
+            <div class="portal-card-title">工学系知識の学習 <span class="portal-card-tag">SPLで実績あり</span></div>
+          </div>
+          <div class="portal-card-desc">超音波とは何か？機器の原理・各モードの解説など。<strong>超音波専門医試験</strong>でも問われる範囲。これを理解するとエコーの見え方が変わる。</div>
+          <a class="portal-card-link" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">POCUS-LOOPアプリへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🏥</div>
+            <div class="portal-card-title">キャノン超音波講座</div>
+          </div>
+          <div class="portal-card-desc">キャノンメディカルによる超音波教育コンテンツ。体系的に学べる良質な無料リソース。</div>
+          <a class="portal-card-link" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">講座サイトへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">📖</div>
+            <div class="portal-card-title">JSUM Ultrasound Path</div>
+          </div>
+          <div class="portal-card-desc">日本超音波医学会によるeラーニング。専門医レベルの知識へのアクセス。</div>
+          <a class="portal-card-link" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">ULPATHへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 04 POCUSを臨床で活かそう -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">04 · Activity</div>
+        <div class="story-h2">POCUSを臨床で活かそう</div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">📋</div>
+            <div class="portal-card-title">低学年向け疾患リスト</div>
+          </div>
+          <div class="portal-card-desc">POCUSで頻繁に扱う疾患の理解を深めるためのページ。概要・症状・POCUS所見から、関連する手技の練習ページへもジャンプできる。低学年がまず押さえておきたい疾患を部員みんなで整理していく。</div>
+          <a class="portal-card-link" href="disease.html">疾患リストへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🚑</div>
+            <div class="portal-card-title">POCUS特化メディカルラリー</div>
+          </div>
+          <div class="portal-card-desc">POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていく。</div>
+          <a class="portal-card-link" href="medical-rally.html">メディカルラリーへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🧠</div>
+            <div class="portal-card-title">臨床推論勉強会</div>
+          </div>
+          <div class="portal-card-desc">開催のお知らせ・過去の良問ストックへのアクセスはこちら。</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">事前共有：症候・検査所見をメンバーに予告</div></div>
+            <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">個人ワーク：各自で鑑別疾患を挙げる</div></div>
+            <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">解説：外来での思考フロー（内科外来マニュアル参照）を解説</div></div>
+            <div class="mini-step"><div class="mini-step-num">4</div><div class="mini-step-text">グループ作問バトル：チームで作問・出題し合い、良問はアプリへ格納</div></div>
+          </div>
+          <div class="portal-card-note">問題ストックアプリ：開発予定</div>
+        </div>
+      </div>
+
+      <!-- 05 その他コンテンツ -->
+      <div class="story-section reveal">
+        <div class="story-eyebrow">05 · More</div>
+        <div class="story-h2">その他</div>
+
+        <div class="portal-card">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🧭</div>
+            <div class="portal-card-title">FAST Journey</div>
+          </div>
+          <div class="portal-card-desc">完全初学者がFASTの基本を習得できるようになることを目標に作成したアプリ。</div>
+          <a class="portal-card-link" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">FAST Journeyへ
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="portal-card disabled">
+          <div class="portal-card-head">
+            <div class="portal-card-icon">🧬</div>
+            <div class="portal-card-title">解剖VR <span class="portal-card-tag muted">未定</span></div>
+          </div>
+          <div class="portal-card-desc">構想段階のコンテンツです。詳細は未定です。</div>
         </div>
       </div>
 
@@ -1121,13 +1269,13 @@ function setupRevealObserver(){
 }
 window.addEventListener('DOMContentLoaded', setupRevealObserver);
 
-// ===================== DNAスクロール演出 =====================
-// スクロール量に合わせて、背景のDNA画像が回転・拡大しながら
-// フェードイン／フェードアウトする。動きを減らす設定(OSのアクセシビリティ)の
+// ===================== らせん背景のスクロール演出 =====================
+// スクロール量に合わせて、ストーリーゾーン背景のらせん画像が回転・拡大しながら
+// フェードイン／フェードアウトする。「動きを減らす」設定(OSのアクセシビリティ)の
 // 端末では回転させず、うっすら表示するだけにする。
-(function initDnaScroll(){
-  const zone = document.getElementById('dna-zone');
-  const img  = document.getElementById('dna-img');
+(function initStoryScroll(){
+  const zone = document.getElementById('story-zone');
+  const img  = document.getElementById('story-bg-img');
   if(!zone || !img) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
