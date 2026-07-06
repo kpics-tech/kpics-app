@@ -213,7 +213,12 @@ button{font-family:inherit;}
 }
 .qa-photo-img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  opacity:.15;pointer-events:none;
+  opacity:.3;pointer-events:none;
+}
+/* スクロールで横に流れる写真（救急車の駆け抜け演出用） */
+.qa-photo-img.qa-pan{
+  width:155%;max-width:none;right:auto;
+  will-change:transform;
 }
 .qa-photo-shade{
   position:absolute;inset:0;pointer-events:none;
@@ -674,7 +679,7 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
 
     <!-- プローブ写真をうっすら敷くゾーン：超音波について詳しくなろう -->
     <div class="qa-photo">
-      <img class="qa-photo-img" src="assets/hero-probe.jpg" alt="" style="opacity:.18;" loading="lazy">
+      <img class="qa-photo-img" src="assets/hero-probe.jpg" alt="" style="opacity:.32;" loading="lazy">
       <div class="qa-photo-shade"></div>
       <div class="qa-photo-inner">
 
@@ -709,49 +714,67 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
       </div>
     </div>
 
-    <div class="sec-label">POCUSを臨床で活かそう</div>
-    <div class="menu-group">
-      <a class="menu-card" href="disease.html">
-        <div class="menu-icon">📋</div>
-        <div class="menu-body">
-          <div class="menu-title">低学年向け疾患リスト</div>
-          <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
+    <!-- 救急車写真：スクロールで駆け抜けるゾーン -->
+    <div class="qa-photo">
+      <img class="qa-photo-img qa-pan" src="assets/bg-ambulance.jpg" alt="" style="opacity:.34;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
+
+        <div class="sec-label">POCUSを臨床で活かそう</div>
+        <div class="menu-group">
+          <a class="menu-card" href="disease.html">
+            <div class="menu-icon">📋</div>
+            <div class="menu-body">
+              <div class="menu-title">低学年向け疾患リスト</div>
+              <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="medical-rally.html">
+            <div class="menu-icon">🚑</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS特化メディカルラリー</div>
+              <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <div class="menu-card disabled">
+            <div class="menu-icon">🧠</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
+              <div class="menu-desc">全国展開アプリ制作予定</div>
+            </div>
+          </div>
         </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="medical-rally.html">
-        <div class="menu-icon">🚑</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS特化メディカルラリー</div>
-          <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <div class="menu-card disabled">
-        <div class="menu-icon">🧠</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
-          <div class="menu-desc">全国展開アプリ制作予定</div>
-        </div>
+
       </div>
     </div>
 
-    <div class="sec-label">その他</div>
-    <div class="menu-group" data-section="other">
-      <a class="menu-card" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">
-        <div class="menu-icon">🧭</div>
-        <div class="menu-body">
-          <div class="menu-title">FAST Journey</div>
-          <div class="menu-desc">FASTの基本を習得する初学者向けアプリ</div>
+    <!-- エンブレム写真：その他ゾーン -->
+    <div class="qa-photo">
+      <img class="qa-photo-img" src="assets/bg-emblem.jpg" alt="" style="opacity:.3;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
+
+        <div class="sec-label">その他</div>
+        <div class="menu-group" data-section="other">
+          <a class="menu-card" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">
+            <div class="menu-icon">🧭</div>
+            <div class="menu-body">
+              <div class="menu-title">FAST Journey</div>
+              <div class="menu-desc">FASTの基本を習得する初学者向けアプリ</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <div class="menu-card disabled">
+            <div class="menu-icon">🧬</div>
+            <div class="menu-body">
+              <div class="menu-title">解剖VR <span class="badge-soon">未定</span></div>
+              <div class="menu-desc">構想段階のコンテンツです</div>
+            </div>
+          </div>
         </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <div class="menu-card disabled">
-        <div class="menu-icon">🧬</div>
-        <div class="menu-body">
-          <div class="menu-title">解剖VR <span class="badge-soon">未定</span></div>
-          <div class="menu-desc">構想段階のコンテンツです</div>
-        </div>
+
       </div>
     </div>
 
@@ -1312,6 +1335,39 @@ window.addEventListener('DOMContentLoaded', setupRevealObserver);
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll);
   window.addEventListener('DOMContentLoaded', update);
+  update();
+})();
+
+// ===================== 救急車が駆け抜けるパン演出 =====================
+// .qa-pan の写真は幅155%で配置してあり、そのゾーンが画面を通過する間に
+// 写真を左から右へスライドさせる。救急車が走り抜けていくように見える。
+// 「動きを減らす」設定の端末では動かさない。
+(function initPanZones(){
+  const imgs = document.querySelectorAll('.qa-pan');
+  if(!imgs.length) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const vh = window.innerHeight;
+    imgs.forEach(img=>{
+      const zone = img.parentElement;
+      const rect = zone.getBoundingClientRect();
+      if(rect.bottom < 0 || rect.top > vh) return; // 画面外なら何もしない
+      // ゾーンが画面下から現れて上に抜けるまでの進捗（0〜1）
+      let t = (vh - rect.top) / (vh + rect.height);
+      t = Math.min(1, Math.max(0, t));
+      // 写真を -35% → 0% へスライド（画面の中を右方向へ駆け抜ける）
+      const x = -35 + t * 35;
+      img.style.transform = `translateX(${x}%)`;
+    });
+  }
+  function onScroll(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
   update();
 })();
 

@@ -61,6 +61,49 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 
 .main{max-width:640px;margin:0 auto;padding:26px 20px 90px;position:relative;}
 
+/* ===== ドクターヘリ ヒーロー（スクロールで着地する演出） ===== */
+.heli-hero{
+  position:relative;height:250px;overflow:hidden;border-bottom:1px solid var(--border);
+}
+@media (min-width:640px){ .heli-hero{height:300px;} }
+.heli-img{
+  position:absolute;left:50%;top:0;width:118%;max-width:none;height:118%;
+  transform:translateX(-50%) translateY(-8%) scale(1.06);
+  object-fit:cover;object-position:center 40%;
+  will-change:transform;
+}
+.heli-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom, rgba(12,12,12,.55) 0%, rgba(12,12,12,.1) 35%, rgba(12,12,12,.25) 65%, var(--black) 100%);
+}
+.heli-copy{
+  position:absolute;left:20px;right:20px;bottom:18px;z-index:1;
+  max-width:600px;margin:0 auto;
+}
+.heli-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;
+  color:var(--orange-light);margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,.9);
+}
+.heli-title{
+  font-weight:900;font-size:21px;line-height:1.45;
+  text-shadow:0 2px 16px rgba(0,0,0,.85);
+}
+.heli-title span{color:var(--orange-light);}
+.heli-sub{
+  font-size:11.5px;color:rgba(240,240,240,.8);margin-top:5px;line-height:1.7;
+  text-shadow:0 1px 10px rgba(0,0,0,.9);
+}
+
+/* スクロールで順番に浮き上がる演出 */
+.reveal{
+  opacity:0;transform:translateY(24px);
+  transition:opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);
+}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+
 /* 幹（トランク） */
 .trunk{position:relative;padding-left:6px;}
 .trunk::before{
@@ -167,6 +210,17 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
     <div class="map-btn" id="map-open">🗺️</div>
   </div>
 </header>
+
+<!-- ドクターヘリ：スクロールすると着地していくヒーロー -->
+<div class="heli-hero" id="heli-hero">
+  <img class="heli-img" id="heli-img" src="assets/bg-heli.jpg" alt="">
+  <div class="heli-shade"></div>
+  <div class="heli-copy">
+    <div class="heli-eyebrow">LEARNING MAP</div>
+    <div class="heli-title">さあ、降り立とう。<span>学びのフィールドへ。</span></div>
+    <div class="heli-sub">基本のキから応用ルートまで、どこからでも自由に。</div>
+  </div>
+</div>
 
 <div class="main fade-up">
 
@@ -356,6 +410,53 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 window.addEventListener('DOMContentLoaded', function(){
   setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 500);
 });
+
+// ===================== ドクターヘリの着地演出 =====================
+// ページを下にスクロールすると、ヘリの写真がゆっくり下降しながら
+// わずかに縮小し、ヘリポートに着地していくように見える。
+// 「動きを減らす」設定の端末では動かさない。
+(function initHeliLanding(){
+  const hero = document.getElementById('heli-hero');
+  const img  = document.getElementById('heli-img');
+  if(!hero || !img) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const rect = hero.getBoundingClientRect();
+    const h = rect.height || 1;
+    // ヒーローが画面外に出るまでの進捗（0〜1）
+    let t = Math.min(1, Math.max(0, -rect.top / h));
+    // 上に少し寄せて配置した写真(-8%)を、スクロールに合わせて 0% まで下降させる
+    // ＝ ヘリがゆっくり降りて着地するように見える
+    const y  = -8 + t * 8;
+    const sc = 1.06 - t * 0.06;
+    img.style.transform = `translateX(-50%) translateY(${y}%) scale(${sc})`;
+  }
+  function onScroll(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
+// ===================== スクロールで順番に浮き上がる演出 =====================
+(function initReveal(){
+  const targets = document.querySelectorAll('.tnode, .spl-zone, .peak, .library');
+  if(!targets.length) return;
+  targets.forEach(el => el.classList.add('reveal'));
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        obs.unobserve(entry.target); // 一度表示したら監視終了
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  targets.forEach(el => obs.observe(el));
+})();
 
 document.getElementById('map-open').addEventListener('click', () => document.getElementById('mm').classList.add('show'));
 document.getElementById('mm-close').addEventListener('click', () => document.getElementById('mm').classList.remove('show'));
