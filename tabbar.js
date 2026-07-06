@@ -9,7 +9,8 @@
     'calendar.html': 'calendar',
     'other.html': 'other',
     'documents.html': 'other',
-    'questions.html': 'other'
+    'questions.html': 'other',
+    'account.html': 'other'
   };
 
   function highlightCurrentTab(){
