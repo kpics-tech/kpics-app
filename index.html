@@ -208,59 +208,31 @@ button{font-family:inherit;}
 }
 
 /* ===== 写真をうっすら敷くゾーン（クイックアクセス内） ===== */
-/* ===== 差し込み写真バナー（通常表示・背景ではない） ===== */
-.photo-insert{
-  position:relative;margin:22px 0 4px;border-radius:12px;overflow:hidden;
-  border:1px solid var(--border);
+.qa-photo{
+  position:relative;margin:14px -20px 0;padding:20px 20px 16px;overflow:hidden;
 }
-.photo-insert img{width:100%;height:170px;object-fit:cover;display:block;}
-.photo-insert-shade{
-  position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top, rgba(12,12,12,.6) 0%, transparent 45%);
+.qa-photo-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:.3;pointer-events:none;
 }
-
-/* プローブ写真：波動が外へ広がるパルスリング */
-.probe-insert{height:170px;}
-.probe-insert img{position:absolute;inset:0;width:100%;height:100%;}
-.probe-wave{
-  position:absolute;left:24px;top:50%;width:10px;height:10px;margin-top:-5px;
-  border-radius:50%;pointer-events:none;
-}
-.probe-wave::before,.probe-wave::after{
-  content:"";position:absolute;inset:0;border-radius:50%;
-  border:1.5px solid var(--orange-light);
-  animation:probePulse 2.6s cubic-bezier(.2,.6,.4,1) infinite;
-}
-.probe-wave::after{animation-delay:1.3s;}
-@keyframes probePulse{
-  0%{transform:scale(1);opacity:.85;}
-  100%{transform:scale(11);opacity:0;}
-}
-@media (prefers-reduced-motion: reduce){
-  .probe-wave::before,.probe-wave::after{animation:none;display:none;}
-}
-
-/* 救急車写真：スクロールで駆け抜けるパン演出 */
-.ambulance-insert{height:170px;}
-.ambulance-insert img{
-  position:absolute;inset:0;width:155%;max-width:none;height:100%;object-fit:cover;
+/* スクロールで横に流れる写真（救急車の駆け抜け演出用） */
+.qa-photo-img.qa-pan{
+  width:155%;max-width:none;right:auto;
   will-change:transform;
 }
+.qa-photo-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom, var(--black) 0%, transparent 16%, transparent 84%, var(--black) 100%);
+}
+.qa-photo-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+.qa-photo-inner .sec-label:first-child{margin-top:0;}
+.qa-photo .menu-card{background:rgba(24,24,24,.88);}
+.qa-photo .menu-card:hover{background:rgba(32,32,32,.92);}
+.qa-photo .menu-card.primary{background:linear-gradient(135deg, rgba(232,160,32,.12), rgba(24,24,24,.9) 60%);}
+.qa-photo .menu-card.disabled:hover{background:rgba(24,24,24,.88);}
 
-/* K-PICSロゴ区切りゾーン：その他 〜 ストーリーゾーンの間を埋める */
-.logo-divider{
-  position:relative;margin:36px -20px 0;padding:38px 20px;overflow:hidden;
-  border-top:1px solid var(--border);
-}
-.logo-divider-bg{
-  position:absolute;left:50%;top:50%;width:150px;
-  transform:translate(-50%,-50%);opacity:.12;pointer-events:none;
-}
-.logo-divider-text{
-  position:relative;z-index:1;text-align:center;
-  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;
-  color:var(--text-dim);
-}
+/* K-PICSロゴ区切りゾーン：その他とストーリーゾーンの間の余白を埋める */
+.emblem-divider{height:150px;padding:0;margin-top:0;}
 
 .install-banner{
   display:flex;align-items:flex-start;gap:12px;background:var(--card);
@@ -699,71 +671,76 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
       </a>
     </div>
 
-    <!-- プローブ写真：波動が外へ広がるパルスリング付き -->
-    <div class="photo-insert probe-insert">
-      <img src="assets/hero-probe.jpg" alt="光るプローブ" loading="lazy">
-      <div class="probe-wave"></div>
-      <div class="photo-insert-shade"></div>
+    <!-- プローブ写真をうっすら敷くゾーン：超音波について詳しくなろう -->
+    <div class="qa-photo">
+      <img class="qa-photo-img" src="assets/hero-probe.jpg" alt="" style="opacity:.32;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
+
+        <div class="sec-label">超音波について詳しくなろう</div>
+        <div class="menu-group">
+          <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
+            <div class="menu-icon">⚙️</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS-LOOP</div>
+              <div class="menu-desc">超音波の原理・各モードを学ぶ</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
+            <div class="menu-icon">🏥</div>
+            <div class="menu-body">
+              <div class="menu-title">キャノン超音波講座</div>
+              <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
+            <div class="menu-icon">📖</div>
+            <div class="menu-body">
+              <div class="menu-title">JSUM Ultrasound Path</div>
+              <div class="menu-desc">日本超音波医学会のeラーニング</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+      </div>
     </div>
 
-    <div class="sec-label">超音波について詳しくなろう</div>
-    <div class="menu-group">
-      <a class="menu-card" href="https://wj-medtech.github.io/pocus-loop/" target="_blank" rel="noopener">
-        <div class="menu-icon">⚙️</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS-LOOP</div>
-          <div class="menu-desc">超音波の原理・各モードを学ぶ</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
-        <div class="menu-icon">🏥</div>
-        <div class="menu-body">
-          <div class="menu-title">キャノン超音波講座</div>
-          <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
-        <div class="menu-icon">📖</div>
-        <div class="menu-body">
-          <div class="menu-title">JSUM Ultrasound Path</div>
-          <div class="menu-desc">日本超音波医学会のeラーニング</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
+    <!-- 救急車写真：スクロールで駆け抜けるゾーン -->
+    <div class="qa-photo">
+      <img class="qa-photo-img qa-pan" src="assets/bg-ambulance.jpg" alt="" style="opacity:.34;" loading="lazy">
+      <div class="qa-photo-shade"></div>
+      <div class="qa-photo-inner">
 
-    <!-- 救急車写真：スクロールで駆け抜けるパン演出 -->
-    <div class="photo-insert ambulance-insert">
-      <img class="qa-pan" src="assets/bg-ambulance.jpg" alt="夜の街を走る救急車" loading="lazy">
-      <div class="photo-insert-shade"></div>
-    </div>
+        <div class="sec-label">POCUSを臨床で活かそう</div>
+        <div class="menu-group">
+          <a class="menu-card" href="disease.html">
+            <div class="menu-icon">📋</div>
+            <div class="menu-body">
+              <div class="menu-title">低学年向け疾患リスト</div>
+              <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="menu-card" href="medical-rally.html">
+            <div class="menu-icon">🚑</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS特化メディカルラリー</div>
+              <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
+            </div>
+            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <div class="menu-card disabled">
+            <div class="menu-icon">🧠</div>
+            <div class="menu-body">
+              <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
+              <div class="menu-desc">全国展開アプリ制作予定</div>
+            </div>
+          </div>
+        </div>
 
-    <div class="sec-label">POCUSを臨床で活かそう</div>
-    <div class="menu-group">
-      <a class="menu-card" href="disease.html">
-        <div class="menu-icon">📋</div>
-        <div class="menu-body">
-          <div class="menu-title">低学年向け疾患リスト</div>
-          <div class="menu-desc">POCUSでよく扱う疾患の理解を深める</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="medical-rally.html">
-        <div class="menu-icon">🚑</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS特化メディカルラリー</div>
-          <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <div class="menu-card disabled">
-        <div class="menu-icon">🧠</div>
-        <div class="menu-body">
-          <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
-          <div class="menu-desc">全国展開アプリ制作予定</div>
-        </div>
       </div>
     </div>
 
@@ -788,10 +765,10 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
 
   </div>
 
-  <!-- K-PICSロゴ区切り：その他 〜 ストーリーゾーンの間 -->
-  <div class="logo-divider">
-    <img class="logo-divider-bg" src="assets/logo-icon-dark.png" alt="">
-    <div class="logo-divider-text">K &nbsp;–&nbsp; P &nbsp;–&nbsp; I &nbsp;–&nbsp; C &nbsp;–&nbsp; S</div>
+  <!-- K-PICSロゴ（エンブレム）区切りゾーン：その他 〜 ストーリーゾーンの間を埋める -->
+  <div class="qa-photo emblem-divider">
+    <img class="qa-photo-img" src="assets/bg-emblem.jpg" alt="" style="opacity:.3;" loading="lazy">
+    <div class="qa-photo-shade"></div>
   </div>
 
   <!-- ============ ストーリーゾーン（読み物ポータル） ============ -->
