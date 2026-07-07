@@ -232,6 +232,21 @@ button{font-family:inherit;}
 .detail-created{font-size:10.5px;color:var(--text-dim);margin-top:14px;text-align:right;}
 
 /* ===================== イベントの感想 ===================== */
+.att-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.att-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.att-label{font-size:12.5px;font-weight:700;color:var(--text);}
+.att-count{font-size:11.5px;color:var(--orange);font-weight:700;}
+.att-btn{width:100%;padding:13px;border-radius:11px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s;}
+.att-btn:active{opacity:.8;}
+.att-btn.join{background:var(--orange);color:var(--black);}
+.att-btn.leave{background:var(--card);color:var(--text-muted);border:1px solid var(--border-light);}
+.att-btn:disabled{opacity:.55;cursor:default;}
+.att-closed{font-size:12px;color:var(--text-dim);text-align:center;padding:10px;background:rgba(255,255,255,.02);border:1px dashed var(--border-light);border-radius:10px;}
+.att-you{display:block;margin-top:6px;color:var(--orange);font-weight:700;}
+.att-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.att-chip{font-size:11.5px;color:var(--text);background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:999px;padding:5px 11px;}
+.att-chip.you{border-color:var(--orange);font-weight:700;}
+.att-empty{font-size:11.5px;color:var(--text-dim);padding:2px 0;}
 .imp-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
 .imp-label{
   font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--orange);text-transform:uppercase;

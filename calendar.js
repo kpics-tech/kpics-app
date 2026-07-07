@@ -175,6 +175,14 @@ function openDetail(id){
     ${e.location ? `<div class="detail-meta-row"><span class="ic">📍</span> ${escapeHtml(e.location)}</div>` : ''}
     ${e.description ? `<div class="detail-desc">${escapeHtml(e.description)}</div>` : ''}
     ${e.created_by_name ? `<div class="detail-created">登録: ${escapeHtml(e.created_by_name)}</div>` : ''}
+    <div class="att-section">
+      <div class="att-head">
+        <div class="att-label">出席</div>
+        <div class="att-count" id="att-count-${id}"></div>
+      </div>
+      <div id="att-action-${id}"></div>
+      <div class="att-list" id="att-list-${id}"><div class="att-empty">読み込み中...</div></div>
+    </div>
     <div class="imp-section">
       <div class="imp-label">感想・学んだこと</div>
       <div class="imp-list" id="imp-list-${id}">
@@ -196,6 +204,81 @@ function openDetail(id){
   `;
   document.getElementById('detail-overlay').classList.add('open');
   loadImpressions(id);
+  loadAttendances(id, e.event_date);
+}
+
+// ---------- イベント出席（出席のみ・前日まで受付） ----------
+async function loadAttendances(eventId, eventDate){
+  const {data, error} = await _supabase
+    .from('event_attendances')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', {ascending:true});
+  if(error){
+    const listEl = document.getElementById('att-list-'+eventId);
+    if(listEl) listEl.innerHTML = `<div class="att-empty">出席情報の読み込みに失敗しました</div>`;
+    return;
+  }
+  renderAttendance(eventId, eventDate, data || []);
+}
+
+function renderAttendance(eventId, eventDate, rows){
+  const countEl  = document.getElementById('att-count-'+eventId);
+  const actionEl = document.getElementById('att-action-'+eventId);
+  const listEl   = document.getElementById('att-list-'+eventId);
+  if(!countEl || !actionEl || !listEl) return;
+
+  const amAttending = rows.some(r => r.user_id === CURRENT_UID);
+  const isOpen = todayStr() < eventDate; // 前日まで受付（当日以降は締切）
+
+  countEl.textContent = rows.length ? `${rows.length}人が出席予定` : '';
+
+  if(isOpen){
+    actionEl.innerHTML = amAttending
+      ? `<button class="att-btn leave" onclick="toggleAttendance('${eventId}','${eventDate}')">出席をとりやめる</button>`
+      : `<button class="att-btn join" onclick="toggleAttendance('${eventId}','${eventDate}')">出席する</button>`;
+  } else {
+    actionEl.innerHTML = `<div class="att-closed">出席の受付は締め切りました（前日まで）${amAttending ? '<span class="att-you">あなたは出席予定です</span>' : ''}</div>`;
+  }
+
+  if(rows.length === 0){
+    listEl.innerHTML = `<div class="att-empty">まだ出席予定の人はいません</div>`;
+  } else {
+    listEl.innerHTML = rows.map(r => {
+      const you = r.user_id === CURRENT_UID;
+      const name = r.user_name || '部員';
+      return `<div class="att-chip ${you ? 'you' : ''}">${escapeHtml(name)}${you ? '（あなた）' : ''}</div>`;
+    }).join('');
+  }
+}
+
+async function toggleAttendance(eventId, eventDate){
+  if(!CURRENT_UID){ location.href = 'index.html'; return; }
+  if(todayStr() >= eventDate){
+    alert('出席の受付は締め切られています（前日まで）。');
+    await loadAttendances(eventId, eventDate);
+    return;
+  }
+  const {data:existing, error:selErr} = await _supabase
+    .from('event_attendances')
+    .select('id')
+    .eq('event_id', eventId)
+    .eq('user_id', CURRENT_UID)
+    .maybeSingle();
+  if(selErr){ alert('出席状態の確認に失敗しました: ' + selErr.message); return; }
+
+  if(existing){
+    const {error} = await _supabase.from('event_attendances').delete().eq('id', existing.id);
+    if(error){ alert('取り消しに失敗しました: ' + error.message); return; }
+  } else {
+    const {error} = await _supabase.from('event_attendances').insert({
+      event_id: eventId,
+      user_id: CURRENT_UID,
+      user_name: CURRENT_USER_NAME || '部員'
+    });
+    if(error){ alert('出席登録に失敗しました: ' + error.message); return; }
+  }
+  await loadAttendances(eventId, eventDate);
 }
 
 // ---------- イベントの感想 ----------
