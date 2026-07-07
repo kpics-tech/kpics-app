@@ -223,9 +223,9 @@ button{font-family:inherit;}
 
 <header class="top-header">
   <div class="top-inner">
-    <a class="back-btn" href="wiki.html">
+    <a class="back-btn" id="back-btn" href="prep.html">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>用語辞典</span>
+      <span id="back-label">予習教材</span>
     </a>
     <div class="top-title" id="top-title">用語</div>
     <img class="top-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
@@ -246,13 +246,7 @@ button{font-family:inherit;}
     <span class="modal-label">よみがな（任意）</span>
     <input type="text" class="modal-input" id="reading-edit-input">
     <span class="modal-label">カテゴリ（任意）</span>
-    <select class="modal-select" id="category-edit-input">
-      <option value="">未分類</option>
-      <option value="解剖">解剖</option>
-      <option value="生理">生理</option>
-      <option value="器械">器械</option>
-      <option value="その他">その他</option>
-    </select>
+    <input type="text" class="modal-input" id="category-edit-input" placeholder="例：血管、筋肉 など">
     <div class="modal-actions">
       <button class="modal-btn cancel" id="term-edit-cancel-btn">キャンセル</button>
       <button class="modal-btn confirm" id="term-edit-save-btn">保存する</button>
@@ -388,6 +382,12 @@ async function loadTerm(){
   CURRENT_TERM = data;
   ALL_ENTRIES = entriesRes.data || [];
   document.getElementById('top-title').textContent = data.term;
+
+  if(data.region_id){
+    const { data: region } = await _supabase.from('technique_regions').select('name').eq('id', data.region_id).single();
+    document.getElementById('back-btn').setAttribute('href', 'prep-detail.html?id=' + data.region_id);
+    document.getElementById('back-label').textContent = region ? region.name : '予習教材';
+  }
 
   await reloadImagesAndUrls();
   await ensureBadges([data.created_by, ...ALL_ENTRIES.map(e => e.author_id)]);
@@ -552,7 +552,8 @@ document.getElementById('image-file-input').addEventListener('change', async () 
     uploadFile = file;
   }
 
-  const path = 'wiki/' + TERM_ID + '/' + entryId + '/' + Date.now() + '.jpg';
+  const regionPart = (CURRENT_TERM && CURRENT_TERM.region_id) ? CURRENT_TERM.region_id : 'misc';
+  const path = 'wiki/' + regionPart + '/' + TERM_ID + '/' + entryId + '/' + Date.now() + '.jpg';
 
   const { error: upErr } = await _supabase.storage.from('wiki-images').upload(path, uploadFile);
   if(upErr){
@@ -731,7 +732,7 @@ document.getElementById('term-edit-cancel-btn').addEventListener('click', () => 
 document.getElementById('term-edit-save-btn').addEventListener('click', async () => {
   const term = document.getElementById('term-edit-input').value.trim();
   const reading = document.getElementById('reading-edit-input').value.trim();
-  const category = document.getElementById('category-edit-input').value;
+  const category = document.getElementById('category-edit-input').value.trim();
   const errEl = document.getElementById('term-edit-error');
   if(!term){
     errEl.textContent = '用語を入力してください';
@@ -769,7 +770,9 @@ async function deleteTerm(){
   }
   const { error } = await _supabase.from('wiki_terms').delete().eq('id', TERM_ID);
   if(error){ alert('削除に失敗しました：' + error.message); return; }
-  window.location.href = 'wiki.html';
+  window.location.href = CURRENT_TERM && CURRENT_TERM.region_id
+    ? 'prep-detail.html?id=' + CURRENT_TERM.region_id
+    : 'prep.html';
 }
 
 loadTerm();

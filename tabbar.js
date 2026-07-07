@@ -11,7 +11,8 @@
     'documents.html': 'other',
     'questions.html': 'other',
     'account.html': 'other',
-    'wiki.html': 'manabu',
+    'prep.html': 'manabu',
+    'prep-detail.html': 'manabu',
     'wiki-detail.html': 'manabu'
   };
 
