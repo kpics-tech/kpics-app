@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>用語辞典 | K-PICS</title>
+
+<!-- ホーム画面に追加した時の設定（PWA） -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C0C0C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="K-PICS">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="assets/icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://iarbwehytrdxuhyedsvi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KyOX0XzlSVLRklBmlOfi7A_sbUtfhha';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+<style>
+:root{
+  --orange:#E8A020;
+  --orange-light:#F5B84A;
+  --orange-dark:#B87A10;
+  --orange-bg:rgba(232,160,32,0.08);
+  --black:#0C0C0C;
+  --dark:#141414;
+  --card:#1A1A1A;
+  --card-hover:#202020;
+  --border:#2A2A2A;
+  --border-light:#333;
+  --text:#F0F0F0;
+  --text-muted:#888;
+  --text-dim:#555;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--black);}
+body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent;}
+.bebas{font-family:"Bebas Neue",sans-serif;}
+.mono{font-family:"JetBrains Mono",monospace;}
+button{font-family:inherit;}
+::-webkit-scrollbar{width:4px;height:4px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.fade-up{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;}
+
+/* SPLASH */
+#splash{
+  position:fixed;inset:0;background:var(--black);z-index:900;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.splash-logo-img{width:110px;animation:scaleIn .5s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 8px 30px rgba(232,160,32,.25));}
+
+/* HEADER */
+.top-header{
+  position:sticky;top:0;z-index:50;background:var(--dark);border-bottom:1px solid var(--border);
+  padding:env(safe-area-inset-top) 16px 0;
+}
+.top-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;height:54px;gap:12px;}
+.back-btn{
+  display:flex;align-items:center;gap:5px;color:var(--text-muted);text-decoration:none;
+  font-size:12.5px;font-weight:600;transition:color .15s;white-space:nowrap;
+}
+.back-btn:hover{color:var(--orange);}
+.top-title{flex:1;font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.05em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.top-logo{height:24px;width:auto;flex-shrink:0;}
+
+.main{max-width:640px;margin:0 auto;padding:26px 20px 90px;}
+
+/* 用語ヘッダ */
+.term-hero{text-align:center;padding:6px 10px 22px;}
+.term-hero-reading{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--text-dim);margin-bottom:6px;}
+.term-hero-title{font-family:"Noto Sans JP",sans-serif;font-weight:900;font-size:24px;line-height:1.4;margin-bottom:10px;}
+.term-hero-meta{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.term-cat-badge{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--orange);
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:8px;padding:4px 10px;
+}
+.term-author{font-size:11px;color:var(--text-muted);}
+.term-actions{display:flex;justify-content:center;gap:16px;margin-top:12px;}
+.term-action-btn{background:none;border:none;color:var(--text-dim);font-size:11.5px;font-weight:700;cursor:pointer;}
+.term-action-btn:hover{color:var(--orange);}
+.term-action-btn.danger:hover{color:#e85050;}
+
+/* 解説カード */
+.entry-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;}
+.entry-section-title{font-size:14.5px;font-weight:900;}
+.entry-add-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--orange);color:var(--black);border:none;border-radius:10px;
+  padding:10px 16px;font-family:"Bebas Neue",sans-serif;font-size:14px;letter-spacing:.04em;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.entry-add-btn:hover{background:var(--orange-light);}
+.entry-add-btn svg{width:15px;height:15px;}
+
+.entry-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.entry-card-text{font-size:13.5px;line-height:1.9;white-space:pre-wrap;word-break:break-word;color:var(--text);margin-bottom:10px;}
+.entry-card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.entry-card-author{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);flex-wrap:wrap;}
+.entry-card-actions{display:flex;gap:12px;flex-shrink:0;}
+.entry-card-action{background:none;border:none;color:var(--text-dim);font-size:11px;cursor:pointer;font-weight:700;padding:0;}
+.entry-card-action:hover{color:var(--orange);}
+.entry-card-action.danger:hover{color:#e85050;}
+.entry-empty{font-size:12.5px;color:var(--text-dim);padding:8px 2px 18px;text-align:center;}
+
+/* バッジ（先生/コア/認定） */
+.imp-badges{display:inline-flex;gap:4px;flex-wrap:wrap;}
+.imp-badge{
+  display:inline-flex;align-items:center;font-size:9px;font-weight:700;padding:2px 6px;
+  border-radius:999px;border:1px solid var(--border-light);color:var(--text-muted);white-space:nowrap;
+}
+.imp-badge.b-teacher{border-color:rgba(232,160,32,.5);color:var(--orange-light);background:var(--orange-bg);}
+.imp-badge.b-core{border-color:rgba(111,168,224,.4);color:#6FA8E0;background:rgba(111,168,224,.08);}
+.imp-badge.b-certified{border-color:rgba(122,200,140,.4);color:#7AC88C;background:rgba(122,200,140,.08);}
+
+/* 解説フォーム */
+.entry-form{background:var(--card);border:1px solid var(--border-light);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.entry-textarea{
+  width:100%;background:var(--black);border:1px solid var(--border-light);border-radius:9px;
+  color:var(--text);font-size:13.5px;line-height:1.75;padding:12px 13px;font-family:inherit;
+  resize:vertical;min-height:90px;margin-bottom:10px;
+}
+.entry-form-actions{display:flex;gap:8px;}
+.entry-form-btn{flex:1;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.entry-form-btn.save{background:var(--orange);color:var(--black);}
+.entry-form-btn.save:disabled{opacity:.5;}
+.entry-form-btn.cancel{background:transparent;border:1px solid var(--border-light);color:var(--text-muted);}
+.entry-form-error{font-size:11px;color:#e85050;margin-bottom:8px;display:none;}
+
+/* 画像 */
+.entry-img-section{margin-bottom:10px;}
+.entry-img-list{display:flex;gap:8px;overflow-x:auto;margin-bottom:8px;padding-bottom:2px;}
+.entry-img-list::-webkit-scrollbar{display:none;}
+.entry-img-item{position:relative;flex-shrink:0;width:120px;height:120px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--black);}
+.entry-img-item img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;display:block;}
+.entry-img-del{
+  position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+  background:rgba(0,0,0,.65);color:#fff;border:none;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.entry-img-add-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:var(--orange-bg);border:1px dashed rgba(232,160,32,.35);color:var(--orange);
+  border-radius:9px;padding:9px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;
+}
+.entry-img-add-btn:hover{background:rgba(232,160,32,.16);}
+.entry-img-uploading{font-size:11px;color:var(--text-muted);padding:4px 2px 4px;}
+
+/* 画像拡大表示（ライトボックス） */
+.lightbox-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;
+  display:none;align-items:center;justify-content:center;padding:24px;
+}
+.lightbox-overlay.show{display:flex;}
+.lightbox-overlay img{max-width:100%;max-height:100%;border-radius:10px;}
+
+.loading-msg{text-align:center;color:var(--text-muted);font-size:12.5px;padding:30px 10px;}
+
+.footer-note{
+  text-align:center;font-size:11px;color:var(--text-dim);margin-top:30px;line-height:1.8;
+}
+.footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
+
+/* 用語編集モーダル */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.modal-overlay.show{display:flex;}
+.modal-box{
+  background:var(--card);border:1px solid var(--border-light);border-radius:16px;
+  width:100%;max-width:400px;padding:24px 22px;animation:scaleIn .25s cubic-bezier(.16,1,.3,1) both;
+}
+.modal-title{font-size:16px;font-weight:900;margin-bottom:18px;}
+.modal-label{font-size:11.5px;color:var(--text-muted);font-weight:700;margin-bottom:7px;display:block;}
+.modal-input, .modal-select{
+  width:100%;background:var(--black);border:1px solid var(--border-light);border-radius:9px;
+  color:var(--text);font-size:14px;padding:11px 13px;margin-bottom:16px;font-family:inherit;
+}
+.modal-select{appearance:none;}
+.modal-actions{display:flex;gap:10px;margin-top:6px;}
+.modal-btn{
+  flex:1;border:none;border-radius:9px;padding:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.modal-btn.cancel{background:transparent;border:1px solid var(--border-light);color:var(--text-muted);}
+.modal-btn.confirm{background:var(--orange);color:var(--black);}
+.modal-btn.confirm:disabled{opacity:.5;}
+.modal-error{font-size:11.5px;color:#e85050;margin:-8px 0 14px;display:none;}
+
+/* 下部タブバー */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:300;
+  background:rgba(20,20,20,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;justify-content:space-around;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tabbar-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:9px 4px 8px;color:var(--text-dim);text-decoration:none;cursor:pointer;
+  transition:color .15s;-webkit-tap-highlight-color:transparent;background:none;border:none;font-family:inherit;
+}
+.tabbar-item svg{width:21px;height:21px;}
+.tabbar-item .tb-label{font-size:10px;font-weight:700;letter-spacing:.02em;}
+.tabbar-item.active{color:var(--orange);}
+.tabbar-item:active{opacity:.7;}
+</style>
+</head>
+<body>
+
+<div id="splash"><img class="splash-logo-img" src="assets/logo-icon-dark.png" alt="K-PICS"></div>
+
+<header class="top-header">
+  <div class="top-inner">
+    <a class="back-btn" href="wiki.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>用語辞典</span>
+    </a>
+    <div class="top-title" id="top-title">用語</div>
+    <img class="top-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
+  </div>
+</header>
+
+<div class="main fade-up" id="main-content">
+  <div class="loading-msg">読み込み中…</div>
+</div>
+
+<!-- 用語編集モーダル -->
+<div class="modal-overlay" id="term-edit-modal">
+  <div class="modal-box">
+    <div class="modal-title">用語を編集</div>
+    <div class="modal-error" id="term-edit-error">保存に失敗しました</div>
+    <span class="modal-label">用語</span>
+    <input type="text" class="modal-input" id="term-edit-input">
+    <span class="modal-label">よみがな（任意）</span>
+    <input type="text" class="modal-input" id="reading-edit-input">
+    <span class="modal-label">カテゴリ（任意）</span>
+    <select class="modal-select" id="category-edit-input">
+      <option value="">未分類</option>
+      <option value="解剖">解剖</option>
+      <option value="生理">生理</option>
+      <option value="器械">器械</option>
+      <option value="その他">その他</option>
+    </select>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="term-edit-cancel-btn">キャンセル</button>
+      <button class="modal-btn confirm" id="term-edit-save-btn">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 画像アップロード用（非表示） -->
+<input type="file" id="image-file-input" accept="image/*" style="display:none;">
+
+<!-- 画像拡大表示 -->
+<div class="lightbox-overlay" id="lightbox-overlay">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- 下部タブバー -->
+<nav class="tabbar" id="main-tabbar">
+  <a class="tabbar-item" data-tab="home" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    <span class="tb-label">ホーム</span>
+  </a>
+  <a class="tabbar-item" data-tab="manabu" href="manabu.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span class="tb-label">まなぶ</span>
+  </a>
+  <a class="tabbar-item" data-tab="calendar" href="calendar.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <span class="tb-label">カレンダー</span>
+  </a>
+  <a class="tabbar-item" data-tab="other" href="other.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    <span class="tb-label">その他</span>
+  </a>
+</nav>
+
+<script src="auth-guard.js"></script>
+<script src="tabbar.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 500);
+});
+
+// ===================== 認証：コアメンバー判定 =====================
+// auth-guard.js が window.CURRENT_UID をセットするのに合わせて、
+// このページ独自にコアメンバー判定も取得しておく（calendar.js と同じ考え方）。
+let CURRENT_IS_CORE = false;
+_supabase.auth.onAuthStateChange((event, session) => {
+  if(session && session.user){
+    _supabase.from('profiles').select('is_core_member').eq('id', session.user.id).single().then(({data}) => {
+      CURRENT_IS_CORE = !!(data && data.is_core_member);
+    });
+  }
+});
+
+// ===================== 設定 =====================
+const TERM_ID = new URLSearchParams(window.location.search).get('id');
+let CURRENT_TERM = null;
+let ALL_ENTRIES = [];
+let ALL_IMAGES = [];      // entry_images: {id, entry_id, storage_path, uploaded_by}
+let IMAGE_URL_MAP = {};
+let BADGE_MAP = {};       // user_id -> {is_teacher, is_core_member, is_certified}
+let MY_NAME = null;
+let ADDING_ENTRY = false;
+let EDITING_ENTRY_ID = null;
+let CURRENT_UPLOAD_TARGET = null; // { entryId }
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+function formatDate(iso){
+  const d = new Date(iso);
+  return d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0');
+}
+async function getMyName(){
+  if(MY_NAME) return MY_NAME;
+  if(!window.CURRENT_UID) return '名無しさん';
+  const { data } = await _supabase.from('profiles').select('name').eq('id', window.CURRENT_UID).single();
+  MY_NAME = (data && data.name) ? data.name : '名無しさん';
+  return MY_NAME;
+}
+
+// ---- バッジ（先生/コア/認定） ----
+async function ensureBadges(userIds){
+  const need = [...new Set(userIds)].filter(id => id && !(id in BADGE_MAP));
+  if(need.length === 0) return;
+  const { data, error } = await _supabase
+    .from('profiles')
+    .select('id,is_teacher,is_core_member,is_certified')
+    .in('id', need);
+  if(error){ console.error('バッジ取得エラー', error); return; }
+  (data || []).forEach(p => { BADGE_MAP[p.id] = p; });
+}
+function badgesHtml(userId){
+  const b = BADGE_MAP[userId];
+  if(!b) return '';
+  let html = '';
+  if(b.is_teacher)     html += '<span class="imp-badge b-teacher">先生</span>';
+  if(b.is_core_member) html += '<span class="imp-badge b-core">コア</span>';
+  if(b.is_certified)   html += '<span class="imp-badge b-certified">認定</span>';
+  return html ? '<span class="imp-badges">' + html + '</span>' : '';
+}
+
+// ===================== 画像圧縮（無料枠対策） =====================
+async function compressImage(file, maxEdge, quality){
+  maxEdge = maxEdge || 1600;
+  quality = quality || 0.8;
+  const img = await createImageBitmap(file);
+  const scale = Math.min(1, maxEdge / Math.max(img.width, img.height));
+  const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+  const canvas = Object.assign(document.createElement('canvas'), { width: w, height: h });
+  canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+  const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', quality));
+  return new File([blob], (file.name.replace(/\.[^.]+$/, '') || 'img') + '.jpg', { type: 'image/jpeg' });
+}
+
+// ===================== データ読み込み =====================
+async function loadTerm(){
+  if(!TERM_ID){
+    document.getElementById('main-content').innerHTML = '<div class="loading-msg">用語が指定されていません</div>';
+    return;
+  }
+  const [{ data, error }, entriesRes] = await Promise.all([
+    _supabase.from('wiki_terms').select('*').eq('id', TERM_ID).single(),
+    _supabase.from('wiki_entries').select('*').eq('term_id', TERM_ID).order('created_at', { ascending: true })
+  ]);
+
+  if(error || !data){
+    document.getElementById('main-content').innerHTML = '<div class="loading-msg">用語が見つかりませんでした</div>';
+    return;
+  }
+  CURRENT_TERM = data;
+  ALL_ENTRIES = entriesRes.data || [];
+  document.getElementById('top-title').textContent = data.term;
+
+  await reloadImagesAndUrls();
+  await ensureBadges([data.created_by, ...ALL_ENTRIES.map(e => e.author_id)]);
+
+  renderContent();
+}
+
+async function reloadImagesAndUrls(){
+  const entryIds = ALL_ENTRIES.map(e => e.id);
+  if(entryIds.length === 0){ ALL_IMAGES = []; return; }
+  const { data } = await _supabase
+    .from('wiki_images')
+    .select('*')
+    .in('entry_id', entryIds)
+    .order('created_at', { ascending: true });
+  ALL_IMAGES = data || [];
+
+  await Promise.all(ALL_IMAGES.map(async img => {
+    if(IMAGE_URL_MAP[img.storage_path]) return;
+    const { data: sd } = await _supabase.storage.from('wiki-images').createSignedUrl(img.storage_path, 3600);
+    if(sd) IMAGE_URL_MAP[img.storage_path] = sd.signedUrl;
+  }));
+}
+
+// ===================== 描画 =====================
+function renderContent(){
+  const t = CURRENT_TERM;
+  const canEditTerm = window.CURRENT_UID && (t.created_by === window.CURRENT_UID || CURRENT_IS_CORE);
+
+  const heroHtml =
+    '<div class="term-hero">' +
+      (t.reading ? '<div class="term-hero-reading">' + escapeHtml(t.reading) + '</div>' : '') +
+      '<div class="term-hero-title">' + escapeHtml(t.term) + '</div>' +
+      '<div class="term-hero-meta">' +
+        (t.category ? '<span class="term-cat-badge">' + escapeHtml(t.category) + '</span>' : '') +
+        '<span class="term-author">' + escapeHtml(t.created_by_name || '名無しさん') + ' が登録</span>' +
+      '</div>' +
+      (canEditTerm ?
+        '<div class="term-actions">' +
+          '<button class="term-action-btn" id="term-edit-open-btn">用語を編集</button>' +
+          '<button class="term-action-btn danger" id="term-delete-btn">用語を削除</button>' +
+        '</div>'
+      : '') +
+    '</div>';
+
+  const entriesHtml = ALL_ENTRIES.map(e => {
+    if(EDITING_ENTRY_ID === e.id) return buildEditEntryForm(e);
+    const canEdit = window.CURRENT_UID && (e.author_id === window.CURRENT_UID || CURRENT_IS_CORE);
+    const actions = canEdit
+      ? '<div class="entry-card-actions">' +
+          '<button class="entry-card-action" onclick="startEditEntry(\'' + e.id + '\')">編集</button>' +
+          '<button class="entry-card-action danger" onclick="deleteEntry(\'' + e.id + '\')">削除</button>' +
+        '</div>'
+      : '';
+    return (
+      '<div class="entry-card">' +
+        buildImageSection(e.id, false) +
+        '<div class="entry-card-text">' + escapeHtml(e.content) + '</div>' +
+        '<div class="entry-card-foot">' +
+          '<div class="entry-card-author">' + escapeHtml(e.author_name || '名無しさん') + badgesHtml(e.author_id) + '<span>・' + formatDate(e.created_at) + '</span></div>' +
+          actions +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  const emptyHtml = (ALL_ENTRIES.length === 0 && !ADDING_ENTRY)
+    ? '<div class="entry-empty">まだ解説が投稿されていません。<br>知っていることがあれば、ぜひ最初の解説を書いてみましょう。</div>' : '';
+
+  const addForm = ADDING_ENTRY ? buildAddEntryForm() : '';
+  const addBtn = ADDING_ENTRY ? '' : '<button class="entry-add-btn" id="entry-add-open-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>解説を追加</button>';
+
+  document.getElementById('main-content').innerHTML =
+    heroHtml +
+    '<div class="entry-section-head">' +
+      '<div class="entry-section-title">解説（' + ALL_ENTRIES.length + '）</div>' +
+      addBtn +
+    '</div>' +
+    addForm + emptyHtml + entriesHtml +
+    '<div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>';
+
+  if(canEditTerm){
+    document.getElementById('term-edit-open-btn').addEventListener('click', openTermEditModal);
+    document.getElementById('term-delete-btn').addEventListener('click', deleteTerm);
+  }
+  const openBtn = document.getElementById('entry-add-open-btn');
+  if(openBtn) openBtn.addEventListener('click', openAddEntry);
+
+  // ADDING/EDITING フォームの中の要素にイベントを再接続
+  wireFormEvents();
+}
+
+function wireFormEvents(){
+  if(ADDING_ENTRY){
+    const cancelBtn = document.getElementById('add-entry-cancel-btn');
+    const saveBtn = document.getElementById('add-entry-save-btn');
+    if(cancelBtn) cancelBtn.addEventListener('click', cancelAddEntry);
+    if(saveBtn) saveBtn.addEventListener('click', submitNewEntry);
+  }
+  if(EDITING_ENTRY_ID){
+    const cancelBtn = document.getElementById('edit-entry-cancel-btn');
+    const saveBtn = document.getElementById('edit-entry-save-btn');
+    if(cancelBtn) cancelBtn.addEventListener('click', cancelEditEntry);
+    if(saveBtn) saveBtn.addEventListener('click', () => saveEditEntry(EDITING_ENTRY_ID));
+  }
+}
+
+// ===================== 画像セクション =====================
+function buildImageSection(entryId, editable){
+  const imgs = ALL_IMAGES.filter(i => i.entry_id === entryId);
+  const itemsHtml = imgs.map(img => {
+    const url = IMAGE_URL_MAP[img.storage_path] || '';
+    const delBtn = editable
+      ? '<button class="entry-img-del" onclick="event.stopPropagation();deleteEntryImage(\'' + img.id + '\',\'' + img.storage_path + '\')">&times;</button>'
+      : '';
+    return (
+      '<div class="entry-img-item">' +
+        '<img src="' + url + '" alt="" onclick="openLightbox(\'' + url + '\')">' +
+        delBtn +
+      '</div>'
+    );
+  }).join('');
+
+  const addBtn = (editable && imgs.length < 3)
+    ? '<button class="entry-img-add-btn" onclick="startImageUpload(\'' + entryId + '\')">＋ 画像を追加（' + imgs.length + '/3）</button>'
+    : '';
+
+  if(!itemsHtml && !addBtn) return '';
+
+  return (
+    '<div class="entry-img-section" id="imgsec-' + entryId + '">' +
+      (itemsHtml ? '<div class="entry-img-list">' + itemsHtml + '</div>' : '') +
+      '<div class="entry-img-uploading" id="img-uploading-' + entryId + '" style="display:none;">アップロード中…（圧縮しています）</div>' +
+      addBtn +
+    '</div>'
+  );
+}
+
+function startImageUpload(entryId){
+  CURRENT_UPLOAD_TARGET = { entryId: entryId };
+  document.getElementById('image-file-input').click();
+}
+
+document.getElementById('image-file-input').addEventListener('change', async () => {
+  const fileInput = document.getElementById('image-file-input');
+  const file = fileInput.files[0];
+  fileInput.value = '';
+  if(!file || !CURRENT_UPLOAD_TARGET) return;
+
+  const entryId = CURRENT_UPLOAD_TARGET.entryId;
+  const existing = ALL_IMAGES.filter(i => i.entry_id === entryId);
+  if(existing.length >= 3){ alert('画像は3枚まで追加できます'); return; }
+
+  const uploadingEl = document.getElementById('img-uploading-' + entryId);
+  if(uploadingEl) uploadingEl.style.display = 'block';
+
+  let uploadFile;
+  try{
+    uploadFile = await compressImage(file);
+  } catch(e){
+    console.error('圧縮に失敗しました。元画像をアップロードします', e);
+    uploadFile = file;
+  }
+
+  const path = 'wiki/' + TERM_ID + '/' + entryId + '/' + Date.now() + '.jpg';
+
+  const { error: upErr } = await _supabase.storage.from('wiki-images').upload(path, uploadFile);
+  if(upErr){
+    alert('アップロードに失敗しました：' + upErr.message);
+    if(uploadingEl) uploadingEl.style.display = 'none';
+    return;
+  }
+
+  const { error: insErr } = await _supabase.from('wiki_images').insert({
+    entry_id: entryId,
+    storage_path: path,
+    uploaded_by: window.CURRENT_UID || null
+  });
+  if(insErr){
+    alert('登録に失敗しました：' + insErr.message);
+  }
+
+  await reloadImagesAndUrls();
+  renderContent();
+});
+
+async function deleteEntryImage(id, path){
+  if(!confirm('この画像を削除しますか？')) return;
+  await _supabase.storage.from('wiki-images').remove([path]);
+  await _supabase.from('wiki_images').delete().eq('id', id);
+  delete IMAGE_URL_MAP[path];
+  await reloadImagesAndUrls();
+  renderContent();
+}
+
+function openLightbox(url){
+  if(!url) return;
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox-overlay').classList.add('show');
+}
+document.getElementById('lightbox-overlay').addEventListener('click', () => {
+  document.getElementById('lightbox-overlay').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+});
+
+// ===================== 解説の追加・編集・削除 =====================
+function buildAddEntryForm(){
+  return (
+    '<div class="entry-form" id="add-entry-form">' +
+      '<div class="entry-form-error" id="add-entry-error">投稿に失敗しました</div>' +
+      '<textarea class="entry-textarea" id="add-entry-textarea" placeholder="この用語について、知っていることを書いてください"></textarea>' +
+      '<div class="entry-form-actions">' +
+        '<button class="entry-form-btn cancel" id="add-entry-cancel-btn">キャンセル</button>' +
+        '<button class="entry-form-btn save" id="add-entry-save-btn">投稿する</button>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function openAddEntry(){
+  ADDING_ENTRY = true;
+  EDITING_ENTRY_ID = null;
+  renderContent();
+  setTimeout(() => { const ta = document.getElementById('add-entry-textarea'); if(ta) ta.focus(); }, 0);
+}
+function cancelAddEntry(){ ADDING_ENTRY = false; renderContent(); }
+
+async function submitNewEntry(){
+  const ta = document.getElementById('add-entry-textarea');
+  const content = ta.value.trim();
+  const errEl = document.getElementById('add-entry-error');
+  if(!content){
+    errEl.textContent = '内容を入力してください';
+    errEl.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('add-entry-save-btn');
+  btn.disabled = true; btn.textContent = '投稿中…';
+
+  const name = await getMyName();
+  const { error } = await _supabase.from('wiki_entries').insert({
+    term_id: TERM_ID,
+    content: content,
+    author_name: name,
+    author_id: window.CURRENT_UID || null
+  });
+
+  if(error){
+    btn.disabled = false; btn.textContent = '投稿する';
+    errEl.textContent = '投稿に失敗しました：' + error.message;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  ADDING_ENTRY = false;
+  await reloadEntries();
+  renderContent();
+}
+
+function buildEditEntryForm(e){
+  return (
+    '<div class="entry-card">' +
+      buildImageSection(e.id, true) +
+      '<div class="entry-form" style="margin-bottom:0;">' +
+        '<div class="entry-form-error" id="edit-entry-error-' + e.id + '">保存に失敗しました</div>' +
+        '<textarea class="entry-textarea" id="edit-entry-textarea">' + escapeHtml(e.content) + '</textarea>' +
+        '<div class="entry-form-actions">' +
+          '<button class="entry-form-btn cancel" id="edit-entry-cancel-btn">キャンセル</button>' +
+          '<button class="entry-form-btn save" id="edit-entry-save-btn">保存する</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function startEditEntry(id){ EDITING_ENTRY_ID = id; ADDING_ENTRY = false; renderContent(); }
+function cancelEditEntry(){ EDITING_ENTRY_ID = null; renderContent(); }
+
+async function saveEditEntry(id){
+  const ta = document.getElementById('edit-entry-textarea');
+  const content = ta.value.trim();
+  const errEl = document.getElementById('edit-entry-error-' + id);
+  if(!content){
+    errEl.textContent = '内容を入力してください';
+    errEl.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('edit-entry-save-btn');
+  btn.disabled = true; btn.textContent = '保存中…';
+
+  const { error } = await _supabase.from('wiki_entries')
+    .update({ content: content, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if(error){
+    btn.disabled = false; btn.textContent = '保存する';
+    errEl.textContent = '保存に失敗しました：' + error.message;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  EDITING_ENTRY_ID = null;
+  await reloadEntries();
+  renderContent();
+}
+
+async function deleteEntry(id){
+  if(!confirm('この解説を削除しますか？（画像も一緒に削除されます）')) return;
+  const imgs = ALL_IMAGES.filter(i => i.entry_id === id);
+  if(imgs.length){
+    await _supabase.storage.from('wiki-images').remove(imgs.map(i => i.storage_path));
+  }
+  const { error } = await _supabase.from('wiki_entries').delete().eq('id', id);
+  if(error){ alert('削除に失敗しました：' + error.message); return; }
+  await reloadEntries();
+  renderContent();
+}
+
+async function reloadEntries(){
+  const { data } = await _supabase
+    .from('wiki_entries')
+    .select('*')
+    .eq('term_id', TERM_ID)
+    .order('created_at', { ascending: true });
+  ALL_ENTRIES = data || [];
+  await reloadImagesAndUrls();
+  await ensureBadges(ALL_ENTRIES.map(e => e.author_id));
+}
+
+// ===================== 用語の編集・削除 =====================
+function openTermEditModal(){
+  document.getElementById('term-edit-input').value = CURRENT_TERM.term || '';
+  document.getElementById('reading-edit-input').value = CURRENT_TERM.reading || '';
+  document.getElementById('category-edit-input').value = CURRENT_TERM.category || '';
+  document.getElementById('term-edit-error').style.display = 'none';
+  document.getElementById('term-edit-modal').classList.add('show');
+}
+document.getElementById('term-edit-cancel-btn').addEventListener('click', () => {
+  document.getElementById('term-edit-modal').classList.remove('show');
+});
+document.getElementById('term-edit-save-btn').addEventListener('click', async () => {
+  const term = document.getElementById('term-edit-input').value.trim();
+  const reading = document.getElementById('reading-edit-input').value.trim();
+  const category = document.getElementById('category-edit-input').value;
+  const errEl = document.getElementById('term-edit-error');
+  if(!term){
+    errEl.textContent = '用語を入力してください';
+    errEl.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('term-edit-save-btn');
+  btn.disabled = true; btn.textContent = '保存中…';
+
+  const { error } = await _supabase.from('wiki_terms').update({
+    term: term,
+    reading: reading || null,
+    category: category || null,
+    updated_at: new Date().toISOString()
+  }).eq('id', TERM_ID);
+
+  btn.disabled = false; btn.textContent = '保存する';
+
+  if(error){
+    errEl.textContent = '保存に失敗しました：' + error.message;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  Object.assign(CURRENT_TERM, { term, reading: reading || null, category: category || null });
+  document.getElementById('term-edit-modal').classList.remove('show');
+  document.getElementById('top-title').textContent = term;
+  renderContent();
+});
+
+async function deleteTerm(){
+  if(!confirm('この用語を削除しますか？すべての解説・画像も一緒に削除されます。')) return;
+  if(ALL_IMAGES.length){
+    await _supabase.storage.from('wiki-images').remove(ALL_IMAGES.map(i => i.storage_path));
+  }
+  const { error } = await _supabase.from('wiki_terms').delete().eq('id', TERM_ID);
+  if(error){ alert('削除に失敗しました：' + error.message); return; }
+  window.location.href = 'wiki.html';
+}
+
+loadTerm();
+</script>
+</body>
+</html>

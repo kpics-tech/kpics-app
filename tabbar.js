@@ -10,7 +10,9 @@
     'other.html': 'other',
     'documents.html': 'other',
     'questions.html': 'other',
-    'account.html': 'other'
+    'account.html': 'other',
+    'wiki.html': 'manabu',
+    'wiki-detail.html': 'manabu'
   };
 
   function highlightCurrentTab(){
