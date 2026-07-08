@@ -19,10 +19,44 @@ function hideSplash(){
 function switchAuthTab(tab){
   document.getElementById('form-login').style.display  = tab==='login'  ? 'block':'none';
   document.getElementById('form-signup').style.display = tab==='signup' ? 'block':'none';
+  document.getElementById('form-forgot').style.display = 'none';
   document.getElementById('tab-login').classList.toggle('active', tab==='login');
   document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
   document.getElementById('login-error').classList.remove('show');
   document.getElementById('signup-error').classList.remove('show');
+}
+
+// ---------- パスワードをお忘れの方 ----------
+function showForgotForm(){
+  document.getElementById('form-login').style.display = 'none';
+  document.getElementById('form-signup').style.display = 'none';
+  document.getElementById('form-forgot').style.display = 'block';
+  document.getElementById('forgot-error').classList.remove('show');
+  document.getElementById('forgot-success').classList.remove('show');
+}
+function hideForgotForm(){
+  document.getElementById('form-forgot').style.display = 'none';
+  switchAuthTab('login');
+}
+async function doForgotPassword(){
+  const email = document.getElementById('forgot-email').value.trim();
+  const errEl = document.getElementById('forgot-error');
+  const okEl  = document.getElementById('forgot-success');
+  const btn   = document.getElementById('forgot-btn');
+  errEl.classList.remove('show');
+  okEl.classList.remove('show');
+  if(!email){ errEl.textContent='メールアドレスを入力してください'; errEl.classList.add('show'); return; }
+  btn.disabled = true; btn.textContent = '送信中...';
+  const redirectTo = new URL('reset-password.html', window.location.href).href;
+  const {error} = await _supabase.auth.resetPasswordForEmail(email, {redirectTo});
+  btn.disabled = false; btn.textContent = '再設定メールを送る';
+  if(error){
+    errEl.textContent = '送信に失敗しました: ' + error.message;
+    errEl.classList.add('show');
+    return;
+  }
+  okEl.textContent = 'メールを送信しました。届いたメール内のリンクから新しいパスワードを設定してください。（迷惑メールフォルダもご確認ください）';
+  okEl.classList.add('show');
 }
 
 // ---------- ログイン ----------

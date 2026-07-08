@@ -126,6 +126,17 @@ select.field{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://ww
 
     <button class="save-btn" id="acct-save" onclick="saveAccount()">保存する</button>
     <div class="acct-msg" id="acct-msg"></div>
+  </div>
+
+  <div class="acct-card ready" id="pw-card" style="margin-top:16px;">
+    <div class="field-label" style="margin-top:0;">パスワードの変更</div>
+    <div class="field-hint" style="margin-top:0;margin-bottom:2px;">新しいパスワードを入力してください（6文字以上）。</div>
+    <div class="field-label">新しいパスワード</div>
+    <input class="field" type="password" id="pw-new" placeholder="新しいパスワード" autocomplete="new-password">
+    <div class="field-label">新しいパスワード（確認）</div>
+    <input class="field" type="password" id="pw-new-confirm" placeholder="もう一度入力" autocomplete="new-password">
+    <button class="save-btn" id="pw-save" onclick="changePassword()">パスワードを変更する</button>
+    <div class="acct-msg" id="pw-msg"></div>
 
     <div class="logout-row">
       <button class="logout-link" onclick="doLogout()">ログアウト</button>
@@ -220,6 +231,50 @@ async function saveAccount(){
     return;
   }
   msg.textContent = '保存しました ✓';
+  msg.className = 'acct-msg ok show';
+}
+
+async function changePassword(){
+  const msg = document.getElementById('pw-msg');
+  msg.className = 'acct-msg';
+
+  const pw  = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-new-confirm').value;
+
+  if(!pw || !pw2){
+    msg.textContent = 'パスワードを入力してください';
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  if(pw.length < 6){
+    msg.textContent = 'パスワードは6文字以上にしてください';
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  if(pw !== pw2){
+    msg.textContent = 'パスワードが一致しません';
+    msg.className = 'acct-msg err show';
+    return;
+  }
+
+  const btn = document.getElementById('pw-save');
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = '変更中...';
+
+  const { error } = await _supabase.auth.updateUser({ password: pw });
+
+  btn.disabled = false;
+  btn.textContent = orig;
+
+  if(error){
+    msg.textContent = '変更に失敗しました: ' + error.message;
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-new-confirm').value = '';
+  msg.textContent = 'パスワードを変更しました ✓';
   msg.className = 'acct-msg ok show';
 }
 

@@ -122,6 +122,18 @@ button{font-family:inherit;}
 .auth-btn:hover{background:var(--orange-light);transform:translateY(-1px);}
 .auth-btn:disabled{background:var(--border);color:var(--text-dim);cursor:not-allowed;transform:none;}
 .auth-hint{font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;line-height:1.6;}
+.auth-forgot{font-size:11.5px;text-align:right;margin-top:10px;}
+.auth-forgot a{color:var(--orange-light);text-decoration:none;cursor:pointer;}
+.auth-forgot a:hover{text-decoration:underline;}
+.auth-success{
+  font-size:11.5px;color:#7fe0a0;background:rgba(80,200,120,.12);
+  border:1px solid rgba(80,200,120,.4);border-radius:6px;
+  padding:9px 11px;margin-top:12px;display:none;line-height:1.5;
+}
+.auth-success.show{display:block;}
+.auth-back-link{font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit;display:block;width:100%;}
+.auth-back-link:hover{color:var(--text-muted);}
+.auth-box-desc{font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:6px;}
 
 /* ===================== HOME ===================== */
 #home-screen{display:none;min-height:100vh;}
@@ -560,7 +572,18 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
         <input class="field" type="password" id="login-password" placeholder="パスワード" autocomplete="current-password">
         <div class="auth-error" id="login-error"></div>
         <button class="auth-btn" id="login-btn" onclick="doLogin()">ログイン</button>
+        <div class="auth-forgot"><a onclick="showForgotForm();return false;" href="#">パスワードをお忘れですか？</a></div>
         <div class="auth-hint">認定試験アプリに登録済みの方は<br>同じメールアドレス・パスワードでログインできます</div>
+      </div>
+
+      <div id="form-forgot" style="display:none;">
+        <div class="auth-box-desc">登録しているメールアドレスを入力してください。パスワード再設定用のリンクをメールで送ります。</div>
+        <div class="auth-field-label">メールアドレス</div>
+        <input class="field" type="email" id="forgot-email" placeholder="example@med.ac.jp" autocomplete="username">
+        <div class="auth-error" id="forgot-error"></div>
+        <div class="auth-success" id="forgot-success"></div>
+        <button class="auth-btn" id="forgot-btn" onclick="doForgotPassword()">再設定メールを送る</button>
+        <button class="auth-back-link" onclick="hideForgotForm();return false;">ログイン画面に戻る</button>
       </div>
 
       <div id="form-signup" style="display:none;">
