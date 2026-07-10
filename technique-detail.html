@@ -146,6 +146,37 @@ button{font-family:inherit;}
 .marker-picker button.active{border-color:var(--orange);color:var(--orange);background:var(--orange-bg);}
 .marker-picker button.none-btn{width:auto;padding:0 10px;font-size:11px;}
 
+/* ===== 描出ゴール・評価コメント（試技対策の核） ===== */
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px 17px;margin-bottom:12px;}
+.goal-head{font-size:10.5px;color:var(--text-muted);font-weight:700;letter-spacing:.05em;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.goal-line{display:flex;gap:9px;font-size:13px;line-height:1.75;margin-bottom:6px;word-break:break-word;}
+.goal-line:last-child{margin-bottom:0;}
+.goal-check{color:var(--orange);flex-shrink:0;font-weight:900;}
+
+.say-card{
+  background:linear-gradient(135deg, rgba(232,160,32,.13), rgba(232,160,32,.05));
+  border:1px solid rgba(232,160,32,.45);border-radius:16px;
+  padding:15px 17px;margin-bottom:14px;position:relative;
+}
+.say-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
+.say-label{font-size:10.5px;color:var(--orange);font-weight:700;letter-spacing:.06em;display:flex;align-items:center;gap:6px;}
+.say-copy{
+  background:none;border:1px solid rgba(232,160,32,.4);color:var(--orange);
+  font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;flex-shrink:0;
+}
+.say-copy:active{background:var(--orange-bg);}
+.say-text{font-size:15px;font-weight:700;line-height:1.95;white-space:pre-wrap;word-break:break-word;transition:filter .2s;}
+.say-text.veiled{filter:blur(8px);cursor:pointer;user-select:none;}
+.say-veil-hint{font-size:10px;color:var(--text-muted);margin-top:8px;display:none;}
+.say-card.is-veiled .say-veil-hint{display:block;}
+
+.selfcheck-row{display:flex;justify-content:flex-end;margin-bottom:12px;}
+.selfcheck-btn{
+  display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border-light);
+  color:var(--text-muted);font-size:11px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer;transition:all .15s;
+}
+.selfcheck-btn.on{border-color:var(--orange);color:var(--orange);background:var(--orange-bg);}
+
 /* ⑧⑨ 失敗例・コツ投稿セクション */
 .tip-section{margin-top:8px;}
 .tip-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;}
@@ -293,7 +324,7 @@ button{font-family:inherit;}
 <div class="modal-overlay" id="edit-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">①〜⑥を編集</div>
+      <div class="modal-title">内容を編集</div>
       <button class="modal-close" id="edit-modal-close">&times;</button>
     </div>
     <div class="modal-scroll" id="modal-fields"></div>
@@ -349,6 +380,12 @@ const FIELDS = [
   { key: 'content_screen',     num: '④', label: '見える画面' },
   { key: 'content_operation',  num: '⑤', label: '必要な操作（扇動走査など）' },
   { key: 'content_evaluation', num: '⑥', label: '評価項目' }
+];
+
+// 試技対策用の特別フィールド（番号なし・ページ最上部に大きく表示される）
+const SPECIAL_FIELDS = [
+  { key: 'content_goal',    num: '✓', label: '描出ゴール（これができればOK・1行に1項目）' },
+  { key: 'content_comment', num: '💬', label: '評価コメント（試技でそのまま言うセリフ）' }
 ];
 
 // マーカーの向き：8方向。角度は「画面の上を0度」として時計回り
@@ -458,6 +495,38 @@ function renderContent(){
       '</div>' +
     '</div>';
 
+  // --- 描出ゴール（これができればOK） ---
+  const goalVal = CURRENT_REGION.content_goal;
+  const goalCard = goalVal
+    ? '<div class="goal-card">' +
+        '<div class="goal-head">🎯 描出ゴール ― これができればOK</div>' +
+        goalVal.split('\n').filter(l => l.trim()).map(l =>
+          '<div class="goal-line"><span class="goal-check">✓</span><span>' + escapeHtml(l.trim()) + '</span></div>'
+        ).join('') +
+      '</div>'
+    : '';
+
+  // --- 評価コメント（そのまま言うセリフ） ---
+  const sayVal = CURRENT_REGION.content_comment;
+  const sayCard = sayVal
+    ? '<div class="say-card' + (SELF_CHECK ? ' is-veiled' : '') + '">' +
+        '<div class="say-head">' +
+          '<div class="say-label">💬 評価コメント ― このまま言う</div>' +
+          '<button class="say-copy" onclick="copyComment()">コピー</button>' +
+        '</div>' +
+        '<div class="say-text' + (SELF_CHECK ? ' veiled' : '') + '" id="say-text" onclick="revealComment(this)">' + escapeHtml(sayVal) + '</div>' +
+        '<div class="say-veil-hint">セルフチェック中：自分で言えたらタップして答え合わせ</div>' +
+      '</div>'
+    : '';
+
+  const selfCheckRow = sayVal
+    ? '<div class="selfcheck-row">' +
+        '<button class="selfcheck-btn' + (SELF_CHECK ? ' on' : '') + '" onclick="toggleSelfCheck()">' +
+          (SELF_CHECK ? '👁 コメントを表示する' : '🙈 セルフチェック（コメントを隠す）') +
+        '</button>' +
+      '</div>'
+    : '';
+
   document.getElementById('main-content').innerHTML =
     '<div class="region-hero">' +
       '<div class="region-hero-title">' + escapeHtml(CURRENT_REGION.name) + '</div>' +
@@ -467,6 +536,9 @@ function renderContent(){
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg>' +
       '編集する' +
     '</button>' +
+    selfCheckRow +
+    goalCard +
+    sayCard +
     quickfactsHtml +
     posCard +
     screenCard +
@@ -476,6 +548,32 @@ function renderContent(){
     '<div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>';
 
   document.getElementById('open-edit-btn').addEventListener('click', openEditModal);
+}
+
+// ===================== セルフチェック・コメントコピー =====================
+let SELF_CHECK = false;
+
+function toggleSelfCheck(){
+  SELF_CHECK = !SELF_CHECK;
+  renderContent();
+}
+
+function revealComment(el){
+  if(el.classList.contains('veiled')){
+    el.classList.remove('veiled');
+    const card = el.closest('.say-card');
+    if(card) card.classList.remove('is-veiled');
+  }
+}
+
+async function copyComment(){
+  const text = CURRENT_REGION.content_comment || '';
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('コメントをコピーしました');
+  }catch(e){
+    alert('コピーに失敗しました');
+  }
 }
 
 // 複数枚アップロードされた画像を、すべてカード内に縦に並べて表示する
@@ -777,6 +875,15 @@ document.getElementById('lightbox-overlay').addEventListener('click', () => {
 
 // ===================== 編集モーダル =====================
 function openEditModal(){
+  const specialHtml = SPECIAL_FIELDS.map(f => {
+    const val = CURRENT_REGION[f.key] || '';
+    return (
+      '<div class="modal-field">' +
+        '<div class="modal-label"><span class="num mono">' + f.num + '</span>' + f.label + '</div>' +
+        '<textarea class="modal-textarea" data-key="' + f.key + '" rows="3">' + escapeHtml(val) + '</textarea>' +
+      '</div>'
+    );
+  }).join('');
   const fieldsHtml = FIELDS.map(f => {
     const val = CURRENT_REGION[f.key] || '';
     const markerPicker = (f.key === 'content_position') ? buildMarkerPicker() : '';
@@ -789,7 +896,7 @@ function openEditModal(){
       '</div>'
     );
   }).join('');
-  document.getElementById('modal-fields').innerHTML = fieldsHtml;
+  document.getElementById('modal-fields').innerHTML = specialHtml + fieldsHtml;
   document.getElementById('edit-error').style.display = 'none';
   document.getElementById('edit-modal').classList.add('show');
 }
