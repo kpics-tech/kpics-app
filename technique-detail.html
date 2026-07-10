@@ -124,7 +124,7 @@ button{font-family:inherit;}
 }
 .visual-card-label{font-size:14.5px;font-weight:900;}
 .visual-img-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:10px;background:var(--black);}
-.visual-img-wrap img{width:100%;display:block;max-height:340px;object-fit:cover;cursor:zoom-in;}
+.visual-img-wrap img{width:100%;display:block;max-height:480px;object-fit:contain;cursor:zoom-in;background:var(--black);}
 .marker-badge{
   position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;
   background:rgba(12,12,12,.7);backdrop-filter:blur(3px);border:1.5px solid var(--orange);
@@ -229,7 +229,7 @@ button{font-family:inherit;}
 .tip-card .field-img-section{padding-left:0;margin-bottom:10px;}
 .field-img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
 .field-img-item{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--black);}
-.field-img-item img{width:100%;display:block;cursor:zoom-in;max-height:280px;object-fit:cover;}
+.field-img-item img{width:100%;display:block;cursor:zoom-in;max-height:420px;object-fit:contain;background:var(--black);}
 .field-img-del{
   position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;
   background:rgba(0,0,0,.65);color:#fff;border:none;font-size:15px;cursor:pointer;
@@ -293,7 +293,7 @@ button{font-family:inherit;}
 <div class="modal-overlay" id="edit-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">①〜⑦を編集</div>
+      <div class="modal-title">①〜⑥を編集</div>
       <button class="modal-close" id="edit-modal-close">&times;</button>
     </div>
     <div class="modal-scroll" id="modal-fields"></div>
@@ -343,12 +343,12 @@ window.addEventListener('DOMContentLoaded', function(){
 
 // ===================== 設定 =====================
 const FIELDS = [
-  { key: 'content_probe',      num: '②', label: '使用プローブ' },
-  { key: 'content_grip',       num: '③', label: 'プローブの持ち方' },
-  { key: 'content_position',   num: '④', label: '当てる部位' },
-  { key: 'content_screen',     num: '⑤', label: '見える画面' },
-  { key: 'content_operation',  num: '⑥', label: '必要な操作（扇動走査など）' },
-  { key: 'content_evaluation', num: '⑦', label: '評価項目' }
+  { key: 'content_probe',      num: '①', label: '使用プローブ' },
+  { key: 'content_grip',       num: '②', label: 'プローブの持ち方' },
+  { key: 'content_position',   num: '③', label: '当てる部位' },
+  { key: 'content_screen',     num: '④', label: '見える画面' },
+  { key: 'content_operation',  num: '⑤', label: '必要な操作（扇動走査など）' },
+  { key: 'content_evaluation', num: '⑥', label: '評価項目' }
 ];
 
 // マーカーの向き：8方向。角度は「画面の上を0度」として時計回り
@@ -428,35 +428,32 @@ function renderContent(){
 
   const quickfactsHtml =
     '<div class="quickfacts-row">' +
-      qf('content_probe', '🔧', '②プローブ') +
-      qf('content_grip', '✋', '③持ち方') +
-      qf('content_operation', '🎛️', '⑥操作') +
+      qf('content_probe', '🔧', '①プローブ') +
+      qf('content_grip', '✋', '②持ち方') +
+      qf('content_operation', '🎛️', '⑤操作') +
     '</div>';
 
   const positionImgs = ALL_IMAGES.filter(i => i.field_key === 'content_position' && !i.tip_id);
-  const firstPosImg = positionImgs[0] ? (IMAGE_URL_MAP[positionImgs[0].storage_path] || '') : '';
-  const markerBadge = (firstPosImg && CURRENT_REGION.marker_angle !== null && CURRENT_REGION.marker_angle !== undefined)
-    ? '<div class="marker-badge" title="マーカーの向き">' + arrowSvg(CURRENT_REGION.marker_angle) + '</div>'
-    : '';
+  const posImagesHtml = buildVisualImageList(positionImgs, true);
   const posVal = CURRENT_REGION.content_position;
   const posCard =
     '<div class="visual-card">' +
-      '<div class="visual-card-head"><div class="visual-card-num mono">④</div><div class="visual-card-label">当てる部位</div></div>' +
-      (firstPosImg ? '<div class="visual-img-wrap"><img src="' + firstPosImg + '" alt="" onclick="openLightbox(\'' + firstPosImg + '\')">' + markerBadge + '</div>' : '') +
+      '<div class="visual-card-head"><div class="visual-card-num mono">③</div><div class="visual-card-label">当てる部位</div></div>' +
+      posImagesHtml +
       '<div class="visual-card-text' + (posVal ? '' : ' empty') + '">' + (posVal ? escapeHtml(posVal) : 'まだ入力されていません') + '</div>' +
     '</div>';
 
   const screenImgs = ALL_IMAGES.filter(i => i.field_key === 'content_screen' && !i.tip_id);
-  const firstScreenImg = screenImgs[0] ? (IMAGE_URL_MAP[screenImgs[0].storage_path] || '') : '';
+  const screenImagesHtml = buildVisualImageList(screenImgs, false);
   const screenVal = CURRENT_REGION.content_screen;
   const evalVal = CURRENT_REGION.content_evaluation;
   const screenCard =
     '<div class="visual-card">' +
-      '<div class="visual-card-head"><div class="visual-card-num mono">⑤</div><div class="visual-card-label">見える画面</div></div>' +
-      (firstScreenImg ? '<div class="visual-img-wrap"><img src="' + firstScreenImg + '" alt="" onclick="openLightbox(\'' + firstScreenImg + '\')"></div>' : '') +
+      '<div class="visual-card-head"><div class="visual-card-num mono">④</div><div class="visual-card-label">見える画面</div></div>' +
+      screenImagesHtml +
       '<div class="visual-card-text' + (screenVal ? '' : ' empty') + '">' + (screenVal ? escapeHtml(screenVal) : 'まだ入力されていません') + '</div>' +
       '<div class="eval-sub">' +
-        '<div class="eval-sub-label">⑦評価ポイント</div>' +
+        '<div class="eval-sub-label">⑥評価ポイント</div>' +
         '<div class="visual-card-text' + (evalVal ? '' : ' empty') + '">' + (evalVal ? escapeHtml(evalVal) : 'まだ入力されていません') + '</div>' +
       '</div>' +
     '</div>';
@@ -473,11 +470,25 @@ function renderContent(){
     quickfactsHtml +
     posCard +
     screenCard +
-    buildTipSection('mistake', '⑧', 'よくある失敗例') +
-    buildTipSection('tip', '⑨', '手技のコツ') +
+    buildTipSection('mistake', '⑦', 'よくある失敗例') +
+    buildTipSection('tip', '⑧', '手技のコツ') +
+    buildTipSection('extra', '⑨', '＋αの知識') +
     '<div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>';
 
   document.getElementById('open-edit-btn').addEventListener('click', openEditModal);
+}
+
+// 複数枚アップロードされた画像を、すべてカード内に縦に並べて表示する
+// （以前は positionImgs[0] / screenImgs[0] のように先頭の1枚しか表示していなかったバグを修正）
+function buildVisualImageList(imgs, withMarker){
+  return imgs.map((img, i) => {
+    const url = IMAGE_URL_MAP[img.storage_path] || '';
+    if(!url) return '';
+    const badge = (withMarker && i === 0 && CURRENT_REGION.marker_angle !== null && CURRENT_REGION.marker_angle !== undefined)
+      ? '<div class="marker-badge" title="マーカーの向き">' + arrowSvg(CURRENT_REGION.marker_angle) + '</div>'
+      : '';
+    return '<div class="visual-img-wrap"><img src="' + url + '" alt="" onclick="openLightbox(\'' + url + '\')">' + badge + '</div>';
+  }).join('');
 }
 
 // ===================== ⑧⑨ 失敗例・コツ投稿 =====================
@@ -574,13 +585,13 @@ async function submitNewTip(type){
   btn.disabled = true; btn.textContent = '投稿中…';
 
   const name = await getMyName();
-  const { error } = await _supabase.from('technique_tips').insert({
+  const { data: inserted, error } = await _supabase.from('technique_tips').insert({
     region_id: REGION_ID,
     tip_type: type,
     content: content,
     author_name: name,
     author_id: window.CURRENT_UID || null
-  });
+  }).select().single();
 
   if(error){
     btn.disabled = false; btn.textContent = '投稿する';
@@ -591,6 +602,8 @@ async function submitNewTip(type){
 
   ADDING_TYPE = null;
   await reloadTips();
+  // 投稿直後、そのまま編集モードにして写真を1枚追加できるようにする
+  EDITING_TIP_ID = inserted ? inserted.id : null;
   renderContent();
 }
 

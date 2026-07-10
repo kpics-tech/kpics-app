@@ -18,6 +18,8 @@ let _myName = '';
 let _myIsCore = false;
 let _questionsCache = []; // 取得した質問をキャッシュしておく（コメント開閉時の再取得を避けるため）
 let _badgeMap = {}; // user_id -> {is_teacher, is_core_member, is_certified}（取得済みバッジのキャッシュ）
+let _qImageUrlMap = {}; // storage_path -> signed url（質問添付画像）
+let _postImageFiles = []; // 投稿モーダルで選択中の画像ファイル（最大2枚）
 
 // ---------- 初期化：自分の名前・権限を取得してから質問一覧を読み込む ----------
 async function initQuestionsPage(){
@@ -85,7 +87,21 @@ async function loadQuestions(){
     return;
   }
   await ensureBadges(_questionsCache.map(q => q.user_id));
+  await ensureQuestionImageUrls(_questionsCache);
   renderQuestions();
+}
+
+// ---------- 添付画像の署名付きURL取得（未取得のpathだけ問い合わせる） ----------
+async function ensureQuestionImageUrls(questions){
+  const paths = [];
+  questions.forEach(q => {
+    (q.image_paths || []).forEach(p => { if(p && !(p in _qImageUrlMap)) paths.push(p); });
+  });
+  if(paths.length === 0) return;
+  await Promise.all(paths.map(async p => {
+    const { data } = await _supabase.storage.from('question-images').createSignedUrl(p, 3600);
+    if(data) _qImageUrlMap[p] = data.signedUrl;
+  }));
 }
 
 function renderQuestions(){
@@ -101,6 +117,13 @@ function renderQuestionCard(q){
   const delBtnHtml = canDelete(q.user_id)
     ? `<button class="q-delete-btn" onclick="deleteQuestion('${q.id}')">削除</button>`
     : '';
+  const imgPaths = q.image_paths || [];
+  const imagesHtml = imgPaths.length > 0
+    ? `<div class="q-images">${imgPaths.map(p => {
+        const url = _qImageUrlMap[p] || '';
+        return url ? `<img src="${url}" alt="" onclick="openLightbox('${url}')">` : '';
+      }).join('')}</div>`
+    : '';
   return `
     <div class="q-card" data-qid="${q.id}">
       <div class="q-card-head">
@@ -110,6 +133,7 @@ function renderQuestionCard(q){
         <div class="q-time">${formatRelativeTime(q.created_at)}</div>
       </div>
       <div class="q-content">${escapeHtml(q.content)}</div>
+      ${imagesHtml}
       <div class="q-actions">
         <button class="q-reply-toggle" onclick="toggleReplies('${q.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
@@ -252,6 +276,8 @@ function openPostModal(){
   document.getElementById('post-content').value = '';
   document.getElementById('post-anon-toggle').checked = false;
   document.getElementById('post-error').classList.remove('show');
+  _postImageFiles = [];
+  renderImgAttachRow();
   document.getElementById('post-overlay').classList.add('open');
 }
 function closeModal(id){
@@ -259,6 +285,53 @@ function closeModal(id){
 }
 function closeOnOverlay(ev, id){
   if(ev.target.id === id) closeModal(id);
+}
+
+// ---------- 画像添付（質問投稿・最大2枚） ----------
+function renderImgAttachRow(){
+  const row = document.getElementById('img-attach-row');
+  const thumbs = _postImageFiles.map((file, i) => {
+    const url = URL.createObjectURL(file);
+    return `<div class="img-attach-thumb"><img src="${url}" alt="">
+      <button type="button" class="img-attach-remove" onclick="removeAttachImage(${i})">✕</button>
+    </div>`;
+  }).join('');
+  const addBtn = _postImageFiles.length < 2
+    ? `<button type="button" class="img-attach-add" onclick="document.getElementById('post-image-input').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        画像
+      </button>`
+    : '';
+  row.innerHTML = thumbs + addBtn;
+}
+
+function removeAttachImage(i){
+  _postImageFiles.splice(i, 1);
+  renderImgAttachRow();
+}
+
+document.getElementById('post-image-input').addEventListener('change', () => {
+  const input = document.getElementById('post-image-input');
+  const file = input.files[0];
+  input.value = '';
+  if(!file) return;
+  if(_postImageFiles.length >= 2){
+    alert('画像は1投稿あたり2枚までです');
+    return;
+  }
+  _postImageFiles.push(file);
+  renderImgAttachRow();
+});
+
+// ---------- ライトボックス ----------
+function openLightbox(url){
+  if(!url) return;
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox-overlay').classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('lightbox-overlay').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
 }
 
 async function submitQuestion(){
@@ -275,11 +348,28 @@ async function submitQuestion(){
   }
 
   btn.disabled = true; btn.textContent = '投稿中...';
-  const {error} = await _supabase.from('questions').insert({
+
+  // 画像を先にアップロードしてパスを集める（最大2枚）
+  const imagePaths = [];
+  for(const file of _postImageFiles){
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = (window.CURRENT_UID || 'anon') + '/' + Date.now() + '_' + imagePaths.length + '.' + ext;
+    const { error: upErr } = await _supabase.storage.from('question-images').upload(path, file);
+    if(upErr){
+      btn.disabled = false; btn.textContent = '投稿する';
+      errEl.textContent = '画像のアップロードに失敗しました: ' + upErr.message;
+      errEl.classList.add('show');
+      return;
+    }
+    imagePaths.push(path);
+  }
+
+  const { error } = await _supabase.from('questions').insert({
     user_id: window.CURRENT_UID,
     is_anonymous: isAnon,
     author_name: isAnon ? null : _myName,
-    content: content
+    content: content,
+    image_paths: imagePaths.length > 0 ? imagePaths : null
   });
   btn.disabled = false; btn.textContent = '投稿する';
 
