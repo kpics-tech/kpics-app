@@ -312,14 +312,19 @@ function removeAttachImage(i){
 
 document.getElementById('post-image-input').addEventListener('change', () => {
   const input = document.getElementById('post-image-input');
-  const file = input.files[0];
+  const files = Array.from(input.files || []);
   input.value = '';
-  if(!file) return;
-  if(_postImageFiles.length >= 2){
+  if(files.length === 0) return;
+
+  const remaining = 2 - _postImageFiles.length;
+  if(remaining <= 0){
     alert('画像は1投稿あたり2枚までです');
     return;
   }
-  _postImageFiles.push(file);
+  if(files.length > remaining){
+    alert('画像は1投稿あたり2枚までです。先頭の' + remaining + '枚のみ追加します');
+  }
+  _postImageFiles.push(...files.slice(0, remaining));
   renderImgAttachRow();
 });
 

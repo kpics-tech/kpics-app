@@ -128,6 +128,15 @@ select.field{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://ww
     <div class="acct-msg" id="acct-msg"></div>
   </div>
 
+  <div class="acct-card ready" id="role-switch-card" style="margin-top:16px;display:none;">
+    <div class="field-label" style="margin-top:0;">確認者への切り替え</div>
+    <div class="field-hint" style="margin-top:0;margin-bottom:2px;">招待コードを入力すると、このアカウントのまま確認者に切り替わります。</div>
+    <div class="field-label">招待コード</div>
+    <input class="field" type="text" id="role-invite" placeholder="招待コード">
+    <button class="save-btn" id="role-switch-btn" onclick="switchToReviewer()">確認者に切り替える</button>
+    <div class="acct-msg" id="role-msg"></div>
+  </div>
+
   <div class="acct-card ready" id="pw-card" style="margin-top:16px;">
     <div class="field-label" style="margin-top:0;">パスワードの変更</div>
     <div class="field-hint" style="margin-top:0;margin-bottom:2px;">新しいパスワードを入力してください（6文字以上）。</div>
@@ -195,6 +204,7 @@ async function loadAccount(){
   document.getElementById('acct-year').value = (y === null || y === undefined || y === '') ? '' : String(y);
   const role = (profile && profile.role) ? profile.role : 'member';
   document.getElementById('acct-role').textContent = (role === 'reviewer') ? '確認者' : '部員';
+  document.getElementById('role-switch-card').style.display = (role === 'member') ? '' : 'none';
 
   document.getElementById('acct-card').classList.add('ready');
   document.getElementById('splash').classList.add('hide');
@@ -232,6 +242,46 @@ async function saveAccount(){
   }
   msg.textContent = '保存しました ✓';
   msg.className = 'acct-msg ok show';
+}
+
+const REVIEWER_INVITE_CODE = 'KPICS-REVIEWER-2026'; // 認定アプリと同じ招待コード
+
+async function switchToReviewer(){
+  const code = document.getElementById('role-invite').value.trim();
+  const msg = document.getElementById('role-msg');
+  msg.className = 'acct-msg';
+  if(!code){
+    msg.textContent = '招待コードを入力してください';
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  if(code !== REVIEWER_INVITE_CODE){
+    msg.textContent = '招待コードが正しくありません';
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  const uid = window.CURRENT_UID;
+  if(!uid){ location.href = 'index.html'; return; }
+
+  const btn = document.getElementById('role-switch-btn');
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = '切り替え中...';
+
+  const { error } = await _supabase.from('profiles').update({ role: 'reviewer' }).eq('id', uid);
+
+  btn.disabled = false;
+  btn.textContent = orig;
+
+  if(error){
+    msg.textContent = '切り替えに失敗しました: ' + error.message;
+    msg.className = 'acct-msg err show';
+    return;
+  }
+  msg.textContent = '確認者に切り替わりました ✓（次回ログイン時から反映されます）';
+  msg.className = 'acct-msg ok show';
+  document.getElementById('acct-role').textContent = '確認者';
+  document.getElementById('role-switch-card').style.display = 'none';
 }
 
 async function changePassword(){
