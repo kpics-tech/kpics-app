@@ -24,6 +24,8 @@ function switchAuthTab(tab){
   document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
   document.getElementById('login-error').classList.remove('show');
   document.getElementById('signup-error').classList.remove('show');
+  const okEl = document.getElementById('signup-success');
+  if(okEl) okEl.classList.remove('show');
 }
 
 // ---------- パスワードをお忘れの方 ----------
@@ -92,6 +94,15 @@ async function doSignup(){
   btn.disabled=true; btn.textContent='登録中...';
   const {data,error}=await _supabase.auth.signUp({email,password});
   if(error){ btn.disabled=false; btn.textContent='登録する'; errEl.textContent='登録に失敗しました: '+error.message; errEl.classList.add('show'); return; }
+
+  // メール確認が必要な設定の場合、この時点ではまだログイン状態にならない。
+  // その場合プロフィール保存も通らないため、確認メールの案内だけ出して終える。
+  if(!data.session){
+    btn.disabled=false; btn.textContent='登録する';
+    showSignupSuccess('確認メールを送信しました。メール内のリンクを開いてから、ログインしてください。（迷惑メールフォルダもご確認ください）');
+    return;
+  }
+
   const uid=data.user.id;
   let pErr=null;
   for(let attempt=0;attempt<3;attempt++){
@@ -106,6 +117,25 @@ async function doSignup(){
     errEl.classList.add('show');
     return;
   }
+  showSignupSuccess(`登録が完了しました。ようこそ、${name} さん。`);
+}
+
+// ---------- 新規登録の成功メッセージ ----------
+// index.html を書き換えなくて済むよう、表示欄はここで動的に作る
+// （既存の .auth-success スタイルをそのまま使う）
+function showSignupSuccess(message){
+  const errEl = document.getElementById('signup-error');
+  if(!errEl) return;
+  let okEl = document.getElementById('signup-success');
+  if(!okEl){
+    okEl = document.createElement('div');
+    okEl.id = 'signup-success';
+    okEl.className = 'auth-success';
+    errEl.insertAdjacentElement('afterend', okEl);
+  }
+  errEl.classList.remove('show');
+  okEl.textContent = message;
+  okEl.classList.add('show');
 }
 
 // ---------- ログアウト ----------
@@ -187,6 +217,20 @@ setTimeout(()=>{
     document.getElementById('auth-screen').classList.add('active');
   }
 }, 4000);
+
+// ---------- キーボード操作への対応 ----------
+// role="button" tabindex="0" を付けた <div>（メニューカードなど）は、
+// そのままだとキーボードのEnter／スペースで押せない。
+// フォーカス中の要素がその形なら、クリックと同じ動きをさせる。
+document.addEventListener('keydown', function(ev){
+  if(ev.key !== 'Enter' && ev.key !== ' ' && ev.key !== 'Spacebar') return;
+  const el = document.activeElement;
+  if(!el || el.getAttribute('role') !== 'button') return;
+  // 本物のボタン・リンク・入力欄はブラウザ標準の動作に任せる
+  if(['BUTTON','A','INPUT','TEXTAREA','SELECT'].includes(el.tagName)) return;
+  ev.preventDefault();
+  el.click();
+});
 
 // ---------- PWA: ホーム画面に追加した時に正しく動くようにする ----------
 if('serviceWorker' in navigator){

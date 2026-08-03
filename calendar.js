@@ -45,7 +45,7 @@ async function loadEvents(){
   const {data, error} = await _supabase.from('events').select('*').order('event_date',{ascending:true});
   if(error){
     console.error(error);
-    document.getElementById('agenda-list').innerHTML = `<div class="empty-state">読み込みに失敗しました<br>${error.message}</div>`;
+    document.getElementById('agenda-list').innerHTML = `<div class="empty-state">読み込みに失敗しました<br>${escapeHtml(error.message)}</div>`;
     return;
   }
   EVENTS = data || [];
