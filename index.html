@@ -207,6 +207,21 @@ button{font-family:inherit;}
 .menu-title{font-size:13.5px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .menu-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.35;}
 .menu-chevron{color:var(--text-dim);flex-shrink:0;transition:transform .18s;}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.quick-tile{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;text-decoration:none;color:var(--text);transition:all .18s;
+  position:relative;overflow:hidden;display:block;
+}
+.quick-tile:hover{background:var(--card-hover);border-color:var(--border-light);transform:translateY(-1px);}
+.quick-tile:active{transform:translateY(0) scale(.99);}
+.quick-tile-icon{
+  width:32px;height:32px;border-radius:8px;background:var(--orange-bg);
+  display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:8px;
+}
+.quick-tile-title{font-size:12.5px;font-weight:700;line-height:1.3;}
+.quick-tile-desc{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.3;}
+.quick-tile-ext{position:absolute;top:10px;right:10px;font-size:9px;color:var(--text-dim);}
 .menu-card:hover .menu-chevron{transform:translateX(2px);color:var(--orange);}
 .badge-soon{
   font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--text-dim);
@@ -665,6 +680,28 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
           <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
         </div>
         <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="sec-label">よく使う機能</div>
+    <div class="quick-grid">
+      <a class="quick-tile" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
+        <span class="quick-tile-ext">外部 ↗</span>
+        <div class="quick-tile-icon">🎥</div>
+        <div class="quick-tile-title">Waza-ari</div>
+      </a>
+      <a class="quick-tile" href="technique.html">
+        <div class="quick-tile-icon">🩺</div>
+        <div class="quick-tile-title">自主練ハンドブック</div>
+      </a>
+      <a class="quick-tile" href="documents.html">
+        <div class="quick-tile-icon">📁</div>
+        <div class="quick-tile-title">資料</div>
+        <div class="quick-tile-desc">セミナー資料はこちら</div>
+      </a>
+      <a class="quick-tile" href="calendar.html">
+        <div class="quick-tile-icon">🗓️</div>
+        <div class="quick-tile-title">カレンダー</div>
       </a>
     </div>
 
