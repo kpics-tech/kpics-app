@@ -17,6 +17,9 @@
 let _myName = '';
 let _myIsCore = false;
 let _questionsCache = []; // 取得した質問をキャッシュしておく（コメント開閉時の再取得を避けるため）
+const QUESTIONS_PAGE_SIZE = 20; // 一度に読み込む質問の件数
+let _questionsHasMore = true; // まだ読み込んでいない古い質問が残っているか
+let _questionsLoadingMore = false; // 「もっと見る」の連打防止
 let _badgeMap = {}; // user_id -> {is_teacher, is_core_member, is_certified}（取得済みバッジのキャッシュ）
 let _qImageUrlMap = {}; // storage_path -> signed url（質問添付画像）
 let _postImageFiles = []; // 投稿モーダルで選択中の画像ファイル（最大2枚）
@@ -100,25 +103,55 @@ function canDelete(ownerId){
   return ownerId === window.CURRENT_UID || _myIsCore;
 }
 
-// ---------- 質問一覧の読み込み ----------
+// ---------- 質問一覧の読み込み（最初の20件だけ） ----------
 async function loadQuestions(){
   const listEl = document.getElementById('q-list');
   const {data, error} = await _supabase
     .from('questions')
     .select('*')
-    .order('created_at', {ascending:false});
+    .order('created_at', {ascending:false})
+    .range(0, QUESTIONS_PAGE_SIZE - 1);
 
   if(error){
     listEl.innerHTML = `<div class="empty-state">読み込みに失敗しました<br>${escapeHtml(error.message)}</div>`;
     return;
   }
   _questionsCache = data || [];
+  _questionsHasMore = (data || []).length === QUESTIONS_PAGE_SIZE;
   if(_questionsCache.length === 0){
     listEl.innerHTML = `<div class="empty-state">まだ質問がありません。<br>右下の＋ボタンから最初の質問を投稿してみましょう。</div>`;
     return;
   }
   await ensureBadges(_questionsCache.map(q => q.user_id));
   await ensureQuestionImageUrls(_questionsCache);
+  renderQuestions();
+}
+
+// ---------- 質問一覧の追加読み込み（「もっと見る」） ----------
+async function loadMoreQuestions(){
+  if(_questionsLoadingMore || !_questionsHasMore) return;
+  _questionsLoadingMore = true;
+  const btn = document.getElementById('q-load-more-btn');
+  if(btn){ btn.disabled = true; btn.textContent = '読み込み中...'; }
+
+  const from = _questionsCache.length;
+  const to = from + QUESTIONS_PAGE_SIZE - 1;
+  const {data, error} = await _supabase
+    .from('questions')
+    .select('*')
+    .order('created_at', {ascending:false})
+    .range(from, to);
+
+  _questionsLoadingMore = false;
+  if(error){
+    if(btn){ btn.disabled = false; btn.textContent = 'もう一度試す'; }
+    return;
+  }
+  const newRows = data || [];
+  _questionsHasMore = newRows.length === QUESTIONS_PAGE_SIZE;
+  _questionsCache = _questionsCache.concat(newRows);
+  await ensureBadges(newRows.map(q => q.user_id));
+  await ensureQuestionImageUrls(newRows);
   renderQuestions();
 }
 
@@ -137,7 +170,11 @@ async function ensureQuestionImageUrls(questions){
 
 function renderQuestions(){
   const listEl = document.getElementById('q-list');
-  listEl.innerHTML = _questionsCache.map(q => renderQuestionCard(q)).join('');
+  const cardsHtml = _questionsCache.map(q => renderQuestionCard(q)).join('');
+  const moreHtml = _questionsHasMore
+    ? `<button type="button" id="q-load-more-btn" onclick="loadMoreQuestions()" style="width:100%;padding:12px;margin-top:4px;border:1px solid var(--orange-dark, #7a4a10);border-radius:10px;background:transparent;color:var(--orange, #E8A020);font-size:13px;font-weight:600;cursor:pointer;">もっと見る</button>`
+    : '';
+  listEl.innerHTML = cardsHtml + moreHtml;
 }
 
 function renderQuestionCard(q){
