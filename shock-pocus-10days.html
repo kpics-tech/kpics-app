@@ -67,11 +67,25 @@ button{font-family:inherit}
 [hidden]{display:none !important}
 
 /* ==== 上部バー ==== */
-.topbar{position:sticky;top:0;z-index:60;height:var(--bar);
+.topbar{position:sticky;top:0;z-index:60;height:calc(var(--bar) + env(safe-area-inset-top,0px));
+  padding-top:env(safe-area-inset-top,0px);
   background:rgba(237,241,244,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.topbar-in{width:var(--wrap);margin-inline:auto;height:100%;display:flex;align-items:center;gap:.7rem}
+.topbar-in{width:var(--wrap);margin-inline:auto;height:var(--bar);display:flex;align-items:center;gap:.55rem}
+.homebtn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border-radius:999px;background:#fff;border:1px solid var(--line);text-decoration:none;font-size:1rem;color:var(--ink)}
 .tocbtn{display:inline-flex;align-items:center;gap:.42rem;background:var(--ink);color:#fff;border:0;
   border-radius:999px;padding:.42rem .8rem;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.04em}
+
+/* ==== Day クイックナビ ==== */
+.dayquick{position:sticky;top:calc(var(--bar) + env(safe-area-inset-top,0px));z-index:55;
+  background:var(--paper);border-bottom:1px solid var(--line);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;scrollbar-width:none}
+.dayquick::-webkit-scrollbar{display:none}
+.dayquick-in{width:var(--wrap);margin-inline:auto;display:inline-flex;gap:.4rem;padding:.55rem 0}
+.daychip{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:2.3rem;
+  height:2.1rem;padding:0 .55rem;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-family:var(--f-mono);font-size:.76rem;font-weight:700;color:var(--ink-2);text-decoration:none}
+.daychip.home{background:var(--ink);color:#fff;border-color:var(--ink)}
 .tocbtn .bars{display:inline-flex;flex-direction:column;gap:2.4px}
 .tocbtn .bars i{display:block;width:12px;height:1.8px;background:#fff;border-radius:2px}
 .topbar-title{flex:1;min-width:0;font-size:.78rem;font-weight:700;color:var(--ink-2);
@@ -158,7 +172,7 @@ button{font-family:inherit}
 
 /* ==== 本文 ==== */
 main{width:var(--wrap);margin:0 auto;padding:2.4rem 0 1rem}
-section{scroll-margin-top:calc(var(--bar) + 12px)}
+section{scroll-margin-top:calc(var(--bar)*2 + env(safe-area-inset-top,0px) + 12px)}
 p{margin:.85rem 0}
 .muted{color:var(--slate);font-size:.88rem}
 .sec-label{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.2em;color:var(--slate);margin:0 0 .5rem}
@@ -459,6 +473,7 @@ footer{width:var(--wrap);margin:0 auto;padding:2.2rem 0 3.2rem;border-top:1px so
 <!-- ============ 上部バー ============ -->
 <div class="topbar">
   <div class="topbar-in">
+    <a class="homebtn" href="index.html" aria-label="K-PICSホームに戻る" title="K-PICSホームに戻る">🏠</a>
     <button class="tocbtn" id="tocOpen" aria-haspopup="dialog">
       <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>目次
     </button>
@@ -473,6 +488,23 @@ footer{width:var(--wrap);margin:0 auto;padding:2.2rem 0 3.2rem;border-top:1px so
   </div>
   <div class="readline" id="readline"></div>
 </div>
+
+<!-- ============ Day クイックナビ（常時表示） ============ -->
+<nav class="dayquick" aria-label="Dayへのショートカット">
+  <div class="dayquick-in">
+    <a class="daychip home" href="#caution">はじめに</a>
+    <a class="daychip" href="#day1">1</a>
+    <a class="daychip" href="#day2">2</a>
+    <a class="daychip" href="#day3">3</a>
+    <a class="daychip" href="#day4">4</a>
+    <a class="daychip" href="#day5">5</a>
+    <a class="daychip" href="#day6">6</a>
+    <a class="daychip" href="#day7">7</a>
+    <a class="daychip" href="#day8">8</a>
+    <a class="daychip" href="#day9">9</a>
+    <a class="daychip" href="#day10">10</a>
+  </div>
+</nav>
 
 <!-- ============ 目次 ============ -->
 <div class="toc" id="toc" hidden role="dialog" aria-modal="true" aria-label="目次">
@@ -1498,6 +1530,7 @@ footer{width:var(--wrap);margin:0 auto;padding:2.2rem 0 3.2rem;border-top:1px so
 <footer>
   <p>10日間で基礎から学べる！エコーを用いたショック鑑別 ── ABCDE評価と POCUS の考え方。初学者向けの入門教材です。実臨床では問診・身体診察が主役であり、エコーはその上に乗るひとつの武器であること、プロトコルや考え方は多様であることを、あらためて申し添えます。</p>
   <a class="totop" href="#top">▲ ページの先頭へ</a>
+  <a class="totop" href="index.html">🏠 K-PICSホームへ戻る</a>
 </footer>
 
 <script>
