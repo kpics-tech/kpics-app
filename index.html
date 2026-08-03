@@ -642,7 +642,17 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
         <div class="auth-field-label">名前（フルネーム）</div>
         <input class="field" type="text" id="signup-name" placeholder="山田 太郎">
         <div class="auth-field-label">学年</div>
-        <input class="field" type="number" id="signup-year" placeholder="5" min="1" max="6">
+        <select class="field" id="signup-year">
+          <option value="">選択してください</option>
+          <option value="1">1年</option>
+          <option value="2">2年</option>
+          <option value="3">3年</option>
+          <option value="4">4年</option>
+          <option value="5">5年</option>
+          <option value="6">6年</option>
+          <option value="7">先生</option>
+          <option value="8">その他</option>
+        </select>
         <div class="auth-field-label">メールアドレス</div>
         <input class="field" type="email" id="signup-email" placeholder="example@med.ac.jp" autocomplete="username">
         <div class="auth-field-label">パスワード（6文字以上）</div>

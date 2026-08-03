@@ -15,7 +15,17 @@ function hideSplash(){
   }, wait);
 }
 
-// ---------- 認証タブ切り替え ----------
+// ---------- 学年表示ラベル変換 ----------
+// DBには数字で保存する（1〜6=学年、7=先生、8=その他）。
+// 認定アプリ側の「学年<=4かどうか」という判定を壊さないよう、
+// 数値のまま扱う設計にしている。表示用のラベルだけここで変換する。
+function formatYearLabel(year){
+  if(!year) return '';
+  if(year >= 1 && year <= 6) return `${year}年生`;
+  if(year === 7) return '先生';
+  if(year === 8) return 'その他';
+  return '';
+}
 function switchAuthTab(tab){
   document.getElementById('form-login').style.display  = tab==='login'  ? 'block':'none';
   document.getElementById('form-signup').style.display = tab==='signup' ? 'block':'none';
@@ -184,7 +194,7 @@ async function applySessionState(session){
     const subEl    = document.getElementById('greet-sub');
     if(avatarEl) avatarEl.textContent = name ? name[0] : '−';
     if(nameEl)   nameEl.textContent = name ? `こんにちは、${name} さん` : 'こんにちは';
-    if(subEl)    subEl.textContent = `${year ? year+'年生 ・ ' : ''}${role==='reviewer' ? '確認者' : '部員'}`;
+    if(subEl)    subEl.textContent = `${formatYearLabel(year) ? formatYearLabel(year)+' ・ ' : ''}${role==='reviewer' ? '確認者' : '部員'}`;
 
     document.getElementById('home-screen').classList.add('active');
     hideSplash();
