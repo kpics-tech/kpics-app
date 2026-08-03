@@ -268,7 +268,10 @@ async function switchToReviewer(){
   const orig = btn.textContent;
   btn.textContent = '切り替え中...';
 
-  const { error } = await _supabase.from('profiles').update({ role: 'reviewer' }).eq('id', uid);
+  // 【2026-08 修正】招待コードのチェックをDB側の関数に任せるようにした。
+  // 以前は profiles.role をブラウザから直接書き換えていたため、
+  // コードを知らなくても直接更新すれば確認者になれてしまっていた。
+  const { error } = await _supabase.rpc('claim_reviewer_role', { invite_code: code });
 
   btn.disabled = false;
   btn.textContent = orig;
