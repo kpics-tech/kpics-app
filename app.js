@@ -175,6 +175,7 @@ async function applySessionState(session){
     const year = profile?.year || '';
     window.CURRENT_UID  = user.id;
     window.CURRENT_ROLE = role;
+    window.CURRENT_PROFILE = profile || null; // お知らせの投稿権限判定に使う
 
     document.getElementById('auth-screen').classList.remove('active');
 
@@ -188,6 +189,7 @@ async function applySessionState(session){
     document.getElementById('home-screen').classList.add('active');
     hideSplash();
     showInstallBannerIfNeeded();
+    refreshAnnouncementBadge();
   } else {
     window.CURRENT_UID = null;
     document.getElementById('home-screen').classList.remove('active');
@@ -268,4 +270,147 @@ function closeGuide(id){
 }
 function closeGuideOnOverlay(ev, id){
   if(ev.target.id===id) closeGuide(id);
+}
+
+// ---------- お知らせ機能 ----------
+let _announcementsCache = [];
+
+function canPostAnnouncement(){
+  const p = window.CURRENT_PROFILE;
+  return !!(p && (p.is_core_member || p.is_teacher));
+}
+
+// 未読件数を数えてベルにバッジを出す（ホーム画面に入るたびに呼ばれる）
+async function refreshAnnouncementBadge(){
+  const badgeEl = document.getElementById('announcement-badge');
+  if(!badgeEl || !window.CURRENT_UID) return;
+
+  const lastRead = window.CURRENT_PROFILE?.last_announcement_read_at || '1970-01-01T00:00:00Z';
+  const {count, error} = await _supabase
+    .from('announcements')
+    .select('id', {count:'exact', head:true})
+    .gt('created_at', lastRead);
+
+  if(error){ console.error('お知らせ件数の取得に失敗', error); return; }
+  if(count && count > 0){
+    badgeEl.textContent = count > 9 ? '9+' : String(count);
+    badgeEl.style.display = 'flex';
+  } else {
+    badgeEl.style.display = 'none';
+  }
+}
+
+async function openAnnouncementModal(){
+  document.getElementById('announcement-modal-overlay').classList.add('open');
+  document.getElementById('announce-post-box').style.display = canPostAnnouncement() ? 'block' : 'none';
+  await loadAnnouncements();
+  await markAnnouncementsRead();
+}
+function closeAnnouncementModal(){
+  document.getElementById('announcement-modal-overlay').classList.remove('open');
+}
+function closeAnnouncementModalOnOverlay(ev){
+  if(ev.target.id === 'announcement-modal-overlay') closeAnnouncementModal();
+}
+
+async function loadAnnouncements(){
+  const listEl = document.getElementById('announcement-list');
+  const {data, error} = await _supabase
+    .from('announcements')
+    .select('*')
+    .order('created_at', {ascending:false})
+    .limit(30);
+
+  if(error){
+    listEl.innerHTML = `<div class="announce-empty">読み込みに失敗しました</div>`;
+    return;
+  }
+  _announcementsCache = data || [];
+  renderAnnouncements();
+}
+
+function renderAnnouncements(){
+  const listEl = document.getElementById('announcement-list');
+  if(_announcementsCache.length === 0){
+    listEl.innerHTML = `<div class="announce-empty">まだお知らせはありません</div>`;
+    return;
+  }
+  listEl.innerHTML = _announcementsCache.map(a => {
+    const canDelete = a.author_id === window.CURRENT_UID || (window.CURRENT_PROFILE && window.CURRENT_PROFILE.is_core_member);
+    const delBtn = canDelete
+      ? `<button class="announce-item-del" onclick="deleteAnnouncement('${a.id}')">削除</button>`
+      : '';
+    return `
+      <div class="announce-item">
+        <div class="announce-item-head">
+          <div class="announce-item-author">${escapeHtmlApp(a.author_name || '不明')}</div>
+          <div class="announce-item-time">${formatAnnounceTime(a.created_at)}</div>
+        </div>
+        <div class="announce-item-content">${escapeHtmlApp(a.content)}</div>
+        ${delBtn}
+      </div>
+    `;
+  }).join('');
+}
+
+async function submitAnnouncement(){
+  const contentEl = document.getElementById('announce-post-content');
+  const errEl = document.getElementById('announce-post-error');
+  const btn = document.getElementById('announce-post-btn');
+  const content = contentEl.value.trim();
+  errEl.classList.remove('show');
+
+  if(!content){
+    errEl.textContent = '内容を入力してください';
+    errEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = '投稿中...';
+  const {error} = await _supabase.from('announcements').insert({
+    author_id: window.CURRENT_UID,
+    author_name: window.CURRENT_PROFILE?.name || 'コアメンバー',
+    content: content
+  });
+  btn.disabled = false; btn.textContent = '投稿する';
+
+  if(error){
+    errEl.textContent = '投稿に失敗しました: ' + error.message;
+    errEl.classList.add('show');
+    return;
+  }
+  contentEl.value = '';
+  await loadAnnouncements();
+}
+
+async function deleteAnnouncement(id){
+  if(!confirm('このお知らせを削除しますか？')) return;
+  const {error} = await _supabase.from('announcements').delete().eq('id', id);
+  if(error){ alert('削除に失敗しました: ' + error.message); return; }
+  await loadAnnouncements();
+}
+
+// モーダルを開いた時点で「最後に読んだ日時」を今に更新する（未読バッジをリセット）
+async function markAnnouncementsRead(){
+  if(!window.CURRENT_UID) return;
+  const now = new Date().toISOString();
+  const {error} = await _supabase.from('profiles').update({last_announcement_read_at: now}).eq('id', window.CURRENT_UID);
+  if(!error){
+    if(window.CURRENT_PROFILE) window.CURRENT_PROFILE.last_announcement_read_at = now;
+    const badgeEl = document.getElementById('announcement-badge');
+    if(badgeEl) badgeEl.style.display = 'none';
+  }
+}
+
+function escapeHtmlApp(str){
+  if(str == null) return '';
+  return String(str)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;');
+}
+function formatAnnounceTime(isoString){
+  const d = new Date(isoString);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }

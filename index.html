@@ -148,6 +148,41 @@ button{font-family:inherit;}
 .brand-mark{display:flex;align-items:center;gap:9px;min-width:0;flex-shrink:0;}
 .brand-mark img{height:26px;width:auto;}
 .brand-mark span{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:.05em;color:var(--text);}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bell-btn{
+  position:relative;width:34px;height:34px;border-radius:50%;
+  background:transparent;border:1px solid var(--border-light);color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;
+}
+.bell-btn:hover{border-color:var(--orange);color:var(--orange);}
+.bell-badge{
+  position:absolute;top:-3px;right:-3px;background:var(--orange);color:var(--black);
+  font-family:"JetBrains Mono",monospace;font-size:9px;font-weight:700;
+  min-width:15px;height:15px;border-radius:50%;padding:0 3px;
+  display:flex;align-items:center;justify-content:center;
+}
+.announce-item{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.announce-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.announce-item-author{font-size:11.5px;font-weight:700;color:var(--orange-light);}
+.announce-item-time{font-size:10px;color:var(--text-dim);}
+.announce-item-content{font-size:13px;line-height:1.6;white-space:pre-wrap;}
+.announce-item-del{font-size:10.5px;color:var(--text-dim);background:none;border:none;cursor:pointer;margin-top:6px;padding:0;}
+.announce-item-del:hover{color:#F06060;}
+.announce-post-box{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.announce-textarea{
+  width:100%;background:var(--black);border:1px solid var(--border-light);border-radius:8px;
+  color:var(--text);padding:10px 12px;font-size:13px;font-family:"Noto Sans JP",sans-serif;
+  resize:vertical;min-height:64px;outline:none;
+}
+.announce-textarea:focus{border-color:var(--orange);}
+.announce-post-btn{
+  margin-top:8px;padding:9px 16px;background:var(--orange);color:var(--black);
+  border:none;border-radius:7px;font-weight:700;font-size:12.5px;cursor:pointer;
+}
+.announce-empty{color:var(--text-muted);font-size:12.5px;padding:20px 0;text-align:center;}
 .logout-btn{
   background:transparent;border:1px solid var(--border-light);color:var(--text-muted);
   font-size:10px;cursor:pointer;transition:all .15s;
@@ -633,10 +668,16 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
         <img src="assets/logo-icon-dark.png" alt="K-PICS">
         <span>K-PICS</span>
       </div>
-      <button class="logout-btn" onclick="doLogout()" aria-label="ログアウト">
-        <span class="logout-btn-text">ログアウト</span>
-        <svg class="logout-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-      </button>
+      <div class="header-actions">
+        <button class="bell-btn" id="announcement-bell-btn" onclick="openAnnouncementModal()" aria-label="お知らせ">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="bell-badge" id="announcement-badge" style="display:none;">0</span>
+        </button>
+        <button class="logout-btn" onclick="doLogout()" aria-label="ログアウト">
+          <span class="logout-btn-text">ログアウト</span>
+          <svg class="logout-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </div>
     </div>
     <div class="greet">
       <div class="greet-avatar" id="greet-avatar">−</div>
@@ -1169,7 +1210,27 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
   </a>
 </nav>
 
-<!-- K-PICSの部員として：自主練注意事項モーダル -->
+<!-- お知らせモーダル：一覧表示＋（コア・先生のみ）投稿フォーム -->
+<div class="guide-modal-overlay" id="announcement-modal-overlay" onclick="closeAnnouncementModalOnOverlay(event)">
+  <div class="guide-modal-box">
+    <div class="guide-modal-head">
+      <div class="guide-modal-title">お知らせ</div>
+      <button class="guide-modal-close" onclick="closeAnnouncementModal()" aria-label="閉じる">✕</button>
+    </div>
+    <div class="guide-modal-body">
+      <div id="announcement-list">
+        <div class="announce-empty">読み込み中...</div>
+      </div>
+      <div class="announce-post-box" id="announce-post-box" style="display:none;">
+        <div class="auth-field-label" style="margin-top:0;">お知らせを投稿する（コア・先生のみ）</div>
+        <textarea class="announce-textarea" id="announce-post-content" placeholder="部員に知らせたいことを書いてください"></textarea>
+        <div class="auth-error" id="announce-post-error"></div>
+        <button class="announce-post-btn" id="announce-post-btn" onclick="submitAnnouncement()">投稿する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="guide-modal-overlay" id="guide-modal-overlay" onclick="closeGuideModalOnOverlay(event)">
   <div class="guide-modal-box">
     <div class="guide-modal-head">
