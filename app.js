@@ -92,7 +92,7 @@ async function doSignup(){
   if(invite&&invite!==REVIEWER_INVITE_CODE){ errEl.textContent='招待コードが正しくありません'; errEl.classList.add('show'); return; }
   const role=(invite===REVIEWER_INVITE_CODE)?'reviewer':'member';
   btn.disabled=true; btn.textContent='登録中...';
-  const {data,error}=await _supabase.auth.signUp({email,password});
+  const {data,error}=await _supabase.auth.signUp({email,password,options:{data:{passphrase:passphrase}}});
   if(error){ btn.disabled=false; btn.textContent='登録する'; errEl.textContent='登録に失敗しました: '+error.message; errEl.classList.add('show'); return; }
 
   // メール確認が必要な設定の場合、この時点ではまだログイン状態にならない。
