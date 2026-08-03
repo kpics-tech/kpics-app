@@ -161,6 +161,30 @@ function escapeHtml(s){
   return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// ---------- 書きかけの感想を保存する（30分無操作の自動ログアウトで消えないように） ----------
+function saveDraft(key, text){
+  try{
+    if(text && text.trim()) localStorage.setItem(key, text);
+    else localStorage.removeItem(key);
+  }catch(e){}
+}
+function loadDraft(key){
+  try{ return localStorage.getItem(key) || ''; }catch(e){ return ''; }
+}
+function clearDraft(key){
+  try{ localStorage.removeItem(key); }catch(e){}
+}
+function bindDraftAutosave(textareaEl, key){
+  if(!textareaEl || textareaEl.dataset.draftBound) return;
+  textareaEl.dataset.draftBound = '1';
+  textareaEl.addEventListener('input', () => saveDraft(key, textareaEl.value));
+}
+function restoreDraft(textareaEl, key){
+  if(!textareaEl) return;
+  const saved = loadDraft(key);
+  if(saved) textareaEl.value = saved;
+}
+
 // ---------- 詳細モーダル ----------
 function openDetail(id){
   const e = EVENTS.find(x=>x.id===id);
@@ -205,6 +229,11 @@ function openDetail(id){
   document.getElementById('detail-overlay').classList.add('open');
   loadImpressions(id);
   loadAttendances(id, e.event_date);
+
+  // 書きかけの感想があれば復元する
+  const impInputEl = document.getElementById('imp-input-'+id);
+  bindDraftAutosave(impInputEl, 'kpics_draft_impression_'+id);
+  restoreDraft(impInputEl, 'kpics_draft_impression_'+id);
 }
 
 // ---------- イベント出席（出席のみ・前日まで受付） ----------
@@ -398,6 +427,7 @@ async function submitImpression(eventId){
     return;
   }
   input.value = '';
+  clearDraft('kpics_draft_impression_'+eventId);
   await loadImpressions(eventId);
 }
 

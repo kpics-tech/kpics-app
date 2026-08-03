@@ -21,6 +21,37 @@ let _badgeMap = {}; // user_id -> {is_teacher, is_core_member, is_certified}（�
 let _qImageUrlMap = {}; // storage_path -> signed url（質問添付画像）
 let _postImageFiles = []; // 投稿モーダルで選択中の画像ファイル（最大2枚）
 
+// ---------- 書きかけの下書きを保存する（30分無操作の自動ログアウトで消えないように） ----------
+// 画像は保存できないので文章だけが対象。ページを再読み込みしても、
+// 同じ入力欄をもう一度開いたときに自動で文章が戻ってくる。
+function saveDraft(key, text){
+  try{
+    if(text && text.trim()){
+      localStorage.setItem(key, text);
+    } else {
+      localStorage.removeItem(key);
+    }
+  }catch(e){ /* 保存に失敗しても致命的ではないので無視する */ }
+}
+function loadDraft(key){
+  try{ return localStorage.getItem(key) || ''; }catch(e){ return ''; }
+}
+function clearDraft(key){
+  try{ localStorage.removeItem(key); }catch(e){}
+}
+// テキストエリアに「入力するたびに下書き保存」を仕込む（多重登録を避けるため一度だけ）
+function bindDraftAutosave(textareaEl, key){
+  if(!textareaEl || textareaEl.dataset.draftBound) return;
+  textareaEl.dataset.draftBound = '1';
+  textareaEl.addEventListener('input', () => saveDraft(key, textareaEl.value));
+}
+// 入力欄を開いたタイミングで、保存済みの下書きがあれば流し込む
+function restoreDraft(textareaEl, key){
+  if(!textareaEl) return;
+  const saved = loadDraft(key);
+  if(saved) textareaEl.value = saved;
+}
+
 // ---------- 初期化：自分の名前・権限を取得してから質問一覧を読み込む ----------
 async function initQuestionsPage(){
   if(window.CURRENT_UID){
@@ -236,6 +267,11 @@ function renderReplyBox(qid, replies){
       </label>
     </div>
   `;
+
+  // 書きかけのコメントがあれば復元する
+  const replyInputEl = document.getElementById('reply-input-'+qid);
+  bindDraftAutosave(replyInputEl, 'kpics_draft_reply_'+qid);
+  restoreDraft(replyInputEl, 'kpics_draft_reply_'+qid);
 }
 
 async function submitReply(qid){
@@ -258,6 +294,7 @@ async function submitReply(qid){
     return;
   }
   input.value = '';
+  clearDraft('kpics_draft_reply_'+qid);
   _repliesLoaded.delete(qid);
   await loadReplies(qid);
 }
@@ -279,6 +316,11 @@ function openPostModal(){
   _postImageFiles = [];
   renderImgAttachRow();
   document.getElementById('post-overlay').classList.add('open');
+
+  // 下書きがあれば復元する（30分無操作の自動ログアウトなどで消えた場合の救済）
+  const postContentEl = document.getElementById('post-content');
+  bindDraftAutosave(postContentEl, 'kpics_draft_question');
+  restoreDraft(postContentEl, 'kpics_draft_question');
 }
 function closeModal(id){
   document.getElementById(id).classList.remove('open');
@@ -384,6 +426,7 @@ async function submitQuestion(){
     return;
   }
   closeModal('post-overlay');
+  clearDraft('kpics_draft_question');
   await loadQuestions();
 }
 
