@@ -23,6 +23,35 @@ let _questionsLoadingMore = false; // 「もっと見る」の連打防止
 let _badgeMap = {}; // user_id -> {is_teacher, is_core_member, is_certified}（取得済みバッジのキャッシュ）
 let _qImageUrlMap = {}; // storage_path -> signed url（質問添付画像）
 let _postImageFiles = []; // 投稿モーダルで選択中の画像ファイル（最大2枚）
+let _qReplyMeta = {}; // question_id -> 現在のコメント件数（未読バッジの判定に使う）
+
+// ---------- 未読コメントの判定（「誰かが返信したのに気づかない」問題への対応） ----------
+// コメント欄を開いて内容を見た時点の件数を端末に保存しておき、
+// 現在の件数がそれより増えていれば「新着あり」として一覧にバッジ表示する。
+const REPLY_SEEN_KEY = 'kpics_seen_replies_v1';
+function getSeenCounts(){
+  try{ return JSON.parse(localStorage.getItem(REPLY_SEEN_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function getSeenCount(qid){
+  return getSeenCounts()[qid] || 0;
+}
+function setSeenCount(qid, count){
+  try{
+    const map = getSeenCounts();
+    map[qid] = count;
+    localStorage.setItem(REPLY_SEEN_KEY, JSON.stringify(map));
+  }catch(e){ /* 保存に失敗しても致命的ではないので無視する */ }
+}
+// コメント欄を開いて見た質問について、未読バッジ・カード強調を解除する
+function markRepliesSeen(qid){
+  const count = _qReplyMeta[qid] || 0;
+  setSeenCount(qid, count);
+  const card = document.getElementById('qcard-'+qid);
+  if(card) card.classList.remove('has-unread');
+  const badge = document.getElementById('reply-badge-'+qid);
+  if(badge){ badge.style.display = 'none'; badge.textContent = ''; }
+}
 
 // ---------- 書きかけの下書きを保存する（30分無操作の自動ログアウトで消えないように） ----------
 // 画像は保存できないので文章だけが対象。ページを再読み込みしても、
@@ -103,6 +132,21 @@ function canDelete(ownerId){
   return ownerId === window.CURRENT_UID || _myIsCore;
 }
 
+// ---------- コメント件数の取得（一覧を開かなくても新着に気づけるようにするため） ----------
+async function ensureReplyMeta(questions){
+  const ids = questions.map(q => q.id);
+  if(ids.length === 0) return;
+  const {data, error} = await _supabase
+    .from('question_replies')
+    .select('question_id')
+    .in('question_id', ids);
+  if(error){ console.error('コメント件数の取得エラー', error); return; }
+  ids.forEach(id => { _qReplyMeta[id] = 0; });
+  (data || []).forEach(r => {
+    if(r.question_id in _qReplyMeta) _qReplyMeta[r.question_id]++;
+  });
+}
+
 // ---------- 質問一覧の読み込み（最初の20件だけ） ----------
 async function loadQuestions(){
   const listEl = document.getElementById('q-list');
@@ -124,6 +168,7 @@ async function loadQuestions(){
   }
   await ensureBadges(_questionsCache.map(q => q.user_id));
   await ensureQuestionImageUrls(_questionsCache);
+  await ensureReplyMeta(_questionsCache);
   renderQuestions();
 }
 
@@ -152,6 +197,7 @@ async function loadMoreQuestions(){
   _questionsCache = _questionsCache.concat(newRows);
   await ensureBadges(newRows.map(q => q.user_id));
   await ensureQuestionImageUrls(newRows);
+  await ensureReplyMeta(newRows);
   renderQuestions();
 }
 
@@ -192,8 +238,17 @@ function renderQuestionCard(q){
         return url ? `<img src="${url}" alt="" onclick="openLightbox('${url}')">` : '';
       }).join('')}</div>`
     : '';
+
+  // コメントの新着（未読）判定：前回見た時点の件数より増えていれば新着ありとする
+  const replyCount = _qReplyMeta[q.id] || 0;
+  const seenCount = getSeenCount(q.id);
+  const unreadCount = Math.max(0, replyCount - seenCount);
+  const hasUnread = unreadCount > 0;
+  const replyLabelText = replyCount > 0 ? `コメント (${replyCount})` : 'コメント';
+  const newBadgeHtml = `<span class="q-new-badge" id="reply-badge-${q.id}" style="${hasUnread ? '' : 'display:none;'}">新着${unreadCount}件</span>`;
+
   return `
-    <div class="q-card" data-qid="${q.id}">
+    <div class="q-card ${hasUnread ? 'has-unread' : ''}" data-qid="${q.id}" id="qcard-${q.id}">
       <div class="q-card-head">
         <div class="q-author-icon ${anonClass}">${escapeHtml(initial)}</div>
         <div class="q-author ${anonClass}">${escapeHtml(displayName)}</div>
@@ -205,8 +260,9 @@ function renderQuestionCard(q){
       <div class="q-actions">
         <button class="q-reply-toggle" onclick="toggleReplies('${q.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          <span id="reply-label-${q.id}">コメント</span>
+          <span id="reply-label-${q.id}">${replyLabelText}</span>
         </button>
+        ${newBadgeHtml}
         ${delBtnHtml}
       </div>
       <div class="q-replies" id="replies-${q.id}">
@@ -243,6 +299,8 @@ async function toggleReplies(qid){
   if(!_repliesLoaded.has(qid)){
     await loadReplies(qid);
   }
+  // コメント欄を開いて見たので、新着バッジ・カードの強調表示を消す
+  markRepliesSeen(qid);
 }
 
 async function loadReplies(qid){
@@ -258,8 +316,10 @@ async function loadReplies(qid){
     return;
   }
   _repliesLoaded.add(qid);
+  _qReplyMeta[qid] = (data || []).length;
   await ensureBadges((data || []).map(r => r.user_id));
   renderReplyBox(qid, data || []);
+  markRepliesSeen(qid);
 }
 
 function renderReplyBox(qid, replies){
