@@ -200,6 +200,7 @@ async function applySessionState(session){
     hideSplash();
     showInstallBannerIfNeeded();
     refreshAnnouncementBadge();
+    loadContentSettings();
   } else {
     window.CURRENT_UID = null;
     document.getElementById('home-screen').classList.remove('active');
@@ -410,6 +411,66 @@ async function markAnnouncementsRead(){
     const badgeEl = document.getElementById('announcement-badge');
     if(badgeEl) badgeEl.style.display = 'none';
   }
+}
+
+// ---------- コンテンツの公開/非公開設定（変更はコアメンバーのみ） ----------
+// content_settings テーブル（key, is_published）を読み込み、対象の
+// メニューカードの表示に反映する。切り替えボタン自体はコアメンバーにしか
+// 見せていないが、DB側のRLSでもコアメンバー以外は更新できないようにしてある。
+window.CONTENT_SETTINGS = {};
+
+async function loadContentSettings(){
+  const {data, error} = await _supabase.from('content_settings').select('*');
+  if(error){ console.error('公開設定の取得に失敗', error); return; }
+  window.CONTENT_SETTINGS = {};
+  (data || []).forEach(row => { window.CONTENT_SETTINGS[row.key] = !!row.is_published; });
+  applyContentVisibility();
+}
+
+function applyContentVisibility(){
+  applyShockCardVisibility();
+}
+
+function applyShockCardVisibility(){
+  const link      = document.getElementById('shock-menu-link');
+  const badge     = document.getElementById('shock-status-badge');
+  const toggleRow = document.getElementById('shock-core-toggle');
+  const checkbox  = document.getElementById('shock-publish-checkbox');
+  if(!link) return;
+
+  const isPublished = !!window.CONTENT_SETTINGS['shock_pocus_10days'];
+
+  link.classList.toggle('disabled', !isPublished);
+  if(badge){
+    badge.textContent = isPublished ? '公開中' : '非公開';
+    badge.classList.toggle('badge-published', isPublished);
+  }
+
+  const isCore = !!(window.CURRENT_PROFILE && window.CURRENT_PROFILE.is_core_member);
+  if(toggleRow) toggleRow.style.display = isCore ? 'flex' : 'none';
+  if(checkbox) checkbox.checked = isPublished;
+}
+
+async function toggleContentPublish(key, nextValue, checkboxEl){
+  if(!window.CURRENT_PROFILE || !window.CURRENT_PROFILE.is_core_member){
+    alert('この操作はコアメンバーのみ行えます');
+    if(checkboxEl) checkboxEl.checked = !nextValue;
+    return;
+  }
+  if(checkboxEl) checkboxEl.disabled = true;
+  const {error} = await _supabase
+    .from('content_settings')
+    .update({is_published: nextValue, updated_at: new Date().toISOString()})
+    .eq('key', key);
+  if(checkboxEl) checkboxEl.disabled = false;
+
+  if(error){
+    alert('設定の更新に失敗しました: ' + error.message);
+    await loadContentSettings(); // 実際のDBの状態にチェックボックスを戻す
+    return;
+  }
+  window.CONTENT_SETTINGS[key] = nextValue;
+  applyContentVisibility();
 }
 
 function escapeHtmlApp(str){

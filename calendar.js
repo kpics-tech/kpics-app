@@ -258,7 +258,7 @@ function renderAttendance(eventId, eventDate, rows){
   if(!countEl || !actionEl || !listEl) return;
 
   const amAttending = rows.some(r => r.user_id === CURRENT_UID);
-  const isOpen = todayStr() <= eventDate; // 当日まで受付（翌日以降は締切）
+  const isOpen = todayStr() < eventDate; // 前日まで受付（イベント当日は締切）
 
   countEl.textContent = rows.length ? `${rows.length}人が出席予定` : '';
 
@@ -267,7 +267,7 @@ function renderAttendance(eventId, eventDate, rows){
       ? `<button class="att-btn leave" onclick="toggleAttendance('${eventId}','${eventDate}')">出席をとりやめる</button>`
       : `<button class="att-btn join" onclick="toggleAttendance('${eventId}','${eventDate}')">出席する</button>`;
   } else {
-    actionEl.innerHTML = `<div class="att-closed">出席の受付は締め切りました（当日まで）${amAttending ? '<span class="att-you">あなたは出席予定です</span>' : ''}</div>`;
+    actionEl.innerHTML = `<div class="att-closed">出席の受付は締め切りました（前日締切）${amAttending ? '<span class="att-you">あなたは出席予定です</span>' : ''}</div>`;
   }
 
   if(rows.length === 0){
@@ -283,8 +283,8 @@ function renderAttendance(eventId, eventDate, rows){
 
 async function toggleAttendance(eventId, eventDate){
   if(!CURRENT_UID){ location.href = 'index.html'; return; }
-  if(todayStr() > eventDate){
-    alert('出席の受付は締め切られています（当日まで）。');
+  if(todayStr() >= eventDate){
+    alert('出席の受付は締め切られています（前日締切）。');
     await loadAttendances(eventId, eventDate);
     return;
   }
