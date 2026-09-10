@@ -45,8 +45,8 @@ button{font-family:inherit;}
 
 /* ===== ヘッダー ===== */
 .top-header{
-  position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 22px;overflow:hidden;
-  background:radial-gradient(ellipse 130% 90% at 50% -30%, rgba(232,160,32,.22), transparent 62%);
+  position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 18px;
+  background:linear-gradient(to bottom, rgba(232,160,32,.14), rgba(232,160,32,.055));
 }
 .top-header-row{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
 .th-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.04em;line-height:1;}
@@ -59,30 +59,39 @@ button{font-family:inherit;}
 }
 .map-btn:active{border-color:var(--orange);background:var(--orange-bg);}
 
-/* ===== ドクターヘリ ヒーロー ===== */
-.heli-hero{position:relative;height:240px;overflow:hidden;}
-@media (min-width:640px){ .heli-hero{height:300px;} }
-.heli-img{
-  position:absolute;left:50%;top:0;width:118%;max-width:none;height:118%;
-  transform:translateX(-50%) translateY(-8%) scale(1.06);
-  object-fit:cover;object-position:center 40%;will-change:transform;
+/* ===== ヒーロー：ドクターヘリ ===== */
+.hero{
+  position:relative;overflow:hidden;
+  min-height:320px;display:flex;align-items:flex-end;
 }
-.heli-shade{position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to bottom, rgba(12,12,12,.7) 0%, rgba(12,12,12,.1) 38%, rgba(12,12,12,.3) 68%, var(--black) 100%);}
-.heli-copy{position:absolute;left:20px;right:20px;bottom:20px;z-index:1;max-width:600px;margin:0 auto;}
-.heli-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.24em;color:var(--orange-light);margin-bottom:8px;text-shadow:0 1px 8px rgba(0,0,0,.9);}
-.heli-title{font-weight:900;font-size:22px;line-height:1.4;text-shadow:0 2px 16px rgba(0,0,0,.85);}
-.heli-title span{color:var(--orange-light);}
-.heli-sub{font-size:11.5px;color:rgba(240,240,240,.82);margin-top:6px;line-height:1.7;text-shadow:0 1px 10px rgba(0,0,0,.9);}
+@media (min-width:640px){ .hero{min-height:400px;} }
+.hero-img{
+  position:absolute;left:50%;top:0;width:120%;max-width:none;height:118%;
+  transform:translateX(-50%) translateY(-8%) scale(1.06);
+  object-fit:cover;object-position:center 38%;will-change:transform;
+}
+/* 上はヘッダーのオレンジから、下は真っ黒へ。目次との境目が出ないよう最後は完全な黒 */
+.hero-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(to bottom, rgba(232,160,32,.10) 0%, rgba(232,160,32,0) 30%),
+    linear-gradient(to bottom, rgba(12,12,12,.92) 0%, rgba(12,12,12,.2) 34%, rgba(12,12,12,.62) 66%, var(--black) 96%);
+}
+.hero-in{position:relative;width:100%;max-width:640px;margin:0 auto;padding:0 20px 16px;}
+.hero-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.3em;color:var(--orange-light);text-shadow:0 1px 10px rgba(0,0,0,.95);}
+.hero-title{font-weight:900;font-size:26px;line-height:1.45;letter-spacing:.01em;margin-top:12px;text-shadow:0 2px 18px rgba(0,0,0,.9);}
+.hero-title span{color:var(--orange-light);}
+.hero-sub{font-size:11.5px;color:rgba(240,240,240,.82);margin-top:10px;line-height:1.8;text-shadow:0 1px 12px rgba(0,0,0,.95);}
+@media (min-width:640px){ .hero-title{font-size:34px;} }
 
 /* ===== スティッキー目次 ===== */
 .snav{
   position:sticky;top:0;z-index:60;
-  background:rgba(12,12,12,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:rgba(12,12,12,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
   padding-top:env(safe-area-inset-top);
 }
-.snav-in{max-width:640px;margin:0 auto;display:flex;gap:6px;padding:9px 16px;overflow-x:auto;scrollbar-width:none;}
+.snav-in{max-width:640px;margin:0 auto;display:flex;gap:6px;padding:8px 16px;overflow-x:auto;scrollbar-width:none;}
 .snav-in::-webkit-scrollbar{display:none;}
 .snav a{
   flex:0 0 auto;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
@@ -202,29 +211,46 @@ button{font-family:inherit;}
 
 .note-box{margin:18px 0 0;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.22);border-radius:14px;font-size:12.5px;line-height:1.85;color:var(--text);}
 
-/* ===== 写真カード（解剖） ===== */
-.photo-card{position:relative;margin:26px 0 0;border-radius:20px;overflow:hidden;border:1px solid rgba(232,160,32,.35);scroll-margin-top:64px;}
-.photo-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.55;}
-.photo-card-shade{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(12,12,12,.35), rgba(12,12,12,.9) 55%, #101010 100%);}
+/* ===== 独立コンテンツ（解剖） ===== */
+.photo-card{
+  position:relative;margin:26px 0 0;border-radius:20px;overflow:hidden;scroll-margin-top:64px;
+  border:1px solid rgba(232,160,32,.35);
+  background:radial-gradient(ellipse 110% 90% at 12% 0%, rgba(232,160,32,.16), transparent 62%), #151312;
+  box-shadow:0 0 34px rgba(232,160,32,.07);
+}
 .photo-card-in{position:relative;padding:22px 16px 16px;}
-.photo-card .acc{background:rgba(20,20,20,.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.photo-card .acc{background:rgba(0,0,0,.3);border-color:rgba(232,160,32,.2);}
 
-/* ===== 帯（ADVANCED：救急車） ===== */
-.band{position:relative;margin:34px -20px 0;height:230px;overflow:hidden;scroll-margin-top:52px;}
-.band-img{position:absolute;left:0;top:0;width:150%;max-width:none;height:100%;object-fit:cover;object-position:center;opacity:.5;will-change:transform;}
-.band-shade{position:absolute;inset:0;background:linear-gradient(to bottom, var(--black) 0%, rgba(12,12,12,.15) 30%, rgba(12,12,12,.4) 70%, var(--black) 100%);}
-.band-copy{position:absolute;left:20px;right:20px;bottom:22px;max-width:600px;margin:0 auto;}
-.band-title{font-size:56px;text-shadow:0 4px 30px rgba(0,0,0,.9);}
-.band-sub{color:rgba(240,240,240,.85);text-shadow:0 1px 10px rgba(0,0,0,.9);}
+/* ===== 帯（ADVANCED） ===== */
+.band{
+  position:relative;margin:36px -20px 4px;padding:42px 20px 34px;overflow:hidden;scroll-margin-top:52px;
+  background:radial-gradient(ellipse 80% 130% at 50% 118%, rgba(232,160,32,.17), transparent 62%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.band::before,.band::after{content:"";position:absolute;left:50%;transform:translateX(-50%);width:min(420px,72%);height:1px;}
+.band::before{top:-1px;background:linear-gradient(to right, transparent, rgba(232,160,32,.5), transparent);}
+.band::after{bottom:-1px;background:linear-gradient(to right, transparent, rgba(232,160,32,.5), transparent);}
+.band-copy{position:relative;max-width:600px;margin:0 auto;}
+.band-title{font-size:54px;}
+.band-sub{color:rgba(240,240,240,.7);}
 
 /* ===== SPL ===== */
 .spl-zone{
   position:relative;margin:18px 0 0;padding:22px 16px 16px;border-radius:20px;overflow:hidden;scroll-margin-top:64px;
-  background:radial-gradient(ellipse 120% 100% at 30% 0%, var(--spl-bg), transparent 70%), #151210;
+  background:
+    radial-gradient(ellipse 90% 70% at 92% 4%, rgba(217,138,61,.22), transparent 60%),
+    radial-gradient(ellipse 120% 100% at 20% 0%, var(--spl-bg), transparent 72%),
+    #151210;
   border:1.5px solid var(--spl);
 }
-.spl-bg{position:absolute;right:-30%;top:-20%;width:90%;max-width:520px;height:auto;opacity:.16;transform:rotate(-18deg);pointer-events:none;
-  -webkit-mask-image:radial-gradient(circle, #000 35%, transparent 72%);mask-image:radial-gradient(circle, #000 35%, transparent 72%);}
+.spl-zone::before{
+  content:"";position:absolute;right:-14%;top:-24%;width:64%;max-width:280px;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(217,138,61,.28);pointer-events:none;
+}
+.spl-zone::after{
+  content:"";position:absolute;right:-4%;top:-10%;width:40%;max-width:180px;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(217,138,61,.18);pointer-events:none;
+}
 .spl-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:16px;}
 .spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.24em;}
 .spl-title{font-family:"Bebas Neue",sans-serif;font-size:52px;letter-spacing:.04em;color:#fff;line-height:.95;margin-top:6px;}
@@ -355,20 +381,20 @@ button{font-family:inherit;}
   <div class="top-header-row">
     <div>
       <div class="th-title">まな<span>ぶ</span></div>
-      <div class="th-sub">LEARNING MAP ー どこからでも自由に</div>
+      <div class="th-sub">K-PICS ー 部員専用ポータル</div>
     </div>
     <div class="map-btn" id="map-open" aria-label="全体マップ"><svg class="" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
   </div>
 </header>
 
-<!-- ドクターヘリ：スクロールで着地するヒーロー -->
-<div class="heli-hero" id="heli-hero">
-  <img class="heli-img" id="heli-img" src="assets/bg-heli.jpg" alt="">
-  <div class="heli-shade"></div>
-  <div class="heli-copy">
-    <div class="heli-eyebrow">LEARNING MAP</div>
-    <div class="heli-title">さあ、降り立とう。<span>学びのフィールドへ。</span></div>
-    <div class="heli-sub">基本のキから応用ルートまで。気になる項目をタップ。</div>
+<!-- ヒーロー：ドクターヘリ（スクロールで着地する） -->
+<div class="hero" id="hero">
+  <img class="hero-img" id="hero-img" src="assets/bg-heli.jpg" alt="">
+  <div class="hero-shade"></div>
+  <div class="hero-in">
+    <div class="hero-eyebrow">LEARNING MAP</div>
+    <h1 class="hero-title">さあ、降り立とう。<br><span>学びのフィールドへ。</span></h1>
+    <p class="hero-sub">基本のキから応用ルートまで。気になる項目をタップ。</p>
   </div>
 </div>
 
@@ -400,8 +426,6 @@ button{font-family:inherit;}
 
   <!-- ================= 解剖（独立・写真カード） ================= -->
   <section class="photo-card" id="anatomy">
-    <img class="photo-card-img" src="assets/hero-probe.jpg" alt="" loading="lazy">
-    <div class="photo-card-shade"></div>
     <div class="photo-card-in">
       <div class="sec-eyebrow">STANDALONE ー ALL GRADES</div>
       <h2 class="sec-title" style="font-size:30px;">Anatomy</h2>
@@ -412,10 +436,8 @@ button{font-family:inherit;}
 
   <!-- ================= 02 ADVANCED ================= -->
   <section class="band" id="advanced">
-    <img class="band-img" src="assets/bg-ambulance.jpg" alt="" loading="lazy">
-    <div class="band-shade"></div>
     <div class="band-copy">
-      <div class="sec-eyebrow" style="color:var(--orange-light);">02 ー FROM HERE ON</div>
+      <div class="sec-eyebrow">02 ー FROM HERE ON</div>
       <h2 class="sec-title band-title">Advanced</h2>
       <p class="sec-sub band-sub">ここから先は応用ルート。興味のあるところから、どこへでも。</p>
     </div>
@@ -423,7 +445,6 @@ button{font-family:inherit;}
 
   <!-- 目玉：SPL -->
   <section class="spl-zone" id="spl">
-    <img class="spl-bg" src="assets/bg-dna.jpg" alt="" loading="lazy">
     <div class="spl-head">
       <div>
         <div class="spl-eyebrow">SPOTLIGHT</div>
@@ -742,6 +763,11 @@ button{font-family:inherit;}
 
 
 
+
+
+
+
+
 <script src="auth-guard.js"></script>
 <script src="tabbar.js"></script>
 <script>
@@ -768,30 +794,20 @@ const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBF
   });
 })();
 
-// ===================== スクロール連動の演出（ヘリ着地／救急車パン） =====================
-(function initScrollFx(){
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const hero = document.getElementById('heli-hero');
-  const heli = document.getElementById('heli-img');
-  const band = document.querySelector('.band');
-  const bandImg = document.querySelector('.band-img');
-  if(reduce) return;
+// ===================== ヘリの着地演出 =====================
+// スクロールに合わせて写真がゆっくり降りて、ヘリポートに着地するように見せる。
+// 「動きを減らす」設定の端末では動かさない。
+(function initHeliLanding(){
+  const hero = document.getElementById('hero');
+  const img  = document.getElementById('hero-img');
+  if(!hero || !img) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   let ticking = false;
   function update(){
     ticking = false;
-    const vh = window.innerHeight;
-    if(hero && heli){
-      const r = hero.getBoundingClientRect();
-      const t = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
-      heli.style.transform = `translateX(-50%) translateY(${-8 + t*8}%) scale(${1.06 - t*0.06})`;
-    }
-    if(band && bandImg){
-      const r = band.getBoundingClientRect();
-      if(r.bottom > 0 && r.top < vh){
-        const t = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
-        bandImg.style.transform = `translateX(${-33 + t*33}%)`;
-      }
-    }
+    const r = hero.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
+    img.style.transform = `translateX(-50%) translateY(${-8 + t*8}%) scale(${1.06 - t*0.06})`;
   }
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', onScroll, {passive:true});
