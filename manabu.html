@@ -26,249 +26,231 @@
 :root{
   --orange:#E8A020; --orange-light:#F5B84A; --orange-dark:#B87A10; --orange-bg:rgba(232,160,32,0.08);
   --black:#0C0C0C; --dark:#141414; --card:#1A1A1A; --card-hover:#202020;
-  --border:#2A2A2A; --border-light:#333; --text:#F0F0F0; --text-muted:#888; --text-dim:#555;
+  --border:#2A2A2A; --border-light:#333; --text:#F0F0F0; --text-muted:#8C8C8C; --text-dim:#555;
   --spl:#D98A3D; --spl-bg:rgba(217,138,61,0.10);
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--black);}
-body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
-.bebas{font-family:"Bebas Neue",sans-serif;}
-.mono{font-family:"JetBrains Mono",monospace;}
+html{background:var(--black);overflow-x:clip;}
+body{background:var(--black);color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent;}
 img{max-width:100%;}
 button{font-family:inherit;}
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border-light);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
-@keyframes accIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
-.fade-up{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;}
 #splash{position:fixed;inset:0;background:var(--black);z-index:900;display:flex;align-items:center;justify-content:center;transition:opacity .45s ease, visibility .45s ease;}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
-.splash-logo-img{width:110px;animation:scaleIn .5s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 8px 30px rgba(232,160,32,.25));}
+.splash-logo-img{width:110px;animation:scaleIn .5s var(--ease) both;filter:drop-shadow(0 8px 30px rgba(232,160,32,.25));}
 
-/* ヘッダー */
+/* ===== ヘッダー ===== */
 .top-header{
-  position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 26px;overflow:hidden;
+  position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 22px;overflow:hidden;
   background:radial-gradient(ellipse 130% 90% at 50% -30%, rgba(232,160,32,.22), transparent 62%);
-  border-bottom:1px solid var(--border);
 }
 .top-header-row{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-.th-title{font-family:"Bebas Neue",sans-serif;font-size:32px;letter-spacing:.04em;}
+.th-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.04em;line-height:1;}
 .th-title span{color:var(--orange);}
-.th-sub{font-size:11px;color:var(--text-muted);font-family:"JetBrains Mono",monospace;letter-spacing:.03em;margin-top:2px;}
+.th-sub{font-size:10px;color:var(--text-muted);font-family:"JetBrains Mono",monospace;letter-spacing:.12em;margin-top:5px;}
 .map-btn{
-  width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.04);
+  width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.04);
   border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;
-  font-size:19px;cursor:pointer;flex-shrink:0;
+  color:var(--orange-light);cursor:pointer;flex-shrink:0;
 }
 .map-btn:active{border-color:var(--orange);background:var(--orange-bg);}
 
-.main{max-width:640px;margin:0 auto;padding:26px 20px 90px;position:relative;}
-
-/* ドクターヘリ ヒーロー */
-.heli-hero{position:relative;height:250px;overflow:hidden;border-bottom:1px solid var(--border);}
+/* ===== ドクターヘリ ヒーロー ===== */
+.heli-hero{position:relative;height:240px;overflow:hidden;}
 @media (min-width:640px){ .heli-hero{height:300px;} }
 .heli-img{
   position:absolute;left:50%;top:0;width:118%;max-width:none;height:118%;
   transform:translateX(-50%) translateY(-8%) scale(1.06);
   object-fit:cover;object-position:center 40%;will-change:transform;
 }
-.heli-shade{
-  position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to bottom, rgba(12,12,12,.55) 0%, rgba(12,12,12,.1) 35%, rgba(12,12,12,.25) 65%, var(--black) 100%);
-}
-.heli-copy{position:absolute;left:20px;right:20px;bottom:18px;z-index:1;max-width:600px;margin:0 auto;}
-.heli-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange-light);margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,.9);}
-.heli-title{font-weight:900;font-size:21px;line-height:1.45;text-shadow:0 2px 16px rgba(0,0,0,.85);}
+.heli-shade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom, rgba(12,12,12,.7) 0%, rgba(12,12,12,.1) 38%, rgba(12,12,12,.3) 68%, var(--black) 100%);}
+.heli-copy{position:absolute;left:20px;right:20px;bottom:20px;z-index:1;max-width:600px;margin:0 auto;}
+.heli-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.24em;color:var(--orange-light);margin-bottom:8px;text-shadow:0 1px 8px rgba(0,0,0,.9);}
+.heli-title{font-weight:900;font-size:22px;line-height:1.4;text-shadow:0 2px 16px rgba(0,0,0,.85);}
 .heli-title span{color:var(--orange-light);}
-.heli-sub{font-size:11.5px;color:rgba(240,240,240,.8);margin-top:5px;line-height:1.7;text-shadow:0 1px 10px rgba(0,0,0,.9);}
+.heli-sub{font-size:11.5px;color:rgba(240,240,240,.82);margin-top:6px;line-height:1.7;text-shadow:0 1px 10px rgba(0,0,0,.9);}
 
-.tap-hint{
-  max-width:640px;margin:18px auto -8px;padding:0 20px;
-  font-size:11px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;letter-spacing:.04em;text-align:center;
+/* ===== スティッキー目次 ===== */
+.snav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(12,12,12,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding-top:env(safe-area-inset-top);
 }
+.snav-in{max-width:640px;margin:0 auto;display:flex;gap:6px;padding:9px 16px;overflow-x:auto;scrollbar-width:none;}
+.snav-in::-webkit-scrollbar{display:none;}
+.snav a{
+  flex:0 0 auto;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  padding:7px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);
+  text-decoration:none;transition:all .18s;white-space:nowrap;
+}
+.snav a.active{color:var(--black);background:var(--orange);border-color:var(--orange);font-weight:600;}
 
-/* スクロールリビール */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);}
+.main{max-width:640px;margin:0 auto;padding:8px 20px 96px;position:relative;}
+
+/* ===== セクション見出し ===== */
+.sec{margin:26px 0 16px;}
+.sec-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.24em;color:var(--orange);}
+.sec-title{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:.95;letter-spacing:.03em;margin-top:6px;font-weight:400;}
+.sec-sub{font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.75;}
+
+/* ===== スクロールリビール ===== */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease), transform .7s var(--ease);}
 .reveal.in-view{opacity:1;transform:translateY(0);}
 @media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;transition:none;} }
 
-/* 幹（トランク） */
-.trunk{position:relative;padding-left:6px;}
+/* ===== 幹（BASIC の番号付きライン） ===== */
+.trunk{position:relative;padding-left:48px;}
 .trunk::before{
-  content:"";position:absolute;left:37px;top:4px;width:2px;height:100%;
-  background:linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 80%, transparent 100%);opacity:.5;
+  content:"";position:absolute;left:17px;top:14px;bottom:8px;width:1px;
+  background:linear-gradient(to bottom, var(--orange), rgba(232,160,32,.35) 60%, transparent);
 }
-.tnode{position:relative;padding-left:44px;margin-bottom:12px;scroll-margin-top:20px;}
+.tnode{position:relative;margin-bottom:10px;scroll-margin-top:64px;}
 .tnode::before{
-  content:attr(data-n);position:absolute;left:16px;top:12px;width:34px;height:34px;
-  background:var(--black);border:2px solid var(--orange);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;
-  font-size:12px;font-weight:700;color:var(--orange);
+  content:attr(data-n);position:absolute;left:-48px;top:11px;width:36px;height:36px;border-radius:50%;
+  background:var(--black);border:1px solid rgba(232,160,32,.55);box-shadow:0 0 0 5px var(--black);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Bebas Neue",sans-serif;font-size:15px;letter-spacing:.04em;color:var(--orange);
 }
+.tnode:has(.acc.open)::before{background:var(--orange);color:var(--black);border-color:var(--orange);}
 
-/* ===== アコーディオン（見出しだけ → タップで開く） ===== */
-.acc{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .15s;}
-.acc.open{border-color:rgba(232,160,32,.4);}
-.acc-head{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;}
-.acc-head:active{background:var(--card-hover);}
+/* ===== アコーディオンカード ===== */
+.acc{
+  background:linear-gradient(180deg, #1C1C1C, #171717);
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;scroll-margin-top:64px;
+  transition:border-color .2s, box-shadow .2s;
+}
+.acc.open{border-color:rgba(232,160,32,.45);box-shadow:0 14px 34px rgba(0,0,0,.4), inset 0 0 0 1px rgba(232,160,32,.06);}
+.acc-head{display:flex;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;user-select:none;}
+.acc-head:active{background:rgba(255,255,255,.03);}
 .acc.static .acc-head{cursor:default;}
 .acc.static .acc-head:active{background:transparent;}
-.acc-title{flex:1;min-width:0;font-size:15.5px;font-weight:700;line-height:1.4;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.acc-arrow{flex-shrink:0;color:var(--text-dim);transition:transform .22s ease;}
+.acc-ic{
+  width:38px;height:38px;border-radius:12px;flex-shrink:0;
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.2);
+  display:flex;align-items:center;justify-content:center;color:var(--orange-light);
+  transition:background .2s, color .2s, border-color .2s;
+}
+.acc-ic.solid{background:var(--orange);color:var(--black);border-color:var(--orange);}
+.acc.open .acc-ic{background:var(--orange);color:var(--black);border-color:var(--orange);}
+.acc-ttl{flex:1;min-width:0;}
+.acc-title{font-size:15px;font-weight:700;line-height:1.35;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.acc-meta{display:flex;align-items:center;gap:9px;margin-top:3px;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;color:var(--text-dim);}
+.acc-meta .m-doc{color:var(--orange);letter-spacing:.04em;}
+.acc-meta .m-doc[hidden]{display:none;}
+.acc-arrow{flex-shrink:0;color:var(--text-dim);transition:transform .28s var(--ease), color .2s;}
 .acc.open .acc-arrow{transform:rotate(180deg);color:var(--orange);}
-.acc-body{display:none;padding:0 16px 16px;}
-.acc.open .acc-body{display:block;animation:accIn .25s ease both;}
-@media (prefers-reduced-motion:reduce){ .acc.open .acc-body{animation:none;} }
-.acc-body p{font-size:12.5px;color:var(--text-muted);line-height:1.95;margin-bottom:11px;}
-.acc-body p:last-of-type{margin-bottom:0;}
-.acc-body p strong{color:var(--text);font-weight:700;}
+.acc-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .36s var(--ease);}
+.acc.open .acc-wrap{grid-template-rows:1fr;}
+.acc-body{min-height:0;overflow:hidden;}
+.acc-inner{padding:2px 15px 16px;}
+.acc-inner p{font-size:12.5px;color:var(--text-muted);line-height:1.95;margin-bottom:11px;}
+.acc-inner p:last-child{margin-bottom:0;}
+.acc-inner p strong{color:var(--text);font-weight:700;}
 .acc-sep{height:1px;background:var(--border);margin:14px 0;}
-.acc-note{
-  margin-top:12px;font-size:11.5px;color:var(--text-muted);line-height:1.8;
-  background:rgba(12,12,12,.6);border:1px solid var(--border);border-radius:9px;padding:11px 13px;
-}
-.acc-quote{
-  margin-top:14px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.28);border-radius:10px;
-  padding:14px 15px;font-size:12.5px;line-height:1.9;color:var(--text);text-align:center;
-}
+.acc-note{margin-top:12px;font-size:11.5px;color:var(--text-muted);line-height:1.8;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:11px 13px;}
+.acc-quote{margin-top:14px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.28);border-radius:12px;padding:15px;font-size:12.5px;line-height:1.9;color:var(--text);text-align:center;}
 .acc-link{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;
-  background:rgba(0,0,0,.3);border:1px solid rgba(232,160,32,.28);border-radius:10px;
-  padding:11px 13px;text-decoration:none;color:var(--orange-light);font-size:12.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;
+  background:rgba(0,0,0,.32);border:1px solid rgba(232,160,32,.28);border-radius:12px;
+  padding:12px 13px;text-decoration:none;color:var(--orange-light);font-size:12.5px;font-weight:700;
+  transition:background .15s, border-color .15s;
 }
 .acc-link:active{border-color:var(--orange);background:var(--orange-bg);}
-.acc-link .ext{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);font-weight:400;}
-.tbadge{flex-shrink:0;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);border:1px solid rgba(232,160,32,.35);border-radius:20px;padding:3px 9px;white-space:nowrap;font-weight:400;}
+.acc-link-l{display:flex;align-items:center;gap:9px;min-width:0;}
+.acc-link .ext{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);font-weight:400;flex-shrink:0;}
+.tbadge{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);border:1px solid rgba(232,160,32,.35);border-radius:20px;padding:2px 8px;white-space:nowrap;font-weight:400;letter-spacing:.04em;}
 .tbadge.soon{color:var(--text-dim);border-color:var(--border-light);}
 
-/* 手順ステップ */
+/* 手順 */
 .steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
 .step{display:flex;align-items:center;gap:10px;}
-.step-num{
-  width:22px;height:22px;border-radius:50%;background:rgba(12,12,12,.85);border:1px solid var(--border-light);
-  color:var(--text-muted);font-family:"JetBrains Mono",monospace;font-size:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
+.step-num{width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid var(--border-light);color:var(--text-muted);font-family:"JetBrains Mono",monospace;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .step-text{font-size:12px;color:var(--text-muted);line-height:1.6;}
 
-/* サブ項目（セミナー別・部位別など） */
+/* サブ項目 */
 .subrows{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
-.subrow{
-  display:flex;align-items:center;gap:10px;
-  background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:10px;padding:11px 12px;
-  text-decoration:none;color:var(--text);
-}
-.subrow:active{border-color:var(--orange);}
+.subrow{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:10px 12px;}
+.subrow-idx{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);width:18px;flex-shrink:0;}
 .subrow-name{flex:1;min-width:0;font-size:12.5px;font-weight:700;line-height:1.4;}
-.subrow-go{flex-shrink:0;font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);border:1px solid var(--border-light);border-radius:6px;padding:3px 7px;}
 
-/* PDF資料ボタン */
+/* PDF 資料ボタン */
 .docbar{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .docbtn{
-  display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-  background:var(--orange-bg);border:1px solid rgba(232,160,32,.28);border-radius:9px;
-  padding:9px 13px;font-size:11.5px;font-weight:700;color:var(--orange-light);
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.3);border-radius:10px;
+  padding:9px 12px;font-size:11.5px;font-weight:700;color:var(--orange-light);transition:background .15s;
 }
-.docbtn:active{background:rgba(232,160,32,.18);}
-.docbtn .cnt{
-  font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--black);
-  background:var(--orange);border-radius:20px;padding:1px 7px;min-width:20px;text-align:center;
-}
+.docbtn:active{background:rgba(232,160,32,.2);}
+.docbtn .cnt{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--black);background:var(--orange);border-radius:20px;padding:1px 7px;min-width:20px;text-align:center;}
 .docbtn .cnt.zero{background:var(--border-light);color:var(--text-muted);}
-.subrow .docbtn{padding:6px 9px;font-size:10.5px;flex-shrink:0;margin:0;}
-.subrow .docbar{margin:0;}
+.subrow .docbtn{padding:6px 8px;flex-shrink:0;}
 
-/* 独立コンテンツ（解剖） */
-.solo-zone{
-  position:relative;margin:26px 0 10px;border-radius:18px;overflow:hidden;
-  background:linear-gradient(135deg, #2a1c05, var(--card) 62%);
-  border:1px solid var(--orange);box-shadow:0 0 34px rgba(232,160,32,.10);scroll-margin-top:20px;
-}
-.solo-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.14em;margin-bottom:5px;}
-.solo-zone .acc{background:transparent;border:none;border-radius:0;}
-.solo-zone .acc.open{border:none;}
-.solo-zone .acc-head{padding:20px 20px 18px;align-items:flex-start;}
-.solo-zone .acc-body{padding:0 20px 20px;}
-.solo-zone .acc-title{font-size:17px;font-weight:900;display:block;}
+.note-box{margin:18px 0 0;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.22);border-radius:14px;font-size:12.5px;line-height:1.85;color:var(--text);}
 
-.note-box{margin:20px 4px 4px;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:12px;font-size:12.5px;line-height:1.85;color:var(--text);}
+/* ===== 写真カード（解剖） ===== */
+.photo-card{position:relative;margin:26px 0 0;border-radius:20px;overflow:hidden;border:1px solid rgba(232,160,32,.35);scroll-margin-top:64px;}
+.photo-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.55;}
+.photo-card-shade{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(12,12,12,.35), rgba(12,12,12,.9) 55%, #101010 100%);}
+.photo-card-in{position:relative;padding:22px 16px 16px;}
+.photo-card .acc{background:rgba(20,20,20,.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 
-/* ADVANCED 見出し */
-.adv-head{margin:38px 0 4px;text-align:center;}
-.adv-head-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange);}
-.adv-head-title{font-family:"Bebas Neue",sans-serif;font-size:38px;letter-spacing:.04em;line-height:1.1;margin-top:4px;}
-.adv-head-sub{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.7;}
-.adv-rule{height:1px;background:linear-gradient(to right, transparent, var(--orange-dark), transparent);margin:16px 0 22px;}
+/* ===== 帯（ADVANCED：救急車） ===== */
+.band{position:relative;margin:34px -20px 0;height:230px;overflow:hidden;scroll-margin-top:52px;}
+.band-img{position:absolute;left:0;top:0;width:150%;max-width:none;height:100%;object-fit:cover;object-position:center;opacity:.5;will-change:transform;}
+.band-shade{position:absolute;inset:0;background:linear-gradient(to bottom, var(--black) 0%, rgba(12,12,12,.15) 30%, rgba(12,12,12,.4) 70%, var(--black) 100%);}
+.band-copy{position:absolute;left:20px;right:20px;bottom:22px;max-width:600px;margin:0 auto;}
+.band-title{font-size:56px;text-shadow:0 4px 30px rgba(0,0,0,.9);}
+.band-sub{color:rgba(240,240,240,.85);text-shadow:0 1px 10px rgba(0,0,0,.9);}
 
-/* SPL：スポットライトゾーン */
+/* ===== SPL ===== */
 .spl-zone{
-  position:relative;margin:0 0 24px;padding:24px 18px 20px;border-radius:20px;
-  background:radial-gradient(ellipse 120% 100% at 30% 0%, var(--spl-bg), transparent 70%), var(--card);
-  border:1.5px solid var(--spl);overflow:hidden;scroll-margin-top:20px;
+  position:relative;margin:18px 0 0;padding:22px 16px 16px;border-radius:20px;overflow:hidden;scroll-margin-top:64px;
+  background:radial-gradient(ellipse 120% 100% at 30% 0%, var(--spl-bg), transparent 70%), #151210;
+  border:1.5px solid var(--spl);
 }
-.spl-zone::after{
-  content:"";position:absolute;top:-40%;right:-20%;width:70%;height:180%;
-  background:radial-gradient(circle, rgba(217,138,61,.18), transparent 70%);pointer-events:none;
-}
-.spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.12em;margin-bottom:4px;position:relative;}
-.spl-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.03em;color:#fff;position:relative;line-height:1.1;}
-.spl-title-ja{font-size:11.5px;color:var(--text-muted);margin:2px 0 14px;position:relative;line-height:1.7;}
-.spl-pillars{display:flex;flex-direction:column;gap:8px;position:relative;}
-.spl-pillars .acc{background:rgba(0,0,0,.28);border-color:rgba(217,138,61,.35);border-radius:11px;}
-.spl-pillars .acc.open{border-color:var(--spl);}
-.spl-pillars .acc-head{padding:13px 14px;}
-.spl-pillars .acc-title{font-size:13.5px;}
-.spl-pillars .acc-body{padding:0 14px 14px;}
-.spl-pillars .acc-link{border-color:rgba(217,138,61,.35);color:var(--spl);}
-.spl-pillars .acc-link:active{border-color:var(--spl);background:var(--spl-bg);}
+.spl-bg{position:absolute;right:-30%;top:-20%;width:90%;max-width:520px;height:auto;opacity:.16;transform:rotate(-18deg);pointer-events:none;
+  -webkit-mask-image:radial-gradient(circle, #000 35%, transparent 72%);mask-image:radial-gradient(circle, #000 35%, transparent 72%);}
+.spl-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:16px;}
+.spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.24em;}
+.spl-title{font-family:"Bebas Neue",sans-serif;font-size:52px;letter-spacing:.04em;color:#fff;line-height:.95;margin-top:6px;}
+.spl-title-ja{font-size:11.5px;color:var(--text-muted);margin-top:4px;letter-spacing:.02em;}
+.spl-mark{width:46px;height:46px;border-radius:14px;background:rgba(217,138,61,.12);border:1px solid rgba(217,138,61,.4);color:var(--spl);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.spl-pillars{position:relative;display:flex;flex-direction:column;gap:8px;}
+.spl-pillars .acc, .spl-group .acc{background:rgba(0,0,0,.34);border-color:rgba(217,138,61,.3);border-radius:14px;}
+.spl-pillars .acc.open, .spl-group .acc.open{border-color:var(--spl);box-shadow:0 10px 26px rgba(0,0,0,.4);}
+.spl-pillars .acc-ic, .spl-group .acc-ic{background:rgba(217,138,61,.12);border-color:rgba(217,138,61,.3);color:var(--spl);}
+.spl-pillars .acc.open .acc-ic, .spl-group .acc.open .acc-ic{background:var(--spl);color:var(--black);border-color:var(--spl);}
+.spl-pillars .acc-link, .spl-group .acc-link{border-color:rgba(217,138,61,.35);color:#E8B27A;}
 .spl-pillars .tbadge{color:var(--spl);border-color:rgba(217,138,61,.4);}
 .spl-pillars .tbadge.soon{color:var(--text-dim);border-color:var(--border-light);}
-/* 過去問・ノウハウ集をまとめるオレンジ枠 */
-.spl-group{
-  position:relative;margin-top:12px;padding:14px 12px 12px;border-radius:14px;
-  border:1px solid var(--orange);background:rgba(232,160,32,.05);
-  display:flex;flex-direction:column;gap:8px;
-}
-.spl-group-label{
-  font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);
-  letter-spacing:.1em;padding:0 2px 2px;
-}
-.spl-group .acc{background:rgba(0,0,0,.3);border-color:rgba(232,160,32,.3);border-radius:11px;}
-.spl-group .acc.open{border-color:var(--orange);}
-.spl-group .acc-head{padding:13px 14px;}
-.spl-group .acc-title{font-size:13.5px;}
-.spl-group .acc-body{padding:0 14px 14px;}
+.spl-group{position:relative;margin-top:12px;padding:13px 10px 10px;border-radius:16px;border:1px solid var(--orange);background:rgba(232,160,32,.05);display:flex;flex-direction:column;gap:8px;}
+.spl-group-label{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);letter-spacing:.14em;padding:0 4px 2px;}
 
-/* advanced カード */
+/* ===== 分野別 ===== */
 .adv-list{display:flex;flex-direction:column;gap:10px;}
-.adv-list .acc{scroll-margin-top:20px;}
-.adv-list .acc-head{padding:15px 16px;}
-.adv-icon{
-  width:34px;height:34px;border-radius:9px;flex-shrink:0;background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.22);display:flex;align-items:center;justify-content:center;font-size:15px;
-}
-.adv-list .acc-title{font-size:14.5px;}
 
-/* 最後の呼びかけ */
+/* ===== 呼びかけ ===== */
 .invite-zone{
-  position:relative;margin:34px 0 0;padding:28px 22px 24px;border-radius:20px;overflow:hidden;
-  background:radial-gradient(ellipse 120% 90% at 50% 0%, rgba(232,160,32,.13), transparent 68%), var(--card);
-  border:1px solid var(--border);scroll-margin-top:20px;
+  position:relative;margin:36px 0 0;padding:30px 22px 26px;border-radius:22px;overflow:hidden;scroll-margin-top:64px;
+  background:radial-gradient(ellipse 120% 90% at 50% 0%, rgba(232,160,32,.14), transparent 68%), var(--card);
+  border:1px solid var(--border);
 }
-.invite-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.2em;text-align:center;}
-.invite-title{font-size:18px;font-weight:900;line-height:1.55;margin-top:10px;text-align:center;}
-.invite-desc{font-size:12.5px;color:var(--text-muted);line-height:1.95;margin-top:16px;}
+.invite-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.24em;text-align:center;}
+.invite-title{font-size:19px;font-weight:900;line-height:1.55;margin-top:10px;text-align:center;}
+.invite-desc{font-size:12.5px;color:var(--text-muted);line-height:1.95;margin-top:18px;}
 .invite-desc strong{color:var(--text);}
-.invite-sign{
-  margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center;
-  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;
-}
+.invite-sign{margin-top:22px;padding-top:16px;border-top:1px solid var(--border);text-align:center;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;color:var(--orange);opacity:.85;}
 
 .footer-note{text-align:center;font-size:11px;color:var(--text-dim);margin-top:36px;line-height:1.8;}
 .footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
 
-/* タブバー */
+/* ===== タブバー ===== */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:rgba(20,20,20,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;align-items:stretch;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom);}
 .tabbar-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:9px 4px 8px;color:var(--text-dim);text-decoration:none;cursor:pointer;transition:color .15s;-webkit-tap-highlight-color:transparent;background:none;border:none;font-family:inherit;}
 .tabbar-item svg{width:21px;height:21px;}
@@ -276,35 +258,30 @@ button{font-family:inherit;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
 
-/* ミニマップ */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500;padding:24px;}
+/* ===== 全体マップ ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:500;padding:24px;}
 .overlay.show{display:flex;}
-.minimap{width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:var(--card);border:1px solid var(--orange-dark);border-radius:18px;padding:20px;}
-.minimap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.minimap-head h4{font-family:"Bebas Neue",sans-serif;font-size:21px;letter-spacing:.03em;}
+.minimap{width:100%;max-width:440px;max-height:82vh;overflow-y:auto;background:var(--dark);border:1px solid var(--orange-dark);border-radius:20px;padding:20px;}
+.minimap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.minimap-head h4{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:.04em;font-weight:400;}
 .minimap-head .close{font-size:20px;color:var(--text-dim);cursor:pointer;padding:4px;}
-.mm-sec{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);letter-spacing:.12em;margin:14px 0 7px;}
+.mm-sec{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);letter-spacing:.2em;margin:14px 0 8px;}
 .mm-sec:first-of-type{margin-top:0;}
-.mm-node{font-size:12.5px;padding:10px 12px;background:#20190E;border-radius:9px;cursor:pointer;margin-bottom:7px;position:relative;padding-left:24px;}
-.mm-node::before{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mm-node{font-size:12px;font-weight:600;padding:10px 11px 10px 22px;background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;position:relative;line-height:1.35;}
+.mm-node::before{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--orange);}
 .mm-node.spl::before{background:var(--spl);}
-.mm-node:active{background:#2a2213;}
-.mm-note{margin-top:6px;font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;text-align:center;}
+.mm-node:active{border-color:var(--orange);background:var(--card-hover);}
+.mm-note{margin-top:12px;font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;text-align:center;letter-spacing:.06em;}
 
 /* ===== PDF資料モーダル ===== */
-.pdf-box{
-  width:100%;max-width:460px;max-height:84vh;display:flex;flex-direction:column;
-  background:var(--dark);border:1px solid var(--border);border-radius:18px;overflow:hidden;
-}
+.pdf-box{width:100%;max-width:460px;max-height:84vh;display:flex;flex-direction:column;background:var(--dark);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
 .pdf-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .pdf-head-title{font-size:14.5px;font-weight:700;line-height:1.4;}
 .pdf-head-sub{font-size:10.5px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;margin-top:3px;}
 .pdf-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
 .pdf-body{padding:16px 18px 22px;overflow-y:auto;}
-.pdf-item{
-  display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);
-  border-radius:11px;padding:12px 13px;margin-bottom:8px;text-decoration:none;color:var(--text);cursor:pointer;
-}
+.pdf-item{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 13px;margin-bottom:8px;text-decoration:none;color:var(--text);cursor:pointer;}
 .pdf-item:active{border-color:var(--orange);}
 .pdf-item-ic{width:32px;height:32px;border-radius:8px;background:rgba(240,96,96,.12);border:1px solid rgba(240,96,96,.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#F06060;flex-shrink:0;font-family:"JetBrains Mono",monospace;}
 .pdf-item-body{flex:1;min-width:0;}
@@ -315,10 +292,7 @@ button{font-family:inherit;}
 .pdf-empty{text-align:center;font-size:12px;color:var(--text-muted);padding:26px 10px;line-height:1.8;}
 .pdf-upload{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
 .pdf-upload-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
-.pdf-drop{
-  border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;
-  cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;display:block;
-}
+.pdf-drop{border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;display:block;}
 .pdf-drop:active{border-color:var(--orange);color:var(--orange-light);}
 .pdf-status{margin-top:10px;font-size:11.5px;line-height:1.6;display:none;border-radius:8px;padding:9px 11px;}
 .pdf-status.show{display:block;}
@@ -326,11 +300,11 @@ button{font-family:inherit;}
 .pdf-status.ng{color:#F06060;background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);}
 .pdf-status.info{color:var(--text-muted);background:var(--card);border:1px solid var(--border);}
 
-/* ===== 「部員として」モーダル（index.htmlと同じ内容） ===== */
+/* ===== 「部員として」モーダル ===== */
 .guide-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:700;align-items:flex-end;justify-content:center;}
 .guide-modal-overlay.open{display:flex;}
 @media (min-width:560px){ .guide-modal-overlay{align-items:center;padding:20px;} }
-.guide-modal-box{background:var(--dark);border:1px solid var(--border);border-radius:18px 18px 0 0;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both;}
+.guide-modal-box{background:var(--dark);border:1px solid var(--border);border-radius:18px 18px 0 0;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;animation:fadeUp .3s var(--ease) both;}
 @media (min-width:560px){ .guide-modal-box{border-radius:16px;} }
 .guide-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .guide-modal-title{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;}
@@ -353,7 +327,7 @@ button{font-family:inherit;}
 @media (min-width:420px){ .gm-tab{font-size:12.5px;padding:9px 8px;} }
 .gm-tab.active{background:var(--orange);border-color:var(--orange);color:var(--black);}
 .gm-pane{display:none;}
-.gm-pane.active{display:block;animation:fadeUp .28s cubic-bezier(.16,1,.3,1) both;}
+.gm-pane.active{display:block;animation:fadeUp .28s var(--ease) both;}
 @media (prefers-reduced-motion:reduce){ .gm-pane.active{animation:none;} }
 .gm-date{font-size:11px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:12px;}
 .gm-pane-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;}
@@ -361,6 +335,7 @@ button{font-family:inherit;}
 .gm-list.check .gm-list-item::before{content:"";left:0;top:3px;width:13px;height:13px;border-radius:3px;background:transparent;border:1.5px solid var(--orange);}
 .gm-sublabel{font-size:12.5px;font-weight:700;color:var(--text);margin:0 0 8px;padding-left:2px;}
 .gm-list + .gm-sublabel{margin-top:16px;}
+
 </style>
 </head>
 <body>
@@ -371,454 +346,99 @@ button{font-family:inherit;}
   <div class="top-header-row">
     <div>
       <div class="th-title">まな<span>ぶ</span></div>
-      <div class="th-sub">全体マップ ー どこからでも自由に</div>
+      <div class="th-sub">LEARNING MAP ー どこからでも自由に</div>
     </div>
-    <div class="map-btn" id="map-open">🗺️</div>
+    <div class="map-btn" id="map-open" aria-label="全体マップ"><svg class="" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
   </div>
 </header>
 
+<!-- ドクターヘリ：スクロールで着地するヒーロー -->
 <div class="heli-hero" id="heli-hero">
   <img class="heli-img" id="heli-img" src="assets/bg-heli.jpg" alt="">
   <div class="heli-shade"></div>
   <div class="heli-copy">
     <div class="heli-eyebrow">LEARNING MAP</div>
     <div class="heli-title">さあ、降り立とう。<span>学びのフィールドへ。</span></div>
-    <div class="heli-sub">基本のキから応用ルートまで、どこからでも自由に。</div>
+    <div class="heli-sub">基本のキから応用ルートまで。気になる項目をタップ。</div>
   </div>
 </div>
 
-<div class="tap-hint">TAP TO OPEN ー 気になる項目をタップ</div>
+<!-- スティッキー目次 -->
+<nav class="snav" id="snav">
+  <div class="snav-in">
+    <a href="#basic" data-sec="basic">01 BASIC</a>
+    <a href="#anatomy" data-sec="anatomy">ANATOMY</a>
+    <a href="#advanced" data-sec="advanced">02 ADVANCED</a>
+    <a href="#spl" data-sec="spl">SPL</a>
+    <a href="#invite" data-sec="invite">SHARE</a>
+  </div>
+</nav>
 
-<div class="main fade-up">
+<main class="main">
+
+  <!-- ================= 01 BASIC ================= -->
+  <section class="sec" id="basic">
+    <div class="sec-eyebrow">01 ー BASIC ROUTE</div>
+    <h2 class="sec-title">Basic</h2>
+    <p class="sec-sub">まずはここから。①から順番に進めば、セミナーも認定試験も迷いません。</p>
+  </section>
 
   <div class="trunk">
-
-    <!-- 1 K-PICSの理念・活動紹介 -->
-    <div class="tnode" id="n1" data-n="1">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">K-PICSの理念・活動紹介</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>K-PICSは、超音波を学ぶためだけの団体ではありません。<br>私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。私たちは超音波だけでなく、救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。</p>
-          <p>また、知識や資格は取得して終わりではありません。学んだことを地域へ還元し、市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。</p>
-          <p>K-PICSは大学の中だけで完結する団体ではありません。地域の医療機関、消防、行政、教育機関、企業、他大学、全国の学生団体など、多くの方々とのつながりによって成り立っています。私たちはそのつながりを大切にしながら、人と人を結ぶハブとして活動していきます。</p>
-          <p>そして、和歌山だけでなく全国にも目を向けます。<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。</p>
-          <p>これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。私たちはその歴史に感謝しながら、時代に合わせて進化し続けます。</p>
-          <div class="acc-quote">超音波を学ぶためだけに活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。</div>
-
-          <div class="acc-sep"></div>
-
-          <p><strong>活動について</strong><br>K-PICSの活動は多岐にわたります。日々の活動の様子はInstagramで見られます。いろんなことに取り組んでいる先輩がいるので、興味のあることはどんどん声をかけていきましょう。</p>
-          <a class="acc-link" href="https://www.instagram.com/k_pics.wmu?igsh=YzlsanMzNDc5eGE3" target="_blank" rel="noopener">
-            <span>📷 Instagram（@k_pics.wmu）</span><span class="ext">外部 ↗</span>
-          </a>
-          <div class="docbar"><div class="docbtn" data-doc="rinen" data-doc-title="K-PICSの理念・活動紹介">📄 資料 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2 K-PICSの部員として -->
-    <div class="tnode" id="n2" data-n="2">
-      <div class="acc">
-        <div class="acc-head" id="member-guide-open">
-          <div class="acc-title">K-PICSの部員として <span class="tbadge">必読</span></div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" style="transform:rotate(-90deg);"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3 エコーの基本のキ -->
-    <div class="tnode" id="n3" data-n="3">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">エコーの基本のキ</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>プローブの種類、画像の見方、機械の触り方など、<strong>ゼロからのエコー入門</strong>。何も知らない状態からでも、ここを読めばセミナーの内容がぐっと分かりやすくなります。</p>
-          <div class="acc-note">読み物としての教材ページは今後追加していきます。それまでは資料（PDF）をご覧ください。</div>
-          <div class="docbar"><div class="docbtn" data-doc="basic" data-doc-title="エコーの基本のキ">📄 資料 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4 予習教材 -->
-    <div class="tnode" id="n4" data-n="4">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">予習教材 <span class="tbadge">5セミナー</span></div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>セミナー前に読んでおきたい教材です。解剖や用語をざっと入れておくだけで、当日の理解度がまったく変わります。セミナーごとに用意しています。</p>
-          <div class="subrows">
-            <div class="subrow"><div class="subrow-name">心臓</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-heart" data-doc-title="予習教材 ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">肺・下肢静脈</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-lung-dvt" data-doc-title="予習教材 ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">腹部</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-abdomen" data-doc-title="予習教材 ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">血管穿刺</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-vascular-access" data-doc-title="予習教材 ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">排泄ケア</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-excretion-care" data-doc-title="予習教材 ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
-          </div>
-          <div class="acc-note">「準備中」は読み物ページのことです。資料（PDF）はいまでも見られます。</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5 セミナー -->
-    <div class="tnode" id="n5" data-n="5">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">セミナー <span class="tbadge">5セミナー</span></div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>各分野の実技セミナーです。開催情報はカレンダーをチェックしてください。当日使った資料は、それぞれの下から見られます。</p>
-          <div class="subrows">
-            <div class="subrow"><div class="subrow-name">心臓</div><div class="docbtn" data-doc="seminar-heart" data-doc-title="セミナー ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">肺・下肢静脈</div><div class="docbtn" data-doc="seminar-lung-dvt" data-doc-title="セミナー ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">腹部</div><div class="docbtn" data-doc="seminar-abdomen" data-doc-title="セミナー ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">血管穿刺</div><div class="docbtn" data-doc="seminar-vascular-access" data-doc-title="セミナー ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">排泄ケア</div><div class="docbtn" data-doc="seminar-excretion-care" data-doc-title="セミナー ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
-          </div>
-          <a class="acc-link" href="calendar.html"><span>📅 開催予定をカレンダーで見る</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6 疾患辞典 -->
-    <div class="tnode" id="n6" data-n="6">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">疾患辞典 <span class="tbadge">低学年向け</span></div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>各セミナーで出てきた疾患を、<strong>まだ習っていない低学年の人にも分かるように</strong>やさしく解説します。「今日の症例、そもそも何の病気？」がここで解決します。</p>
-          <div class="subrows">
-            <div class="subrow"><div class="subrow-name">心臓</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-heart" data-doc-title="疾患辞典 ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">肺・下肢静脈</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-lung-dvt" data-doc-title="疾患辞典 ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">腹部</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-abdomen" data-doc-title="疾患辞典 ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">血管穿刺</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-vascular-access" data-doc-title="疾患辞典 ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">排泄ケア</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-excretion-care" data-doc-title="疾患辞典 ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
-          </div>
-          <div class="acc-note">ゆくゆくは疾患ごとの解説ページを作って、ここから引けるようにしていきます。</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 7 自主練ハンドブック -->
-    <div class="tnode" id="n7" data-n="7">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">自主練ハンドブック</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>部位ごとに、プローブ・当てる部位・見える画面を画像中心でまとめた自主練用のハンドブック。よくある失敗例・コツは部員みんなで書き込み・編集していきます。<strong>自主練の時に最適！</strong></p>
-          <div class="acc-note">セミナー受講や先輩からの指導などで基本的な手技を一度学んだことがある方を対象としています。ゼロから学ぶための教材ではなく、復習や自主練習の補助として活用してください。</div>
-          <a class="acc-link" href="technique.html"><span>自主練ハンドブックへ</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 8 認定アプリ -->
-    <div class="tnode" id="n8" data-n="8">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">認定アプリ</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>認定アプリは、セミナーを<strong>受けっぱなしで終わらせない</strong>ための仕組みです。受講後に自主練を積み重ねて、実際に技術を身につけてもらうことが目的です。</p>
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">セミナー受講日を選択</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">練習日を入力</div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">適切な画像をアップロード</div></div>
-          </div>
-          <p style="margin-top:12px;">アップロードすると、多田先生やバッジ取得者が<strong>Pass / Keep</strong>を判定。Keepの場合はフィードバックがもらえるので、それを元にまた練習。<strong>セミナーを受講し、全断面Passすると、認定試験の受験資格</strong>が得られます。</p>
-          <div class="acc-note">
-            ・異なる日に練習する場合は、同じ被検者にエコーを当ててOK<br>
-            ・同じ日にまとめて練習する場合は、別の3人に当てて撮像すること<br><br>
-            ・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK
-          </div>
-          <a class="acc-link" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener">
-            <span>認定アプリを開く</span><span class="ext">外部 ↗</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 9 waza-ari -->
-    <div class="tnode" id="n9" data-n="9">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">waza-ari</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>GE社（Versana）が提供するPOCUS動画コンテンツ。「腹部領域」「心臓領域」「血管領域」「運動器/表在領域」「排泄ケア領域」について、非常に分かりやすい動画が見られます。異常所見や症例の解説もあるので、バンバン見てほしい。<strong>セミナーの予習にも復習にも最適</strong>です。</p>
-          <a class="acc-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-            <span>waza-ariを見る</span><span class="ext">外部 ↗</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 10 10日間で学ぶ！ -->
-    <div class="tnode" id="n10" data-n="10">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">10日間で学ぶ！エコーを用いたショック鑑別の基礎</div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>ショック状態の患者さんを前にして、何を見て、何を考え、どこにエコーを当てるのか。ABCDE評価から4大ショックの鑑別、POCUSの当て方までを<strong>1日1テーマ・10日間</strong>で追いかける初学者向け教材です。「なぜそこにプローブを当てるのか」が腑に落ちると、日々の手技練習にも一段と身が入るはず。低学年の方もぜひ学んでみてください。</p>
-          <p><strong>下のボタンから、10日間コースの本編が読めます。</strong></p>
-          <a class="acc-link" href="shock-pocus-10days.html"><span>▶ 10日間コースを読む</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <div class="docbar"><div class="docbtn" data-doc="shock-10days" data-doc-title="10日間で学ぶ！ショック鑑別の基礎">📄 資料 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 11 認定試験 -->
-    <div class="tnode" id="n11" data-n="11">
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">認定試験 <span class="tbadge">受験要項</span></div>
-          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>エコー手技が一定水準に達したと評価されると合格し、<strong>バッジが付与されます</strong>。バッジ取得者は指導者側にまわり、後輩の育成を担う。これがK-PICSの核心、<strong>学生主体の教育循環システム</strong>です。</p>
-          <p><strong>直近の認定試験の受験要項は、下の資料からご確認ください。</strong></p>
-          <div class="docbar"><div class="docbtn" data-doc="cert-exam" data-doc-title="認定試験 受験要項">📄 受験要項 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
+<div class="tnode" id="n1" data-n="01"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div class="acc-ttl"><div class="acc-title">K-PICSの理念・活動紹介</div><div class="acc-meta"><span>PHILOSOPHY</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>K-PICSは、超音波を学ぶためだけの団体ではありません。<br>私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。私たちは超音波だけでなく、救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。</p><p>また、知識や資格は取得して終わりではありません。学んだことを地域へ還元し、市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。</p><p>K-PICSは大学の中だけで完結する団体ではありません。地域の医療機関、消防、行政、教育機関、企業、他大学、全国の学生団体など、多くの方々とのつながりによって成り立っています。私たちはそのつながりを大切にしながら、人と人を結ぶハブとして活動していきます。</p><p>そして、和歌山だけでなく全国にも目を向けます。<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。</p><p>これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。私たちはその歴史に感謝しながら、時代に合わせて進化し続けます。</p><div class="acc-quote">超音波を学ぶためだけに活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。</div><div class="acc-sep"></div><p><strong>活動について</strong><br>K-PICSの活動は多岐にわたります。日々の活動の様子はInstagramで見られます。いろんなことに取り組んでいる先輩がいるので、興味のあることはどんどん声をかけていきましょう。</p><a class="acc-link" href="https://www.instagram.com/k_pics.wmu?igsh=YzlsanMzNDc5eGE3" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Instagram（@k_pics.wmu）</span></span><span class="ext">外部 ↗</span></a><div class="docbar"><div class="docbtn" data-doc="rinen" data-doc-title="K-PICSの理念・活動紹介"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="tnode" id="n2" data-n="02"><div class="acc static"><div class="acc-head" id="member-guide-open"><div class="acc-ic solid"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="acc-ttl"><div class="acc-title">K-PICSの部員として <span class="tbadge">必読</span></div><div class="acc-meta"><span>RULES ・ MANNERS</span><span class="m-doc" hidden></span></div></div></div></div></div><div class="tnode" id="n3" data-n="03"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><div class="acc-ttl"><div class="acc-title">エコーの基本のキ</div><div class="acc-meta"><span>ZERO TO ONE</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>プローブの種類、画像の見方、機械の触り方など、<strong>ゼロからのエコー入門</strong>。何も知らない状態からでも、ここを読めばセミナーの内容がぐっと分かりやすくなります。</p><div class="acc-note">読み物としての教材ページは今後追加していきます。それまでは資料（PDF）をご覧ください。</div><div class="docbar"><div class="docbtn" data-doc="basic" data-doc-title="エコーの基本のキ"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="tnode" id="n4" data-n="04"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div><div class="acc-ttl"><div class="acc-title">予習教材</div><div class="acc-meta"><span>5 SEMINARS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>セミナー前に読んでおきたい教材です。解剖や用語をざっと入れておくだけで、当日の理解度がまったく変わります。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">心臓</div><div class="docbtn" data-doc="prep-heart" data-doc-title="予習教材 ｜ 心臓"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">肺・下肢静脈</div><div class="docbtn" data-doc="prep-lung-dvt" data-doc-title="予習教材 ｜ 肺・下肢静脈"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">腹部</div><div class="docbtn" data-doc="prep-abdomen" data-doc-title="予習教材 ｜ 腹部"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">血管穿刺</div><div class="docbtn" data-doc="prep-vascular-access" data-doc-title="予習教材 ｜ 血管穿刺"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">排泄ケア</div><div class="docbtn" data-doc="prep-excretion-care" data-doc-title="予習教材 ｜ 排泄ケア"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div><div class="acc-note">読み物ページは順次作っていきます。資料（PDF）はいまでも見られます。</div></div></div></div></div></div><div class="tnode" id="n5" data-n="05"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="acc-ttl"><div class="acc-title">セミナー</div><div class="acc-meta"><span>5 SEMINARS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>各分野の実技セミナーです。当日使った資料は、それぞれの単元から見られます。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">心臓</div><div class="docbtn" data-doc="seminar-heart" data-doc-title="セミナー ｜ 心臓"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">肺・下肢静脈</div><div class="docbtn" data-doc="seminar-lung-dvt" data-doc-title="セミナー ｜ 肺・下肢静脈"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">腹部</div><div class="docbtn" data-doc="seminar-abdomen" data-doc-title="セミナー ｜ 腹部"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">血管穿刺</div><div class="docbtn" data-doc="seminar-vascular-access" data-doc-title="セミナー ｜ 血管穿刺"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">排泄ケア</div><div class="docbtn" data-doc="seminar-excretion-care" data-doc-title="セミナー ｜ 排泄ケア"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div><a class="acc-link" href="calendar.html"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>開催予定をカレンダーで見る</span></span><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a></div></div></div></div></div><div class="tnode" id="n6" data-n="06"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><div class="acc-ttl"><div class="acc-title">疾患辞典</div><div class="acc-meta"><span>FOR JUNIORS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>各セミナーで出てきた疾患を、<strong>まだ習っていない低学年の人にも分かるように</strong>やさしく解説します。「今日の症例、そもそも何の病気？」がここで解決します。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">心臓</div><div class="docbtn" data-doc="disease-heart" data-doc-title="疾患辞典 ｜ 心臓"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">肺・下肢静脈</div><div class="docbtn" data-doc="disease-lung-dvt" data-doc-title="疾患辞典 ｜ 肺・下肢静脈"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">腹部</div><div class="docbtn" data-doc="disease-abdomen" data-doc-title="疾患辞典 ｜ 腹部"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">血管穿刺</div><div class="docbtn" data-doc="disease-vascular-access" data-doc-title="疾患辞典 ｜ 血管穿刺"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">排泄ケア</div><div class="docbtn" data-doc="disease-excretion-care" data-doc-title="疾患辞典 ｜ 排泄ケア"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div><div class="acc-note">ゆくゆくは疾患ごとの解説ページを作って、ここから引けるようにしていきます。</div></div></div></div></div></div><div class="tnode" id="n7" data-n="07"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></div><div class="acc-ttl"><div class="acc-title">自主練ハンドブック</div><div class="acc-meta"><span>FOR PRACTICE</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>部位ごとに、プローブ・当てる部位・見える画面を画像中心でまとめた自主練用のハンドブック。よくある失敗例・コツは部員みんなで書き込み・編集していきます。<strong>自主練の時に最適！</strong></p><div class="acc-note">セミナー受講や先輩からの指導などで基本的な手技を一度学んだことがある方を対象としています。ゼロから学ぶための教材ではなく、復習や自主練習の補助として活用してください。</div><a class="acc-link" href="technique.html"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg><span>自主練ハンドブックへ</span></span><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a></div></div></div></div></div><div class="tnode" id="n8" data-n="08"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-7 4 7M12 3a4 4 0 00-4 4c0 2 1 3 4 6 3-3 4-4 4-6a4 4 0 00-4-4z"/></svg></div><div class="acc-ttl"><div class="acc-title">認定アプリ</div><div class="acc-meta"><span>EXTERNAL APP</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>認定アプリは、セミナーを<strong>受けっぱなしで終わらせない</strong>ための仕組みです。受講後に自主練を積み重ねて、実際に技術を身につけてもらうことが目的です。</p><div class="steps"><div class="step"><div class="step-num">1</div><div class="step-text">セミナー受講日を選択</div></div><div class="step"><div class="step-num">2</div><div class="step-text">練習日を入力</div></div><div class="step"><div class="step-num">3</div><div class="step-text">適切な画像をアップロード</div></div></div><p style="margin-top:12px;">アップロードすると、多田先生やバッジ取得者が<strong>Pass / Keep</strong>を判定。Keepの場合はフィードバックがもらえるので、それを元にまた練習。<strong>セミナーを受講し、全断面Passすると、認定試験の受験資格</strong>が得られます。</p><div class="acc-note">・異なる日に練習する場合は、同じ被検者にエコーを当ててOK<br>・同じ日にまとめて練習する場合は、別の3人に当てて撮像すること<br><br>・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK</div><a class="acc-link" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-7 4 7M12 3a4 4 0 00-4 4c0 2 1 3 4 6 3-3 4-4 4-6a4 4 0 00-4-4z"/></svg><span>認定アプリを開く</span></span><span class="ext">外部 ↗</span></a></div></div></div></div></div><div class="tnode" id="n9" data-n="09"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="acc-ttl"><div class="acc-title">waza-ari</div><div class="acc-meta"><span>GE HEALTHCARE</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>GE社（Versana）が提供するPOCUS動画コンテンツ。「腹部領域」「心臓領域」「血管領域」「運動器/表在領域」「排泄ケア領域」について、非常に分かりやすい動画が見られます。異常所見や症例の解説もあるので、バンバン見てほしい。<strong>セミナーの予習にも復習にも最適</strong>です。</p><a class="acc-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>waza-ariを見る</span></span><span class="ext">外部 ↗</span></a></div></div></div></div></div><div class="tnode" id="n10" data-n="10"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="acc-ttl"><div class="acc-title">10日間で学ぶ！エコーを用いたショック鑑別の基礎</div><div class="acc-meta"><span>10 DAYS COURSE</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>ショック状態の患者さんを前にして、何を見て、何を考え、どこにエコーを当てるのか。ABCDE評価から4大ショックの鑑別、POCUSの当て方までを<strong>1日1テーマ・10日間</strong>で追いかける初学者向け教材です。「なぜそこにプローブを当てるのか」が腑に落ちると、日々の手技練習にも一段と身が入るはず。低学年の方もぜひ学んでみてください。</p><p><strong>下のボタンから、10日間コースの本編が読めます。</strong></p><a class="acc-link" href="shock-pocus-10days.html"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>10日間コースを読む</span></span><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a><div class="docbar"><div class="docbtn" data-doc="shock-10days" data-doc-title="10日間で学ぶ！ショック鑑別の基礎"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="tnode" id="n11" data-n="11"><div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div><div class="acc-ttl"><div class="acc-title">認定試験 <span class="tbadge">受験要項</span></div><div class="acc-meta"><span>CERTIFICATION</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>エコー手技が一定水準に達したと評価されると合格し、<strong>バッジが付与されます</strong>。バッジ取得者は指導者側にまわり、後輩の育成を担う。これがK-PICSの核心、<strong>学生主体の教育循環システム</strong>です。</p><p><strong>直近の認定試験の受験要項は、下の資料からご確認ください。</strong></p><div class="docbar"><div class="docbtn" data-doc="cert-exam" data-doc-title="認定試験 受験要項"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 受験要項 <span class="cnt zero">0</span></div></div></div></div></div></div></div>
   </div>
 
   <div class="note-box">エコー手技は、練習だけでなく<strong>臨床と繋がってくると、より楽しくなってきます！</strong>学んだ手技が実際の診療でどう活きるのかを意識すると、学びがぐっと深まります。</div>
 
-  <!-- ===== 独立コンテンツ：解剖の理解を深める ===== -->
-  <div class="solo-zone" id="anatomy">
-    <div class="acc">
-      <div class="acc-head">
-        <div style="flex:1;min-width:0;">
-          <div class="solo-eyebrow">学年を問わない、独立コンテンツ</div>
-          <div class="acc-title">解剖の理解を深める</div>
-        </div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>エコー画像は、解剖が頭に入っているほど読めるようになります。低学年の方はもちろん、<strong>高学年の方が理解を深め直すのにもかなり有効</strong>です。資料は随時追加していきます。</p>
-        <div class="docbar"><div class="docbtn" data-doc="anatomy" data-doc-title="解剖の理解を深める">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
+  <!-- ================= 解剖（独立・写真カード） ================= -->
+  <section class="photo-card" id="anatomy">
+    <img class="photo-card-img" src="assets/hero-probe.jpg" alt="" loading="lazy">
+    <div class="photo-card-shade"></div>
+    <div class="photo-card-in">
+      <div class="sec-eyebrow">STANDALONE ー ALL GRADES</div>
+      <h2 class="sec-title" style="font-size:30px;">Anatomy</h2>
+      <p class="sec-sub" style="margin-bottom:14px;">学年を問わない、独立コンテンツ。</p>
+<div class="acc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="acc-ttl"><div class="acc-title">解剖の理解を深める</div><div class="acc-meta"><span>ALL GRADES</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>エコー画像は、解剖が頭に入っているほど読めるようになります。低学年の方はもちろん、<strong>高学年の方が理解を深め直すのにもかなり有効</strong>です。資料は随時追加していきます。</p><div class="docbar"><div class="docbtn" data-doc="anatomy" data-doc-title="解剖の理解を深める"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div>
     </div>
-  </div>
+  </section>
 
-  <!-- ================= ADVANCED ================= -->
-  <div class="adv-head" id="advanced">
-    <div class="adv-head-eyebrow">FROM HERE ON</div>
-    <div class="adv-head-title">Advanced</div>
-    <div class="adv-head-sub">ここから先は応用ルート。<br>興味のあるところから、どこへでも。</div>
-  </div>
-  <div class="adv-rule"></div>
+  <!-- ================= 02 ADVANCED ================= -->
+  <section class="band" id="advanced">
+    <img class="band-img" src="assets/bg-ambulance.jpg" alt="" loading="lazy">
+    <div class="band-shade"></div>
+    <div class="band-copy">
+      <div class="sec-eyebrow" style="color:var(--orange-light);">02 ー FROM HERE ON</div>
+      <h2 class="sec-title band-title">Advanced</h2>
+      <p class="sec-sub band-sub">ここから先は応用ルート。興味のあるところから、どこへでも。</p>
+    </div>
+  </section>
 
   <!-- 目玉：SPL -->
-  <div class="spl-zone" id="spl">
-    <div class="spl-eyebrow">応用ルートの目玉</div>
-    <div class="spl-title">SPL</div>
-    <div class="spl-title-ja">Student POCUS League</div>
+  <section class="spl-zone" id="spl">
+    <img class="spl-bg" src="assets/bg-dna.jpg" alt="" loading="lazy">
+    <div class="spl-head">
+      <div>
+        <div class="spl-eyebrow">SPOTLIGHT</div>
+        <div class="spl-title">SPL</div>
+        <div class="spl-title-ja">Student POCUS League</div>
+      </div>
+      <div class="spl-mark"><svg class="" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+    </div>
     <div class="spl-pillars">
-
-      <div class="acc" id="spl-ematching">
-        <div class="acc-head"><div class="acc-title">絵合わせアプリ</div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>提示された超音波画像を実際に再現し、タイムを測る練習ツール。1人3枚×3人で計9枚のリレー形式。SPLの競技種目の一つですが、<strong>出場しない人も練習に最適！</strong></p>
-          <div class="acc-note">第4回SPL戦績：機材トラブルありながら99秒で全国1位 🥇<br>練習では1:08を記録したことも。</div>
-          <a class="acc-link" href="https://kpics-tech.github.io/-/" target="_blank" rel="noopener"><span>絵合わせアプリを開く</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="acc" id="spl-engineering">
-        <div class="acc-head"><div class="acc-title">工学系学習</div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>超音波とは何か？機器の原理・各モードの解説など。<strong>超音波専門医試験</strong>でも問われる範囲です。これを理解するとエコーの見え方が変わります。</p>
-          <a class="acc-link" href="https://kpics-tech.github.io/pocus-loop/" target="_blank" rel="noopener">
-            <span>POCUS-LOOP <span class="tbadge soon" style="margin-left:4px;">改良中</span></span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <div class="acc-note">POCUS-LOOPではインプットと問題演習ができます。今後レクチャーの追加も予定していて、<strong>随時改良中</strong>です。</div>
-          <a class="acc-link" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
-            <span>キャノン超音波講座</span><span class="ext">外部 ↗</span>
-          </a>
-          <a class="acc-link" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
-            <span>JSUM Ultrasound Path</span><span class="ext">外部 ↗</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="acc" id="spl-rally">
-        <div class="acc-head"><div class="acc-title">POCUS特化メディカルラリー</div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていきます。</p>
-          <p><strong>症候別プロトコル（Googleドキュメント）と、SP台本フォルダ（ドライブ）</strong>は、どちらもメディカルラリーのページからひらけます。</p>
-          <a class="acc-link" href="medical-rally.html"><span>🚑 POCUS特化メディカルラリーのページへ</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="acc static">
-        <div class="acc-head"><div class="acc-title">POCUS特化臨床推論 <span class="tbadge soon">構想中</span></div></div>
-      </div>
-
+<div class="acc" id="spl-ematching"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div class="acc-ttl"><div class="acc-title">絵合わせアプリ</div><div class="acc-meta"><span>TIME ATTACK</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>提示された超音波画像を実際に再現し、タイムを測る練習ツール。1人3枚×3人で計9枚のリレー形式。SPLの競技種目の一つですが、<strong>出場しない人も練習に最適！</strong></p><div class="acc-note">第4回SPL戦績：機材トラブルありながら99秒で全国1位 🥇<br>練習では1:08を記録したことも。</div><a class="acc-link" href="https://kpics-tech.github.io/-/" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>絵合わせアプリを開く</span></span><span class="ext">外部 ↗</span></a></div></div></div></div><div class="acc" id="spl-engineering"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg></div><div class="acc-ttl"><div class="acc-title">工学系学習</div><div class="acc-meta"><span>PHYSICS ・ MODES</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>超音波とは何か？機器の原理・各モードの解説など。<strong>超音波専門医試験</strong>でも問われる範囲です。これを理解するとエコーの見え方が変わります。</p><a class="acc-link" href="https://kpics-tech.github.io/pocus-loop/" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg><span>POCUS-LOOP <span class="tbadge soon" style="margin-left:4px;">改良中</span></span></span><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a><div class="acc-note">POCUS-LOOPではインプットと問題演習ができます。今後レクチャーの追加も予定していて、<strong>随時改良中</strong>です。</div><a class="acc-link" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>キャノン超音波講座</span></span><span class="ext">外部 ↗</span></a><a class="acc-link" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg><span>JSUM Ultrasound Path</span></span><span class="ext">外部 ↗</span></a></div></div></div></div><div class="acc" id="spl-rally"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></div><div class="acc-ttl"><div class="acc-title">POCUS特化メディカルラリー</div><div class="acc-meta"><span>PROTOCOL ・ SP SCRIPTS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていきます。</p><p><strong>症候別プロトコル（Googleドキュメント）と、SP台本フォルダ（ドライブ）</strong>は、どちらもメディカルラリーのページからひらけます。</p><a class="acc-link" href="medical-rally.html"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg><span>POCUS特化メディカルラリーのページへ</span></span><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a></div></div></div></div><div class="acc static"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div><div class="acc-ttl"><div class="acc-title">POCUS特化臨床推論 <span class="tbadge soon">構想中</span></div><div class="acc-meta"><span>COMING SOON</span><span class="m-doc" hidden></span></div></div></div></div>
     </div>
+<div class="spl-group"><div class="spl-group-label">SPL STOCK ー ドライブにまとまっています</div><div class="acc" id="spl-past"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div><div class="acc-ttl"><div class="acc-title">過去問</div><div class="acc-meta"><span>PAST EXAMS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>これまでのSPLで出題された問題のストックです。</p><a class="acc-link" id="spl-past-exam-link" href="#" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><span>ドライブで過去問を見る</span></span><span class="ext">外部 ↗</span></a><div class="acc-note" id="spl-past-exam-note" style="display:none;">ドライブのリンクは準備中です。</div></div></div></div></div><div class="acc" id="spl-knowhow"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="acc-ttl"><div class="acc-title">先輩たちのノウハウ集</div><div class="acc-meta"><span>KNOW-HOW</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>出場した先輩が残してくれた、対策・コツ・反省。次に出る人が同じところでつまずかないように。</p><a class="acc-link" id="spl-knowhow-link" href="#" target="_blank" rel="noopener"><span class="acc-link-l"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><span>ドライブでノウハウ集を見る</span></span><span class="ext">外部 ↗</span></a><div class="acc-note" id="spl-knowhow-note" style="display:none;">ドライブのリンクは準備中です。</div></div></div></div></div></div>
+  </section>
 
-    <!-- 過去問・ノウハウ集：ドライブにまとめてあるもの -->
-    <div class="spl-group">
-      <div class="spl-group-label">SPLのストック ー ドライブにまとまっています</div>
-
-      <div class="acc" id="spl-past">
-        <div class="acc-head"><div class="acc-title">過去問</div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>これまでのSPLで出題された問題のストックです。</p>
-          <a class="acc-link" id="spl-past-exam-link" href="#" target="_blank" rel="noopener"><span>📁 ドライブで過去問を見る</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <div class="acc-note" id="spl-past-exam-note" style="display:none;">ドライブのリンクは準備中です。</div>
-        </div>
-      </div>
-
-      <div class="acc" id="spl-knowhow">
-        <div class="acc-head"><div class="acc-title">先輩たちのノウハウ集</div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>出場した先輩が残してくれた、対策・コツ・反省。次に出る人が同じところでつまずかないように。</p>
-          <a class="acc-link" id="spl-knowhow-link" href="#" target="_blank" rel="noopener"><span>📁 ドライブでノウハウ集を見る</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <div class="acc-note" id="spl-knowhow-note" style="display:none;">ドライブのリンクは準備中です。</div>
-        </div>
-      </div>
-
-    </div>
+  <div class="sec" style="margin-top:28px;">
+    <div class="sec-eyebrow">FIELDS</div>
+    <h2 class="sec-title" style="font-size:26px;">分野別</h2>
   </div>
-
   <div class="adv-list">
-
-    <div class="acc" id="adv-abdomen">
-      <div class="acc-head"><div class="adv-icon">🫄</div><div class="acc-title">腹部エコー</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>基本の腹部から、一歩踏み込んだ内容です。</p>
-        <div class="subrows">
-          <div class="subrow"><div class="subrow-name">膵臓</div><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">6アプローチ</div><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ">📄 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-heart">
-      <div class="acc-head"><div class="adv-icon">❤️</div><div class="acc-title">心臓の詳細エコー</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>POCUSの先へ。断面・計測・弁の評価まで。</p>
-        <div class="docbar"><div class="docbtn" data-doc="heart-advanced" data-doc-title="心臓の詳細エコー">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-msk">
-      <div class="acc-head"><div class="adv-icon">🦴</div><div class="acc-title">運動器</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <div class="subrows" style="margin-top:2px;">
-          <div class="subrow"><div class="subrow-name">肩</div><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">肘</div><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">膝</div><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">ゼロイチサイン</div><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">乳児・新生児の股関節エコー</div><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー">📄 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-rheuma">
-      <div class="acc-head"><div class="adv-icon">🖐️</div><div class="acc-title">リウマチ</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>診察〜エコーの活用まで。身体所見とエコーをつなげて考えます。</p>
-        <div class="docbar"><div class="docbtn" data-doc="rheumatology" data-doc-title="リウマチ ｜ 診察〜エコーの活用まで">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-vexus">
-      <div class="acc-head"><div class="adv-icon">🌊</div><div class="acc-title">VExUS</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>静脈うっ血の評価。</p>
-        <div class="docbar"><div class="docbtn" data-doc="vexus" data-doc-title="VExUS">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-cvc">
-      <div class="acc-head"><div class="adv-icon">💉</div><div class="acc-title">中心静脈カテーテル</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>エコーガイド下穿刺の考え方と手順。</p>
-        <div class="docbar"><div class="docbtn" data-doc="cvc" data-doc-title="中心静脈カテーテル">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-rally">
-      <div class="acc-head"><div class="adv-icon">🚑</div><div class="acc-title">メディカルラリー / 救急</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>外傷初期診療をはじめとした救急領域。</p>
-        <div class="subrows">
-          <div class="subrow"><div class="subrow-name">JATEC</div><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急 ｜ JATEC">📄 <span class="cnt zero">0</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-bls">
-      <div class="acc-head"><div class="adv-icon">🫁</div><div class="acc-title">BLS</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>一次救命処置。誰でも身につけておきたい基本。</p>
-        <div class="docbar"><div class="docbtn" data-doc="bls" data-doc-title="BLS">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="acc" id="adv-disaster">
-      <div class="acc-head"><div class="adv-icon">⛑️</div><div class="acc-title">災害</div>
-        <svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="acc-body">
-        <p>災害医療の基礎と、その中でのPOCUSの位置づけ。</p>
-        <div class="docbar"><div class="docbtn" data-doc="disaster" data-doc-title="災害">📄 資料 <span class="cnt zero">0</span></div></div>
-      </div>
-    </div>
-
+<div class="acc" id="adv-neck"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></div><div class="acc-ttl"><div class="acc-title">頸部エコー</div><div class="acc-meta"><span>THYROID</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>甲状腺を中心に、頸部の描出と読み方。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">甲状腺</div><div class="docbtn" data-doc="neck-thyroid" data-doc-title="頸部エコー ｜ 甲状腺"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-abdomen"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div><div class="acc-ttl"><div class="acc-title">腹部エコー</div><div class="acc-meta"><span>PANCREAS ・ 6 APPROACH</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>基本の腹部から、一歩踏み込んだ内容です。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">膵臓</div><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">6アプローチ</div><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-heart"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="acc-ttl"><div class="acc-title">心臓の詳細エコー</div><div class="acc-meta"><span>BEYOND POCUS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>POCUSの先へ。断面・計測・弁の評価まで。</p><div class="docbar"><div class="docbtn" data-doc="heart-advanced" data-doc-title="心臓の詳細エコー"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-msk"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></div><div class="acc-ttl"><div class="acc-title">運動器</div><div class="acc-meta"><span>5 REGIONS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">肩</div><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">肘</div><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">膝</div><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">ゼロイチサイン</div><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">乳児・新生児の股関節エコー</div><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-rheuma"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-4 0v5M14 10V4a2 2 0 00-4 0v2M10 10.5V6a2 2 0 00-4 0v8"/><path d="M18 8a2 2 0 114 0v6a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 012.83-2.82L7 15"/></svg></div><div class="acc-ttl"><div class="acc-title">リウマチ</div><div class="acc-meta"><span>EXAM TO ECHO</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>診察〜エコーの活用まで。身体所見とエコーをつなげて考えます。</p><div class="docbar"><div class="docbtn" data-doc="rheumatology" data-doc-title="リウマチ ｜ 診察〜エコーの活用まで"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-vexus"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 12c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/></svg></div><div class="acc-ttl"><div class="acc-title">VExUS</div><div class="acc-meta"><span>VENOUS CONGESTION</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>静脈うっ血の評価。</p><div class="docbar"><div class="docbtn" data-doc="vexus" data-doc-title="VExUS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-cvc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg></div><div class="acc-ttl"><div class="acc-title">中心静脈カテーテル</div><div class="acc-meta"><span>US-GUIDED</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>エコーガイド下穿刺の考え方と手順。</p><div class="docbar"><div class="docbtn" data-doc="cvc" data-doc-title="中心静脈カテーテル"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-rally"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><div class="acc-ttl"><div class="acc-title">メディカルラリー / 救急</div><div class="acc-meta"><span>TRAUMA</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>外傷初期診療をはじめとした救急領域。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">JATEC</div><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急 ｜ JATEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-bls"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="acc-ttl"><div class="acc-title">BLS</div><div class="acc-meta"><span>BASIC LIFE SUPPORT</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>一次救命処置。誰でも身につけておきたい基本。</p><div class="docbar"><div class="docbtn" data-doc="bls" data-doc-title="BLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-disaster"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div><div class="acc-ttl"><div class="acc-title">災害</div><div class="acc-meta"><span>DISASTER MEDICINE</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>災害医療の基礎と、その中でのPOCUSの位置づけ。</p><div class="docbar"><div class="docbtn" data-doc="disaster" data-doc-title="災害"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div>
   </div>
 
   <!-- ===== 最後の呼びかけ ===== -->
-  <div class="invite-zone" id="invite">
+  <section class="invite-zone" id="invite">
     <div class="invite-eyebrow">TO BE CONTINUED</div>
     <div class="invite-title">このページは、<br>みんなで増やしていくものです。</div>
     <p class="invite-desc">
@@ -829,65 +449,51 @@ button{font-family:inherit;}
       開発者自身も、プログラミング未経験の状態からこのアプリを作りました。最近はAIの力を借りながら開発できる時代なので、思っているより始めやすいと思います。これから一緒に改善したり、機能を増やしたり、将来引き継いでくださる方がいれば、とても嬉しいです。
     </p>
     <div class="invite-sign">学びを、次の代へ。</div>
-  </div>
+  </section>
 
   <div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>
 
-</div>
+</main>
 
-<nav class="tabbar" id="main-tabbar">
-  <a class="tabbar-item" data-tab="home" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
-    <span class="tb-label">ホーム</span>
-  </a>
-  <a class="tabbar-item" data-tab="manabu" href="manabu.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-    <span class="tb-label">まなぶ</span>
-  </a>
-  <a class="tabbar-item" data-tab="calendar" href="calendar.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    <span class="tb-label">カレンダー</span>
-  </a>
-  <a class="tabbar-item" data-tab="other" href="other.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
-    <span class="tb-label">その他</span>
-  </a>
-</nav>
+<nav class="tabbar" id="main-tabbar"><a class="tabbar-item" data-tab="home" href="index.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="tb-label">ホーム</span></a><a class="tabbar-item" data-tab="manabu" href="manabu.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span class="tb-label">まなぶ</span></a><a class="tabbar-item" data-tab="calendar" href="calendar.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="tb-label">カレンダー</span></a><a class="tabbar-item" data-tab="other" href="other.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span class="tb-label">その他</span></a></nav>
 
-<!-- ===== ミニマップ ===== -->
+<!-- ===== 全体マップ ===== -->
 <div class="overlay" id="mm">
   <div class="minimap">
     <div class="minimap-head">
       <h4>全体マップ</h4>
       <div class="close" id="mm-close">✕</div>
     </div>
-    <div class="mm-sec">BASIC</div>
-    <div class="mm-node" data-jump="n1">① 理念・活動紹介</div>
-    <div class="mm-node" data-jump="n2">② K-PICSの部員として</div>
-    <div class="mm-node" data-jump="n3">③ エコーの基本のキ</div>
-    <div class="mm-node" data-jump="n4">④ 予習教材</div>
-    <div class="mm-node" data-jump="n5">⑤ セミナー</div>
-    <div class="mm-node" data-jump="n6">⑥ 疾患辞典</div>
-    <div class="mm-node" data-jump="n7">⑦ 自主練ハンドブック</div>
-    <div class="mm-node" data-jump="n8">⑧ 認定アプリ</div>
-    <div class="mm-node" data-jump="n9">⑨ waza-ari</div>
-    <div class="mm-node" data-jump="n10">⑩ 10日間で学ぶ！</div>
-    <div class="mm-node" data-jump="n11">⑪ 認定試験</div>
-    <div class="mm-sec">独立コンテンツ</div>
-    <div class="mm-node" data-jump="anatomy">解剖の理解を深める</div>
-    <div class="mm-sec">ADVANCED</div>
-    <div class="mm-node spl" data-jump="spl">SPL（Student POCUS League）</div>
-    <div class="mm-node" data-jump="adv-abdomen">腹部エコー</div>
-    <div class="mm-node" data-jump="adv-heart">心臓の詳細エコー</div>
-    <div class="mm-node" data-jump="adv-msk">運動器</div>
-    <div class="mm-node" data-jump="adv-rheuma">リウマチ</div>
-    <div class="mm-node" data-jump="adv-vexus">VExUS</div>
-    <div class="mm-node" data-jump="adv-cvc">中心静脈カテーテル</div>
-    <div class="mm-node" data-jump="adv-rally">メディカルラリー / 救急</div>
-    <div class="mm-node" data-jump="adv-bls">BLS</div>
-    <div class="mm-node" data-jump="adv-disaster">災害</div>
-    <div class="mm-sec">SHARE</div>
-    <div class="mm-node" data-jump="invite">みんなで増やしていく</div>
+    <div class="mm-sec">01 BASIC</div>
+    <div class="mm-grid">
+      <div class="mm-node" data-jump="n1">① 理念・活動紹介</div>
+      <div class="mm-node" data-jump="n2">② 部員として</div>
+      <div class="mm-node" data-jump="n3">③ 基本のキ</div>
+      <div class="mm-node" data-jump="n4">④ 予習教材</div>
+      <div class="mm-node" data-jump="n5">⑤ セミナー</div>
+      <div class="mm-node" data-jump="n6">⑥ 疾患辞典</div>
+      <div class="mm-node" data-jump="n7">⑦ 自主練HB</div>
+      <div class="mm-node" data-jump="n8">⑧ 認定アプリ</div>
+      <div class="mm-node" data-jump="n9">⑨ waza-ari</div>
+      <div class="mm-node" data-jump="n10">⑩ 10日間で学ぶ！</div>
+      <div class="mm-node" data-jump="n11">⑪ 認定試験</div>
+      <div class="mm-node" data-jump="anatomy">解剖の理解</div>
+    </div>
+    <div class="mm-sec">02 ADVANCED</div>
+    <div class="mm-grid">
+      <div class="mm-node spl" data-jump="spl">SPL</div>
+      <div class="mm-node" data-jump="adv-neck">頸部エコー</div>
+      <div class="mm-node" data-jump="adv-abdomen">腹部エコー</div>
+      <div class="mm-node" data-jump="adv-heart">心臓の詳細</div>
+      <div class="mm-node" data-jump="adv-msk">運動器</div>
+      <div class="mm-node" data-jump="adv-rheuma">リウマチ</div>
+      <div class="mm-node" data-jump="adv-vexus">VExUS</div>
+      <div class="mm-node" data-jump="adv-cvc">中心静脈カテーテル</div>
+      <div class="mm-node" data-jump="adv-rally">メディカルラリー/救急</div>
+      <div class="mm-node" data-jump="adv-bls">BLS</div>
+      <div class="mm-node" data-jump="adv-disaster">災害</div>
+      <div class="mm-node" data-jump="invite">みんなで増やす</div>
+    </div>
     <div class="mm-note">タップでその場所へジャンプ</div>
   </div>
 </div>
@@ -1124,6 +730,8 @@ button{font-family:inherit;}
   </div>
 </div>
 
+
+
 <script src="auth-guard.js"></script>
 <script src="tabbar.js"></script>
 <script>
@@ -1131,36 +739,11 @@ window.addEventListener('DOMContentLoaded', function(){
   setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 500);
 });
 
-// ===================== ドクターヘリの着地演出 =====================
-(function initHeliLanding(){
-  const hero = document.getElementById('heli-hero');
-  const img  = document.getElementById('heli-img');
-  if(!hero || !img) return;
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let ticking = false;
-  function update(){
-    ticking = false;
-    const rect = hero.getBoundingClientRect();
-    const h = rect.height || 1;
-    let t = Math.min(1, Math.max(0, -rect.top / h));
-    const y  = -8 + t * 8;
-    const sc = 1.06 - t * 0.06;
-    img.style.transform = `translateX(-50%) translateY(${y}%) scale(${sc})`;
-  }
-  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  update();
-})();
-
 // ================================================================
 // ★ ドライブのリンク設定（ここだけ書き換えればOK）
 // ================================================================
-// SPLの「過去問」「先輩たちのノウハウ集」が入っているGoogleドライブのURLを、
-// 下のシングルクォート('')の中に貼り付けてください。
-// 空のままにしておくと、ボタンの代わりに「準備中です」と表示されます。
-//
-// 例： const SPL_PAST_EXAM_DRIVE_URL = 'https://drive.google.com/drive/folders/xxxxx';
+// SPLの「過去問」「先輩たちのノウハウ集」が入っているGoogleドライブのURL。
+// 空('')にすると、ボタンの代わりに「準備中です」と表示されます。
 // ================================================================
 const SPL_PAST_EXAM_DRIVE_URL = 'https://drive.google.com/drive/folders/17ybVoBFthk_iw7Ro4d37fj8M8yKvn0la';   // ← 過去問のドライブURL
 const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBFthk_iw7Ro4d37fj8M8yKvn0la';   // ← 先輩たちのノウハウ集のドライブURL
@@ -1175,8 +758,61 @@ const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBF
   });
 })();
 
+// ===================== スクロール連動の演出（ヘリ着地／救急車パン） =====================
+(function initScrollFx(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hero = document.getElementById('heli-hero');
+  const heli = document.getElementById('heli-img');
+  const band = document.querySelector('.band');
+  const bandImg = document.querySelector('.band-img');
+  if(reduce) return;
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const vh = window.innerHeight;
+    if(hero && heli){
+      const r = hero.getBoundingClientRect();
+      const t = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
+      heli.style.transform = `translateX(-50%) translateY(${-8 + t*8}%) scale(${1.06 - t*0.06})`;
+    }
+    if(band && bandImg){
+      const r = band.getBoundingClientRect();
+      if(r.bottom > 0 && r.top < vh){
+        const t = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+        bandImg.style.transform = `translateX(${-33 + t*33}%)`;
+      }
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
+// ===================== アコーディオン =====================
+function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.add('open'); }
+(function initAccordion(){
+  document.querySelectorAll('.acc-head').forEach(head => {
+    const acc = head.closest('.acc');
+    if(!acc || !acc.querySelector('.acc-body')) return;
+    head.addEventListener('click', () => {
+      const willOpen = !acc.classList.contains('open');
+      acc.classList.toggle('open', willOpen);
+      if(willOpen){
+        setTimeout(() => {
+          const r = head.getBoundingClientRect();
+          if(r.top < 60) acc.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 80);
+      }
+    });
+  });
+  // 中のリンクや資料ボタンを押しても閉じない
+  document.querySelectorAll('.acc-inner a, .acc-inner .subrow').forEach(el => {
+    el.addEventListener('click', ev => ev.stopPropagation());
+  });
+})();
+
 // ===================== ホームからのジャンプ（URLの #〜 で項目を開く） =====================
-// 例：manabu.html#n4 で開くと、④予習教材を開いた状態でそこまでスクロールする。
 (function openFromHash(){
   function go(){
     const id = (location.hash || '').replace('#','');
@@ -1184,8 +820,7 @@ const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBF
     const el = document.getElementById(id);
     if(!el) return;
     const acc = el.classList.contains('acc') ? el : el.querySelector('.acc');
-    if(acc && acc.querySelector('.acc-body')) acc.classList.add('open');
-    // 浮き上がり演出の対象なら、先に表示状態にしておく
+    openAcc(acc);
     el.classList.add('in-view');
     el.querySelectorAll('.reveal').forEach(x => x.classList.add('in-view'));
     setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 650);
@@ -1194,51 +829,61 @@ const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBF
   window.addEventListener('hashchange', go);
 })();
 
-// ===================== アコーディオン（見出しタップで開閉） =====================
-// 見出しの部分をタップすると、説明と資料ボタンが出てくる。
-// 中のリンクや資料ボタンを押したときは、閉じないようにしてある。
-(function initAccordion(){
-  document.querySelectorAll('.acc-head').forEach(head => {
-    const acc = head.closest('.acc');
-    if(!acc || !acc.querySelector('.acc-body')) return;   // 中身が無いものは対象外
-    head.addEventListener('click', () => {
-      const willOpen = !acc.classList.contains('open');
-      acc.classList.toggle('open', willOpen);
-      // 開いたとき、見出しが画面から見切れていたら見える位置まで寄せる
-      if(willOpen){
-        setTimeout(() => {
-          const r = head.getBoundingClientRect();
-          if(r.top < 8) head.scrollIntoView({behavior:'smooth', block:'start'});
-        }, 60);
-      }
-    });
-  });
-})();
-
-// ===================== スクロールで順番に浮き上がる演出 =====================
+// ===================== スクロールで順番に浮き上がる =====================
 (function initReveal(){
-  const targets = document.querySelectorAll('.tnode, .solo-zone, .spl-zone, .adv-list > .acc, .adv-head, .note-box, .invite-zone');
+  const targets = document.querySelectorAll('.tnode, .sec, .note-box, .photo-card, .spl-zone, .adv-list > .acc, .invite-zone');
   if(!targets.length) return;
   targets.forEach(el => el.classList.add('reveal'));
   const obs = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        obs.unobserve(entry.target);
-      }
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
   targets.forEach(el => obs.observe(el));
 })();
 
-// ===================== ミニマップ =====================
+// ===================== スティッキー目次：いまいる場所を光らせる =====================
+(function initSnav(){
+  const links = Array.from(document.querySelectorAll('.snav a'));
+  const secs  = links.map(a => document.getElementById(a.dataset.sec)).filter(Boolean);
+  if(!secs.length) return;
+  const map = {};
+  links.forEach(a => map[a.dataset.sec] = a);
+  function setActive(id){
+    links.forEach(a => a.classList.toggle('active', a.dataset.sec === id));
+    const a = map[id];
+    if(a && a.scrollIntoView) a.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'});
+  }
+  let current = null;
+  function update(){
+    let best = secs[0].id;
+    for(const s of secs){ if(s.getBoundingClientRect().top <= 130) best = s.id; }
+    if(best !== current){ current = best; setActive(best); }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('load', update);
+  update();
+  // 目次のリンクは、スティッキー分だけ余白をとって移動
+  links.forEach(a => a.addEventListener('click', ev => {
+    ev.preventDefault();
+    const t = document.getElementById(a.dataset.sec);
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    history.replaceState(null, '', '#' + a.dataset.sec);
+  }));
+})();
+
+// ===================== 全体マップ =====================
 document.getElementById('map-open').addEventListener('click', () => document.getElementById('mm').classList.add('show'));
 document.getElementById('mm-close').addEventListener('click', () => document.getElementById('mm').classList.remove('show'));
+document.getElementById('mm').addEventListener('click', e => { if(e.target.id === 'mm') e.currentTarget.classList.remove('show'); });
 document.querySelectorAll('.mm-node').forEach(el => {
   el.addEventListener('click', () => {
     const target = document.getElementById(el.dataset.jump);
     document.getElementById('mm').classList.remove('show');
-    if(target) setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+    if(!target) return;
+    openAcc(target.classList.contains('acc') ? target : target.querySelector('.acc'));
+    target.classList.add('in-view');
+    setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 150);
   });
 });
 
@@ -1257,39 +902,27 @@ function switchGuideTab(index){
   var body = document.getElementById('guide-modal-body');
   if(body) body.scrollTop = 0;
 }
-function openGuideModal(){
-  switchGuideTab(0);
-  document.getElementById('guide-modal-overlay').classList.add('open');
-}
-function closeGuideModal(){
-  document.getElementById('guide-modal-overlay').classList.remove('open');
-}
-function closeGuideModalOnOverlay(e){
-  if(e.target.id === 'guide-modal-overlay') closeGuideModal();
-}
+function openGuideModal(){ switchGuideTab(0); document.getElementById('guide-modal-overlay').classList.add('open'); }
+function closeGuideModal(){ document.getElementById('guide-modal-overlay').classList.remove('open'); }
+function closeGuideModalOnOverlay(e){ if(e.target.id === 'guide-modal-overlay') closeGuideModal(); }
 document.getElementById('member-guide-open').addEventListener('click', openGuideModal);
 
 // ================================================================
 // PDF資料モジュール
 // ================================================================
-// やっていること：
-//  ・各コンテンツ（心臓の予習教材、VExUS…）に「資料」ボタンを置く
-//  ・ボタンを押すと、そのコンテンツに登録されたPDFの一覧が出る
-//  ・部員なら誰でも開ける／コアメンバー・先生だけ「追加」「削除」ができる
-//  ・1つのコンテンツに何個でもPDFを入れられる（新しい順に並ぶ）
-//
-// ファイルの実体は Supabase の Storage（ファイル置き場）に、
-// 「どのコンテンツのPDFか」という情報は content_files テーブルに入る。
+//  ・各コンテンツの「資料」ボタン → そのコンテンツのPDF一覧
+//  ・部員なら誰でも開ける／コアメンバー・先生だけ追加・削除
+//  ・1つのコンテンツに何個でも入れられる（新しい順）
+//  ・カードの見出しにも「資料 n」と件数が出る
 // ================================================================
 (function initDocs(){
+  const PDF_BUCKET = 'content-pdfs';
+  const PDF_TABLE  = 'content_files';
+  const MAX_MB     = 20;
 
-  const PDF_BUCKET = 'content-pdfs';   // Storageのバケット名
-  const PDF_TABLE  = 'content_files';  // テーブル名
-  const MAX_MB     = 20;               // 1ファイルの上限
-
-  let isCore   = false;   // ログイン中の人がアップロードできる人かどうか
-  let counts   = {};      // { コンテンツキー: 件数 }
-  let openKey  = null;    // いま開いているコンテンツキー
+  let isCore  = false;
+  let counts  = {};
+  let openKey = null;
 
   const modal   = document.getElementById('pdf-modal');
   const elTitle = document.getElementById('pdf-title');
@@ -1305,20 +938,18 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     elStat.textContent = msg;
   }
 
-  // ---- ログイン中の人がアップロードできる人かどうかを調べる ----
-  // app.js のお知らせ投稿と同じ基準：profiles の is_core_member または is_teacher
+  // ログイン中の人がアップロードできる人か（app.js のお知らせ投稿と同じ基準）
   async function fetchIsCore(uid){
     if(!uid) return false;
     try{
-      const { data, error } = await _supabase
-        .from('profiles').select('*').eq('id', uid).maybeSingle();
+      const { data, error } = await _supabase.from('profiles').select('*').eq('id', uid).maybeSingle();
       if(error || !data) return false;
       window.CURRENT_PROFILE = data;
       return !!(data.is_core_member || data.is_teacher);
     }catch(e){ return false; }
   }
 
-  // ---- 全コンテンツのPDF件数をまとめて取る ----
+  // 全コンテンツの件数をまとめて取り、ボタンとカード見出しに反映
   async function loadCounts(){
     try{
       const { data, error } = await _supabase.from(PDF_TABLE).select('content_key');
@@ -1331,44 +962,35 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
         cnt.textContent = n;
         cnt.classList.toggle('zero', n === 0);
       });
+      document.querySelectorAll('.acc').forEach(acc => {
+        const m = acc.querySelector('.acc-head .m-doc');
+        if(!m) return;
+        let n = 0;
+        acc.querySelectorAll('.docbtn').forEach(b => { n += counts[b.dataset.doc] || 0; });
+        if(n > 0){ m.textContent = '資料 ' + n; m.hidden = false; } else { m.hidden = true; }
+      });
     }catch(e){ /* テーブル未作成のときは何もしない */ }
   }
 
-  function fmtSize(b){
-    if(!b && b !== 0) return '';
-    return b < 1024*1024 ? Math.round(b/1024) + ' KB' : (b/1024/1024).toFixed(1) + ' MB';
-  }
-  function fmtDate(s){
-    if(!s) return '';
-    const d = new Date(s);
-    return d.getFullYear() + '/' + ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2);
-  }
-  function esc(s){
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
+  function fmtSize(b){ if(!b && b !== 0) return ''; return b < 1024*1024 ? Math.round(b/1024) + ' KB' : (b/1024/1024).toFixed(1) + ' MB'; }
+  function fmtDate(s){ if(!s) return ''; const d = new Date(s); return d.getFullYear() + '/' + ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  // ---- 一覧を描く ----
   async function renderList(){
     elList.innerHTML = '<div class="pdf-empty">読み込み中…</div>';
     let rows = [];
     try{
-      const { data, error } = await _supabase
-        .from(PDF_TABLE).select('*')
-        .eq('content_key', openKey)
-        .order('created_at', { ascending: false });
+      const { data, error } = await _supabase.from(PDF_TABLE).select('*').eq('content_key', openKey).order('created_at', { ascending: false });
       if(error) throw error;
       rows = data || [];
     }catch(e){
       elList.innerHTML = '<div class="pdf-empty">資料を読み込めませんでした。<br>通信環境を確認して、開き直してみてください。</div>';
       return;
     }
-
     if(!rows.length){
-      elList.innerHTML = '<div class="pdf-empty">まだ資料はありません。' +
-        (isCore ? '<br>下から追加できます。' : '<br>追加され次第、ここに表示されます。') + '</div>';
+      elList.innerHTML = '<div class="pdf-empty">まだ資料はありません。' + (isCore ? '<br>下から追加できます。' : '<br>追加され次第、ここに表示されます。') + '</div>';
       return;
     }
-
     elList.innerHTML = rows.map(r => `
       <div class="pdf-item" data-path="${esc(r.storage_path)}" data-id="${esc(r.id)}">
         <div class="pdf-item-ic">PDF</div>
@@ -1383,14 +1005,12 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
       item.addEventListener('click', async (ev) => {
         if(ev.target.classList.contains('pdf-item-del')) return;
         status('資料を開いています…', 'info');
-        const { data, error } = await _supabase.storage.from(PDF_BUCKET)
-          .createSignedUrl(item.dataset.path, 60 * 60);
+        const { data, error } = await _supabase.storage.from(PDF_BUCKET).createSignedUrl(item.dataset.path, 60 * 60);
         if(error || !data){ status('資料を開けませんでした。', 'ng'); return; }
         status('');
         window.open(data.signedUrl, '_blank', 'noopener');
       });
     });
-
     elList.querySelectorAll('.pdf-item-del').forEach(btn => {
       btn.addEventListener('click', async (ev) => {
         ev.stopPropagation();
@@ -1408,50 +1028,28 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     });
   }
 
-  // ---- アップロード（コアメンバー・先生のみ） ----
   elFile.addEventListener('change', async () => {
     const file = elFile.files && elFile.files[0];
     if(!file) return;
     elFile.value = '';
-
-    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){
-      status('PDFファイルを選んでください。', 'ng'); return;
-    }
-    if(file.size > MAX_MB * 1024 * 1024){
-      status('ファイルが大きすぎます（' + MAX_MB + 'MBまで）。', 'ng'); return;
-    }
-
+    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ status('PDFファイルを選んでください。', 'ng'); return; }
+    if(file.size > MAX_MB * 1024 * 1024){ status('ファイルが大きすぎます（' + MAX_MB + 'MBまで）。', 'ng'); return; }
     status('アップロード中…（大きいファイルは少し時間がかかります）', 'info');
-
-    // ファイル名に日本語や記号があっても壊れないよう、保存名は英数字だけにする
     const path = openKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.pdf';
-
-    const up = await _supabase.storage.from(PDF_BUCKET)
-      .upload(path, file, { contentType: 'application/pdf', upsert: false });
-    if(up.error){
-      status('アップロードできませんでした。（' + up.error.message + '）', 'ng');
-      return;
-    }
-
+    const up = await _supabase.storage.from(PDF_BUCKET).upload(path, file, { contentType: 'application/pdf', upsert: false });
+    if(up.error){ status('アップロードできませんでした。（' + up.error.message + '）', 'ng'); return; }
     const ins = await _supabase.from(PDF_TABLE).insert({
-      content_key : openKey,
-      file_name   : file.name,
-      storage_path: path,
-      size_bytes  : file.size,
-      uploaded_by : window.CURRENT_UID || null
+      content_key: openKey, file_name: file.name, storage_path: path, size_bytes: file.size, uploaded_by: window.CURRENT_UID || null
     });
     if(ins.error){
       await _supabase.storage.from(PDF_BUCKET).remove([path]);
-      status('登録できませんでした。（' + ins.error.message + '）', 'ng');
-      return;
+      status('登録できませんでした。（' + ins.error.message + '）', 'ng'); return;
     }
-
     status('アップロードしました。', 'ok');
     await renderList();
     await loadCounts();
   });
 
-  // ---- モーダルの開閉 ----
   function openModal(key, name){
     openKey = key;
     elTitle.textContent = name;
@@ -1465,38 +1063,27 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
 
   document.querySelectorAll('.docbtn').forEach(btn => {
     btn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();   // アコーディオンが閉じないように
+      ev.preventDefault(); ev.stopPropagation();
       openModal(btn.dataset.doc, btn.dataset.docTitle || '資料');
     });
   });
   document.getElementById('pdf-close').addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-  // アコーディオンの中のリンクを押しても閉じないようにする
-  document.querySelectorAll('.acc-body a, .acc-body .subrow').forEach(el => {
-    el.addEventListener('click', (ev) => ev.stopPropagation());
-  });
-
-  // ---- 起動 ----
-  // auth-guard.js が window.CURRENT_UID をセットするのを待ってから動く
   (function waitForLogin(tries){
     if(window.CURRENT_UID){
       fetchIsCore(window.CURRENT_UID).then(v => {
         isCore = v;
-        if(openKey){
-          elUp.style.display = isCore ? 'block' : 'none';
-          renderList();
-        }
+        if(openKey){ elUp.style.display = isCore ? 'block' : 'none'; renderList(); }
       });
       loadCounts();
       return;
     }
-    if(tries > 40) { loadCounts(); return; }   // 保険：8秒であきらめて一覧だけ出す
+    if(tries > 40) { loadCounts(); return; }
     setTimeout(() => waitForLogin(tries + 1), 200);
   })(0);
-
 })();
+
 </script>
 </body>
 </html>
