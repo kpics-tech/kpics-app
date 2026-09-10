@@ -34,7 +34,10 @@ html,body{background:var(--black);}
 body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
 .bebas{font-family:"Bebas Neue",sans-serif;}
 .mono{font-family:"JetBrains Mono",monospace;}
+img{max-width:100%;}
+button{font-family:inherit;}
 ::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--border-light);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
 .fade-up{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;}
@@ -42,7 +45,7 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
 .splash-logo-img{width:110px;animation:scaleIn .5s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 8px 30px rgba(232,160,32,.25));}
 
-/* ヘッダー：発光グラデーション */
+/* ヘッダー */
 .top-header{
   position:relative;padding:calc(18px + env(safe-area-inset-top)) 20px 26px;overflow:hidden;
   background:radial-gradient(ellipse 130% 90% at 50% -30%, rgba(232,160,32,.22), transparent 62%);
@@ -61,55 +64,34 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 
 .main{max-width:640px;margin:0 auto;padding:26px 20px 90px;position:relative;}
 
-/* ===== ドクターヘリ ヒーロー（スクロールで着地する演出） ===== */
-.heli-hero{
-  position:relative;height:250px;overflow:hidden;border-bottom:1px solid var(--border);
-}
+/* ドクターヘリ ヒーロー */
+.heli-hero{position:relative;height:250px;overflow:hidden;border-bottom:1px solid var(--border);}
 @media (min-width:640px){ .heli-hero{height:300px;} }
 .heli-img{
   position:absolute;left:50%;top:0;width:118%;max-width:none;height:118%;
   transform:translateX(-50%) translateY(-8%) scale(1.06);
-  object-fit:cover;object-position:center 40%;
-  will-change:transform;
+  object-fit:cover;object-position:center 40%;will-change:transform;
 }
 .heli-shade{
   position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(to bottom, rgba(12,12,12,.55) 0%, rgba(12,12,12,.1) 35%, rgba(12,12,12,.25) 65%, var(--black) 100%);
 }
-.heli-copy{
-  position:absolute;left:20px;right:20px;bottom:18px;z-index:1;
-  max-width:600px;margin:0 auto;
-}
-.heli-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;
-  color:var(--orange-light);margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,.9);
-}
-.heli-title{
-  font-weight:900;font-size:21px;line-height:1.45;
-  text-shadow:0 2px 16px rgba(0,0,0,.85);
-}
+.heli-copy{position:absolute;left:20px;right:20px;bottom:18px;z-index:1;max-width:600px;margin:0 auto;}
+.heli-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange-light);margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,.9);}
+.heli-title{font-weight:900;font-size:21px;line-height:1.45;text-shadow:0 2px 16px rgba(0,0,0,.85);}
 .heli-title span{color:var(--orange-light);}
-.heli-sub{
-  font-size:11.5px;color:rgba(240,240,240,.8);margin-top:5px;line-height:1.7;
-  text-shadow:0 1px 10px rgba(0,0,0,.9);
-}
+.heli-sub{font-size:11.5px;color:rgba(240,240,240,.8);margin-top:5px;line-height:1.7;text-shadow:0 1px 10px rgba(0,0,0,.9);}
 
-/* スクロールで順番に浮き上がる演出 */
-.reveal{
-  opacity:0;transform:translateY(24px);
-  transition:opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);
-}
+/* スクロールリビール */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);}
 .reveal.in-view{opacity:1;transform:translateY(0);}
-@media (prefers-reduced-motion: reduce){
-  .reveal{opacity:1;transform:none;transition:none;}
-}
+@media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;transition:none;} }
 
 /* 幹（トランク） */
 .trunk{position:relative;padding-left:6px;}
 .trunk::before{
   content:"";position:absolute;left:37px;top:4px;width:2px;height:100%;
-  background:linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 80%, transparent 100%);
-  opacity:.5;
+  background:linear-gradient(to bottom, var(--orange) 0%, var(--orange-dark) 80%, transparent 100%);opacity:.5;
 }
 .tnode{position:relative;padding-left:44px;margin-bottom:16px;scroll-margin-top:20px;}
 .tnode::before{
@@ -128,51 +110,111 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 .tbadge.soon{color:var(--text-dim);border-color:var(--border-light);}
 .text-link{display:block;text-decoration:none;color:inherit;}
 
-/* 疾患辞典セクション */
-.section-gap{margin:30px 0 18px;padding-left:50px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--text-dim);letter-spacing:.04em;}
+/* カード内のサブ項目（セミナー別など） */
+.subrows{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.subrow{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;text-decoration:none;color:var(--text);
+}
+.subrow:active{border-color:var(--orange);}
+.subrow-name{flex:1;min-width:0;font-size:12.5px;font-weight:700;line-height:1.4;}
+.subrow-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;font-weight:400;line-height:1.5;}
+.subrow-go{flex-shrink:0;font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);border:1px solid var(--border-light);border-radius:6px;padding:3px 7px;}
+.subrow-go.ready{color:var(--orange);border-color:rgba(232,160,32,.35);}
 
-/* SPL特化：スポットライトゾーン */
+/* PDF資料ボタン */
+.docbar{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.docbtn{
+  display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.28);border-radius:9px;
+  padding:8px 12px;font-size:11.5px;font-weight:700;color:var(--orange-light);
+}
+.docbtn:active{background:rgba(232,160,32,.18);}
+.docbtn .cnt{
+  font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--black);
+  background:var(--orange);border-radius:20px;padding:1px 7px;min-width:20px;text-align:center;
+}
+.docbtn .cnt.zero{background:var(--border-light);color:var(--text-muted);}
+.subrow .docbtn{padding:6px 9px;font-size:10.5px;flex-shrink:0;}
+
+/* 区切りラベル */
+.section-gap{margin:30px 0 18px;padding-left:50px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--text-dim);letter-spacing:.04em;}
+.adv-head{margin:38px 0 4px;text-align:center;}
+.adv-head-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange);}
+.adv-head-title{font-family:"Bebas Neue",sans-serif;font-size:38px;letter-spacing:.04em;line-height:1.1;margin-top:4px;}
+.adv-head-sub{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.7;}
+.adv-rule{height:1px;background:linear-gradient(to right, transparent, var(--orange-dark), transparent);margin:16px 0 22px;}
+
+/* SPL：スポットライトゾーン */
 .spl-zone{
-  position:relative;margin:22px 0 10px;padding:24px 20px;border-radius:20px;
+  position:relative;margin:0 0 24px;padding:24px 20px;border-radius:20px;
   background:radial-gradient(ellipse 120% 100% at 30% 0%, var(--spl-bg), transparent 70%), var(--card);
-  border:1.5px solid var(--spl);overflow:hidden;
+  border:1.5px solid var(--spl);overflow:hidden;scroll-margin-top:20px;
 }
 .spl-zone::after{
   content:"";position:absolute;top:-40%;right:-20%;width:70%;height:180%;
   background:radial-gradient(circle, rgba(217,138,61,.18), transparent 70%);pointer-events:none;
 }
-.spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.12em;margin-bottom:4px;}
-.spl-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.03em;color:#fff;margin-bottom:14px;position:relative;}
+.spl-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--spl);letter-spacing:.12em;margin-bottom:4px;position:relative;}
+.spl-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.03em;color:#fff;position:relative;line-height:1.1;}
+.spl-title-ja{font-size:11.5px;color:var(--text-muted);margin:2px 0 14px;position:relative;line-height:1.7;}
 .spl-pillars{display:flex;flex-direction:column;gap:8px;position:relative;}
 .spl-pillar{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
   background:rgba(0,0,0,.28);border:1px solid rgba(217,138,61,.35);border-radius:11px;padding:12px 14px;
-  text-decoration:none;color:var(--text);
+  text-decoration:none;color:var(--text);display:block;
 }
-.spl-pillar-name{font-size:13.5px;font-weight:700;}
-.spl-pillar-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+.spl-pillar-name{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.spl-pillar-desc{font-size:10.5px;color:var(--text-muted);margin-top:3px;line-height:1.6;}
 .spl-sublink{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(0,0,0,.22);border:1px solid rgba(217,138,61,.22);border-radius:9px;padding:9px 12px;margin-top:6px;text-decoration:none;color:var(--text);font-size:12.5px;font-weight:600;}
 .spl-sublink:active{border-color:var(--spl);}
 
-/* 山頂：+α */
-.peak{margin:34px 0 6px;text-align:center;position:relative;}
-.peak::before{content:"";position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:1px;height:16px;background:var(--orange-dark);}
-.peak-card{
-  display:inline-block;background:linear-gradient(135deg, #2a1c05, var(--card));
-  border:1px solid var(--orange);border-radius:16px;padding:18px 28px;
-  box-shadow:0 0 34px rgba(232,160,32,.10);
+/* advanced カード */
+.adv-list{display:flex;flex-direction:column;gap:12px;}
+.adv-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;scroll-margin-top:20px;
 }
-.peak-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.15em;}
-.peak-title{font-family:"Bebas Neue",sans-serif;font-size:25px;letter-spacing:.03em;margin-top:5px;}
+.adv-card-top{display:flex;align-items:flex-start;gap:12px;}
+.adv-icon{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;background:var(--orange-bg);
+  border:1px solid rgba(232,160,32,.22);display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.adv-body{flex:1;min-width:0;}
+.adv-title{font-size:14.5px;font-weight:700;line-height:1.4;}
+.adv-desc{font-size:11.5px;color:var(--text-muted);margin-top:3px;line-height:1.65;}
 
-/* その他コンテンツ棚 */
-.library{margin:34px -20px 0;padding:20px;background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.library-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;padding:0 20px;}
-.library-head h3{font-size:13.5px;font-weight:700;}
-.library-head span{font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;}
-.shelf{display:flex;gap:10px;overflow-x:auto;padding:0 20px 4px;}
-.shelf-item{flex:0 0 auto;width:118px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 10px;font-size:11.5px;color:var(--text-muted);line-height:1.5;}
-.shelf-item.add{display:flex;align-items:center;justify-content:center;color:var(--text-dim);border-style:dashed;font-size:20px;}
+/* 独立コンテンツ（解剖の理解を深める） */
+.solo-zone{
+  position:relative;margin:26px 0 10px;padding:22px 20px 20px;border-radius:18px;overflow:hidden;
+  background:linear-gradient(135deg, #2a1c05, var(--card) 62%);
+  border:1px solid var(--orange);box-shadow:0 0 34px rgba(232,160,32,.10);scroll-margin-top:20px;
+}
+.solo-zone::before{
+  content:"";position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  width:1px;height:16px;background:var(--orange-dark);
+}
+.solo-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.14em;}
+.solo-title{font-size:18px;font-weight:900;margin-top:6px;line-height:1.4;}
+.solo-desc{font-size:12.5px;color:var(--text-muted);line-height:1.85;margin-top:8px;}
+.solo-desc strong{color:var(--text);}
+
+.note-box{margin:20px 4px 4px;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:12px;font-size:12.5px;line-height:1.85;color:var(--text);}
+
+/* 最後の呼びかけ */
+.invite-zone{
+  position:relative;margin:34px 0 0;padding:28px 22px 24px;border-radius:20px;overflow:hidden;
+  background:radial-gradient(ellipse 120% 90% at 50% 0%, rgba(232,160,32,.13), transparent 68%), var(--card);
+  border:1px solid var(--border);scroll-margin-top:20px;
+}
+.invite-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);letter-spacing:.2em;text-align:center;}
+.invite-title{font-size:18px;font-weight:900;line-height:1.55;margin-top:10px;text-align:center;}
+.invite-desc{font-size:12.5px;color:var(--text-muted);line-height:1.95;margin-top:16px;}
+.invite-desc strong{color:var(--text);}
+.invite-zone .docbar{margin-top:18px;justify-content:center;}
+.invite-sign{
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center;
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;
+}
 
 .footer-note{text-align:center;font-size:11px;color:var(--text-dim);margin-top:36px;line-height:1.8;}
 .footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
@@ -192,11 +234,84 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 .minimap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .minimap-head h4{font-family:"Bebas Neue",sans-serif;font-size:21px;letter-spacing:.03em;}
 .minimap-head .close{font-size:20px;color:var(--text-dim);cursor:pointer;padding:4px;}
+.mm-sec{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--text-dim);letter-spacing:.12em;margin:14px 0 7px;}
+.mm-sec:first-of-type{margin-top:0;}
 .mm-node{font-size:12.5px;padding:10px 12px;background:#20190E;border-radius:9px;cursor:pointer;margin-bottom:7px;position:relative;padding-left:24px;}
 .mm-node::before{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--orange);}
 .mm-node.spl::before{background:var(--spl);}
 .mm-node:active{background:#2a2213;}
 .mm-note{margin-top:6px;font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;text-align:center;}
+
+/* ===== PDF資料モーダル ===== */
+.pdf-box{
+  width:100%;max-width:460px;max-height:84vh;display:flex;flex-direction:column;
+  background:var(--dark);border:1px solid var(--border);border-radius:18px;overflow:hidden;
+}
+.pdf-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.pdf-head-title{font-size:14.5px;font-weight:700;line-height:1.4;}
+.pdf-head-sub{font-size:10.5px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;margin-top:3px;}
+.pdf-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
+.pdf-body{padding:16px 18px 22px;overflow-y:auto;}
+.pdf-item{
+  display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);
+  border-radius:11px;padding:12px 13px;margin-bottom:8px;text-decoration:none;color:var(--text);
+}
+.pdf-item:active{border-color:var(--orange);}
+.pdf-item-ic{width:32px;height:32px;border-radius:8px;background:rgba(240,96,96,.12);border:1px solid rgba(240,96,96,.3);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.pdf-item-body{flex:1;min-width:0;}
+.pdf-item-name{font-size:12.5px;font-weight:700;line-height:1.4;word-break:break-all;}
+.pdf-item-meta{font-size:10px;color:var(--text-dim);margin-top:3px;font-family:"JetBrains Mono",monospace;}
+.pdf-item-del{flex-shrink:0;background:none;border:1px solid var(--border-light);color:var(--text-dim);border-radius:7px;font-size:10px;padding:5px 8px;cursor:pointer;}
+.pdf-item-del:active{color:#F06060;border-color:#F06060;}
+.pdf-empty{text-align:center;font-size:12px;color:var(--text-muted);padding:26px 10px;line-height:1.8;}
+.pdf-upload{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
+.pdf-upload-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.pdf-drop{
+  border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;
+  cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;
+}
+.pdf-drop:active{border-color:var(--orange);color:var(--orange-light);}
+.pdf-status{margin-top:10px;font-size:11.5px;line-height:1.6;display:none;border-radius:8px;padding:9px 11px;}
+.pdf-status.show{display:block;}
+.pdf-status.ok{color:#7fe0a0;background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.35);}
+.pdf-status.ng{color:#F06060;background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);}
+.pdf-status.info{color:var(--text-muted);background:var(--card);border:1px solid var(--border);}
+
+/* ===== 「部員として」モーダル（index.htmlと同じ内容） ===== */
+.guide-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:700;align-items:flex-end;justify-content:center;}
+.guide-modal-overlay.open{display:flex;}
+@media (min-width:560px){ .guide-modal-overlay{align-items:center;padding:20px;} }
+.guide-modal-box{background:var(--dark);border:1px solid var(--border);border-radius:18px 18px 0 0;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both;}
+@media (min-width:560px){ .guide-modal-box{border-radius:16px;} }
+.guide-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.guide-modal-title{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;}
+.guide-modal-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
+.guide-modal-body{padding:20px 20px 28px;overflow-y:auto;}
+.gm-lead{font-size:12.5px;color:var(--text-muted);line-height:1.85;margin-bottom:22px;}
+.gm-section{margin-bottom:20px;}
+.gm-section-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--orange);margin-bottom:10px;}
+.gm-section-title .gm-icon{width:24px;height:24px;border-radius:7px;background:var(--orange-bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.gm-list{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 14px;}
+.gm-list-item{font-size:12.5px;line-height:1.7;color:var(--text);padding-left:14px;position:relative;}
+.gm-list-item::before{content:"";position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--orange);}
+.gm-note{margin-top:24px;font-size:12px;color:var(--text-muted);line-height:1.85;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:10px;padding:14px 15px;}
+.gm-note strong{color:var(--orange);}
+.gm-link{color:var(--orange);text-decoration:underline;word-break:break-all;}
+.gm-closing{margin-top:20px;font-size:12.5px;color:var(--text-muted);line-height:1.85;text-align:center;}
+.gm-ack-btn{width:100%;margin-top:22px;padding:14px;font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.06em;border:none;border-radius:9px;cursor:pointer;background:var(--orange);color:var(--black);}
+.gm-tabs{display:flex;gap:5px;flex-shrink:0;padding:12px 14px;border-bottom:1px solid var(--border);}
+.gm-tab{flex:1 1 0;min-width:0;padding:9px 4px;border-radius:8px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text-muted);font-family:"Noto Sans JP",sans-serif;font-size:11.5px;font-weight:700;white-space:nowrap;text-align:center;overflow:hidden;text-overflow:ellipsis;transition:background .18s,color .18s,border-color .18s;}
+@media (min-width:420px){ .gm-tab{font-size:12.5px;padding:9px 8px;} }
+.gm-tab.active{background:var(--orange);border-color:var(--orange);color:var(--black);}
+.gm-pane{display:none;}
+.gm-pane.active{display:block;animation:fadeUp .28s cubic-bezier(.16,1,.3,1) both;}
+@media (prefers-reduced-motion:reduce){ .gm-pane.active{animation:none;} }
+.gm-date{font-size:11px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:12px;}
+.gm-pane-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;}
+.gm-list.check .gm-list-item{padding-left:24px;}
+.gm-list.check .gm-list-item::before{content:"";left:0;top:3px;width:13px;height:13px;border-radius:3px;background:transparent;border:1.5px solid var(--orange);}
+.gm-sublabel{font-size:12.5px;font-weight:700;color:var(--text);margin:0 0 8px;padding-left:2px;}
+.gm-list + .gm-sublabel{margin-top:16px;}
 </style>
 </head>
 <body>
@@ -213,7 +328,6 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
   </div>
 </header>
 
-<!-- ドクターヘリ：スクロールすると着地していくヒーロー -->
 <div class="heli-hero" id="heli-hero">
   <img class="heli-img" id="heli-img" src="assets/bg-heli.jpg" alt="">
   <div class="heli-shade"></div>
@@ -228,43 +342,81 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
 
   <div class="trunk">
 
+    <!-- 1 -->
     <div class="tnode" id="n1" data-n="1">
       <div class="tcard">
         <h3>K-PICSの理念・活動紹介</h3>
-        <p>K-PICSの理念はポータルに書いています。</p>
-        <p>K-PICSの活動は多岐にわたります。活動の様子はInstagramをご覧ください。</p>
-        <a class="text-link" href="https://www.instagram.com/k_pics.wmu?igsh=YzlsanMzNDc5eGE3" target="_blank" rel="noopener" style="display:inline-block;margin:4px 0 12px;font-weight:700;color:var(--orange);">📷 Instagram（@k_pics.wmu）<span class="tbadge" style="margin-left:6px;">外部 ↗</span></a>
+        <p>K-PICSの理念はポータルに書いています。K-PICSの活動は多岐にわたります。活動の様子はInstagramをご覧ください。</p>
+        <a class="text-link" href="https://www.instagram.com/k_pics.wmu?igsh=YzlsanMzNDc5eGE3" target="_blank" rel="noopener" style="display:inline-block;margin:6px 0 8px;font-weight:700;font-size:12.5px;color:var(--orange);">📷 Instagram（@k_pics.wmu）<span class="tbadge" style="margin-left:6px;">外部 ↗</span></a>
         <p>いろんなことに取り組んでいる先輩がいるので、興味のあることはどんどん声をかけていきましょう。</p>
+        <div class="docbar"><div class="docbtn" data-doc="rinen" data-doc-title="K-PICSの理念・活動紹介">📄 資料 <span class="cnt zero">0</span></div></div>
       </div>
     </div>
 
+    <!-- 2 -->
     <div class="tnode" id="n2" data-n="2">
-      <a class="text-link" href="basic.html">
-        <div class="tcard linkable">
-          <div class="tcard-top"><h3>エコーの基本のキ</h3></div>
-          <p>プローブの種類、画像の見方など、ゼロからのエコー入門。全12章。</p>
-        </div>
-      </a>
+      <div class="tcard linkable" id="member-guide-open" role="button" tabindex="0">
+        <div class="tcard-top"><h3>K-PICSの部員として</h3><span class="tbadge">必読</span></div>
+        <p>活動ルール・エコー練習の注意事項・自主練チェックリスト・何より大事なこと。タップして読めます。</p>
+      </div>
     </div>
 
+    <!-- 3 -->
     <div class="tnode" id="n3" data-n="3">
-      <a class="text-link" href="prep.html">
-        <div class="tcard linkable">
-          <div class="tcard-top"><h3>予習教材</h3><span class="tbadge">13部位</span></div>
-          <p>セミナー前に読んでおきたい、部位ごとの解剖・用語Wiki。分からない単語は自由に登録・追記できます。</p>
-        </div>
-      </a>
+      <div class="tcard">
+        <div class="tcard-top"><h3>エコーの基本のキ</h3><span class="tbadge soon">準備中</span></div>
+        <p>プローブの種類、画像の見方など、ゼロからのエコー入門。作り直しています。</p>
+        <div class="docbar"><div class="docbtn" data-doc="basic" data-doc-title="エコーの基本のキ">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
     </div>
 
-
+    <!-- 4 -->
     <div class="tnode" id="n4" data-n="4">
       <div class="tcard">
-        <div class="tcard-top"><h3>セミナー</h3></div>
-        <p>各分野の実技セミナー。開催情報はカレンダーをチェック。勉強会資料はアプリ内「その他」からアクセスできます。</p>
+        <div class="tcard-top"><h3>予習教材</h3><span class="tbadge">5セミナー</span></div>
+        <p>セミナー前に読んでおきたい教材です。セミナーごとに用意しています。</p>
+        <div class="subrows">
+          <div class="subrow"><div class="subrow-name">心臓<div class="subrow-desc">prep-heart.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-heart" data-doc-title="予習教材 ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">肺・下肢静脈<div class="subrow-desc">prep-lung-dvt.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-lung-dvt" data-doc-title="予習教材 ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">腹部<div class="subrow-desc">prep-abdomen.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-abdomen" data-doc-title="予習教材 ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">血管穿刺<div class="subrow-desc">prep-vascular-access.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-vascular-access" data-doc-title="予習教材 ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">排泄ケア<div class="subrow-desc">prep-excretion-care.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="prep-excretion-care" data-doc-title="予習教材 ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
+        </div>
       </div>
     </div>
 
+    <!-- 5 -->
     <div class="tnode" id="n5" data-n="5">
+      <div class="tcard">
+        <div class="tcard-top"><h3>セミナー</h3><span class="tbadge">5セミナー</span></div>
+        <p>各分野の実技セミナー。開催情報はカレンダーをチェック。当日資料はここから見られます。</p>
+        <div class="subrows">
+          <div class="subrow"><div class="subrow-name">心臓<div class="subrow-desc">seminar-heart.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-heart" data-doc-title="セミナー ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">肺・下肢静脈<div class="subrow-desc">seminar-lung-dvt.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-lung-dvt" data-doc-title="セミナー ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">腹部<div class="subrow-desc">seminar-abdomen.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-abdomen" data-doc-title="セミナー ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">血管穿刺<div class="subrow-desc">seminar-vascular-access.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-vascular-access" data-doc-title="セミナー ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">排泄ケア<div class="subrow-desc">seminar-excretion-care.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-excretion-care" data-doc-title="セミナー ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="tnode" id="n6" data-n="6">
+      <div class="tcard">
+        <div class="tcard-top"><h3>疾患辞典</h3><span class="tbadge">低学年向け</span></div>
+        <p>各セミナーで出てきた疾患を、低学年の人にも分かるようにやさしく解説します。</p>
+        <div class="subrows">
+          <div class="subrow"><div class="subrow-name">心臓<div class="subrow-desc">disease-heart.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-heart" data-doc-title="疾患辞典 ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">肺・下肢静脈<div class="subrow-desc">disease-lung-dvt.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-lung-dvt" data-doc-title="疾患辞典 ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">腹部<div class="subrow-desc">disease-abdomen.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-abdomen" data-doc-title="疾患辞典 ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">血管穿刺<div class="subrow-desc">disease-vascular-access.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-vascular-access" data-doc-title="疾患辞典 ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">排泄ケア<div class="subrow-desc">disease-excretion-care.html</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="disease-excretion-care" data-doc-title="疾患辞典 ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="tnode" id="n7" data-n="7">
       <a class="text-link" href="technique.html">
         <div class="tcard linkable">
           <div class="tcard-top"><h3>自主練ハンドブック</h3><span class="tbadge">13部位</span></div>
@@ -273,7 +425,8 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
       </a>
     </div>
 
-    <div class="tnode" id="n6" data-n="6">
+    <!-- 8 -->
+    <div class="tnode" id="n8" data-n="8">
       <a class="text-link" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener">
         <div class="tcard linkable">
           <div class="tcard-top"><h3>認定アプリ</h3><span class="tbadge">外部 ↗</span></div>
@@ -282,7 +435,8 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
       </a>
     </div>
 
-    <div class="tnode" id="n7" data-n="7">
+    <!-- 9 -->
+    <div class="tnode" id="n9" data-n="9">
       <a class="text-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
         <div class="tcard linkable">
           <div class="tcard-top"><h3>waza-ari</h3><span class="tbadge">外部 ↗</span></div>
@@ -291,64 +445,64 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
       </a>
     </div>
 
-    <div class="tnode" id="n8" data-n="8">
-      <a class="text-link" href="shock-pocus-10days.html">
-        <div class="tcard linkable">
+    <!-- 10 -->
+    <div class="tnode" id="n10" data-n="10">
+      <div class="tcard">
+        <a class="text-link" href="shock-pocus-10days.html">
           <div class="tcard-top"><h3>10日間で学ぶ！エコーを用いたショック鑑別の基礎</h3></div>
           <p>ABCDE評価から4大ショックの鑑別、POCUSの当て方までを1日1テーマで。低学年のうちに読んでおくと、その後の手技練習にも身が入ります。</p>
-        </div>
-      </a>
+        </a>
+        <div class="docbar"><div class="docbtn" data-doc="shock-10days" data-doc-title="10日間で学ぶ！ショック鑑別の基礎">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
     </div>
 
-    <div class="tnode" id="n9-cert" data-n="9">
+    <!-- 11 -->
+    <div class="tnode" id="n11" data-n="11">
       <div class="tcard">
-        <h3>認定試験</h3>
-        <p>認定試験の案内・受験エントリーは認定アプリから。</p>
+        <div class="tcard-top"><h3>認定試験</h3><span class="tbadge">受験要項</span></div>
+        <p>直近の認定試験の受験要項をここに掲載します。案内・受験エントリーは認定アプリから。</p>
+        <div class="docbar"><div class="docbtn" data-doc="cert-exam" data-doc-title="認定試験 受験要項">📄 受験要項 <span class="cnt zero">0</span></div></div>
       </div>
     </div>
 
   </div>
 
-  <div class="section-gap" id="n9">ここから先はPOCUSの応用ルート ―――</div>
+  <div class="note-box">エコー手技は、練習だけでなく<strong>臨床と繋がってくると、より楽しくなってきます！</strong>学んだ手技が実際の診療でどう活きるのかを意識すると、学びがぐっと深まります。</div>
 
-  <div class="trunk" style="padding-left:6px;">
-    <div class="tnode" data-n="9">
-      <a class="text-link" href="disease.html">
-        <div class="tcard linkable">
-          <div class="tcard-top"><h3>疾患辞典</h3><span class="tbadge">常時アクセス可</span></div>
-          <p>専門用語や疾患をいつでも調べられる、低学年向けの解説集。予習教材・自主練HBともリンク。</p>
-        </div>
-      </a>
-    </div>
-    <div class="tnode" data-n="10">
-      <div class="tcard">
-        <div class="tcard-top"><h3>ショック鑑別・JATECなど</h3><span class="tbadge soon">追加予定</span></div>
-        <p>今後も項目を増やしていく予定です。</p>
-      </div>
-    </div>
-    <div style="margin:16px 4px 4px;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:12px;font-size:12.5px;line-height:1.85;color:var(--text);">エコー手技は、練習だけでなく<strong>臨床と繋がってくると、より楽しくなってきます！</strong>学んだ手技が実際の診療でどう活きるのかを意識すると、学びがぐっと深まります。</div>
+  <!-- ===== 独立コンテンツ：解剖の理解を深める ===== -->
+  <div class="solo-zone" id="anatomy">
+    <div class="solo-eyebrow">学年を問わない、独立コンテンツ</div>
+    <div class="solo-title">解剖の理解を深める</div>
+    <p class="solo-desc">エコー画像は、解剖が頭に入っているほど読めるようになります。低学年の方はもちろん、<strong>高学年の方が理解を深め直すのにもかなり有効</strong>です。資料は随時追加していきます。</p>
+    <div class="docbar"><div class="docbtn" data-doc="anatomy" data-doc-title="解剖の理解を深める">📄 資料 <span class="cnt zero">0</span></div></div>
   </div>
 
+  <!-- ================= ADVANCED ================= -->
+  <div class="adv-head" id="advanced">
+    <div class="adv-head-eyebrow">FROM HERE ON</div>
+    <div class="adv-head-title">Advanced</div>
+    <div class="adv-head-sub">ここから先は応用ルート。<br>興味のあるところから、どこへでも。</div>
+  </div>
+  <div class="adv-rule"></div>
+
+  <!-- 目玉：SPL -->
   <div class="spl-zone" id="spl">
-    <div class="spl-eyebrow">応用ルートの到達点</div>
-    <div class="spl-title">SPL特化</div>
+    <div class="spl-eyebrow">応用ルートの目玉</div>
+    <div class="spl-title">SPL</div>
+    <div class="spl-title-ja">Student POCUS League</div>
     <div class="spl-pillars">
-      <a class="spl-pillar text-link" href="medical-rally.html">
-        <div>
-          <div class="spl-pillar-name">POCUS特化メディカルラリー</div>
-          <div class="spl-pillar-desc">症候別プロトコル・SP台本のストック</div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--spl)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+
       <div class="spl-pillar">
-        <div>
-          <div class="spl-pillar-name">POCUS特化臨床推論 <span class="tbadge soon" style="margin-left:4px;">構想中</span></div>
-          <div class="spl-pillar-desc">全国展開アプリ制作予定</div>
-        </div>
+        <a class="text-link" href="https://kpics-tech.github.io/-/" target="_blank" rel="noopener">
+          <div class="spl-pillar-name">絵合わせアプリ <span class="tbadge" style="border-color:rgba(217,138,61,.4);color:var(--spl);">外部 ↗</span></div>
+          <div class="spl-pillar-desc">超音波画像を再現してタイムを測る練習ツール</div>
+        </a>
+        <div class="docbar"><div class="docbtn" data-doc="spl-ematching" data-doc-title="SPL ｜ 絵合わせアプリ">📄 資料 <span class="cnt zero">0</span></div></div>
       </div>
-      <div class="spl-pillar" style="flex-direction:column;align-items:stretch;">
+
+      <div class="spl-pillar">
         <div class="spl-pillar-name">工学系学習</div>
-        <div class="spl-pillar-desc" style="margin-bottom:6px;">超音波の原理・各モードを学べるリソース</div>
+        <div class="spl-pillar-desc">超音波の原理・各モードを学べるリソース</div>
         <a class="spl-sublink" href="https://kpics-tech.github.io/pocus-loop/" target="_blank" rel="noopener">
           <span>POCUS-LOOP</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--spl)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -361,31 +515,169 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
           <span>JSUM Ultrasound Path</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="var(--spl)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
+        <div class="docbar"><div class="docbtn" data-doc="spl-engineering" data-doc-title="SPL ｜ 工学系学習">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
+
+      <div class="spl-pillar">
+        <a class="text-link" href="medical-rally.html">
+          <div class="spl-pillar-name">POCUS特化メディカルラリー</div>
+          <div class="spl-pillar-desc">症候別プロトコル・SP台本のストック</div>
+        </a>
+        <div class="docbar"><div class="docbtn" data-doc="spl-medical-rally" data-doc-title="SPL ｜ POCUS特化メディカルラリー">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
+
+      <div class="spl-pillar">
+        <div class="spl-pillar-name">POCUS特化臨床推論 <span class="tbadge soon">構想中</span></div>
+        <div class="spl-pillar-desc">全国展開アプリ制作予定</div>
+        <div class="docbar"><div class="docbtn" data-doc="spl-clinical-reasoning" data-doc-title="SPL ｜ POCUS特化臨床推論">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
+
+      <div class="spl-pillar">
+        <div class="spl-pillar-name">過去問</div>
+        <div class="spl-pillar-desc">これまでのSPLで出題された問題のストック</div>
+        <div class="docbar"><div class="docbtn" data-doc="spl-past-exams" data-doc-title="SPL ｜ 過去問">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
+
+      <div class="spl-pillar">
+        <div class="spl-pillar-name">先輩たちのノウハウ集</div>
+        <div class="spl-pillar-desc">出場した先輩が残してくれた対策・コツ・反省</div>
+        <div class="docbar"><div class="docbtn" data-doc="spl-knowhow" data-doc-title="SPL ｜ 先輩たちのノウハウ集">📄 資料 <span class="cnt zero">0</span></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="adv-list">
+
+    <div class="adv-card" id="adv-abdomen">
+      <div class="adv-card-top">
+        <div class="adv-icon">🫀</div>
+        <div class="adv-body">
+          <div class="adv-title">腹部エコー</div>
+          <div class="adv-desc">基本の腹部から一歩踏み込んだ内容。</div>
+        </div>
+      </div>
+      <div class="subrows">
+        <div class="subrow"><div class="subrow-name">膵臓<div class="subrow-desc">描出のコツと読み方</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓">📄 <span class="cnt zero">0</span></div></div>
+        <div class="subrow"><div class="subrow-name">6アプローチ<div class="subrow-desc">腹部を6方向から系統的に</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ">📄 <span class="cnt zero">0</span></div></div>
       </div>
     </div>
-  </div>
 
-  <div class="peak" id="peak">
-    <div class="peak-card">
-      <div class="peak-eyebrow">＋α ・ 独立到達点</div>
-      <div class="peak-title">ハイレベルコース</div>
+    <div class="adv-card" id="adv-heart">
+      <div class="adv-card-top">
+        <div class="adv-icon">❤️</div>
+        <div class="adv-body">
+          <div class="adv-title">心臓の詳細エコー</div>
+          <div class="adv-desc">POCUSの先へ。断面・計測・弁の評価まで。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="heart-advanced" data-doc-title="心臓の詳細エコー">📄 資料 <span class="cnt zero">0</span></div></div>
     </div>
+
+    <div class="adv-card" id="adv-msk">
+      <div class="adv-card-top">
+        <div class="adv-icon">🦴</div>
+        <div class="adv-body">
+          <div class="adv-title">運動器</div>
+          <div class="adv-desc">整形外科・小児領域で使うエコー。</div>
+        </div>
+      </div>
+      <div class="subrows">
+        <div class="subrow"><div class="subrow-name">肩<div class="subrow-desc">腱板・肩峰下滑液包の描出</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩">📄 <span class="cnt zero">0</span></div></div>
+        <div class="subrow"><div class="subrow-name">肘<div class="subrow-desc">上顆・関節裂隙の見かた</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘">📄 <span class="cnt zero">0</span></div></div>
+        <div class="subrow"><div class="subrow-name">膝<div class="subrow-desc">関節液貯留・半月板・靱帯</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝">📄 <span class="cnt zero">0</span></div></div>
+        <div class="subrow"><div class="subrow-name">ゼロイチサイン<div class="subrow-desc">骨折の評価に</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン">📄 <span class="cnt zero">0</span></div></div>
+        <div class="subrow"><div class="subrow-name">乳児・新生児の股関節エコー<div class="subrow-desc">発育性股関節形成不全のスクリーニング</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー">📄 <span class="cnt zero">0</span></div></div>
+      </div>
+    </div>
+
+    <div class="adv-card" id="adv-rheuma">
+      <div class="adv-card-top">
+        <div class="adv-icon">🖐️</div>
+        <div class="adv-body">
+          <div class="adv-title">リウマチ</div>
+          <div class="adv-desc">診察〜エコーの活用まで。身体所見とエコーをつなげて考えます。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="rheumatology" data-doc-title="リウマチ ｜ 診察〜エコーの活用まで">📄 資料 <span class="cnt zero">0</span></div></div>
+    </div>
+
+    <div class="adv-card" id="adv-vexus">
+      <div class="adv-card-top">
+        <div class="adv-icon">🌊</div>
+        <div class="adv-body">
+          <div class="adv-title">VExUS</div>
+          <div class="adv-desc">静脈うっ血の評価。輸液・循環管理とエコーをつなぐ。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="vexus" data-doc-title="VExUS">📄 資料 <span class="cnt zero">0</span></div></div>
+    </div>
+
+    <div class="adv-card" id="adv-cvc">
+      <div class="adv-card-top">
+        <div class="adv-icon">💉</div>
+        <div class="adv-body">
+          <div class="adv-title">中心静脈カテーテル</div>
+          <div class="adv-desc">エコーガイド下穿刺の考え方と手順。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="cvc" data-doc-title="中心静脈カテーテル">📄 資料 <span class="cnt zero">0</span></div></div>
+    </div>
+
+    <div class="adv-card" id="adv-rally">
+      <div class="adv-card-top">
+        <div class="adv-icon">🚑</div>
+        <div class="adv-body">
+          <div class="adv-title">メディカルラリー / 救急</div>
+          <div class="adv-desc">外傷初期診療をはじめとした救急領域。</div>
+        </div>
+      </div>
+      <div class="subrows">
+        <div class="subrow"><div class="subrow-name">JATEC<div class="subrow-desc">外傷初期診療ガイドライン</div></div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急 ｜ JATEC">📄 <span class="cnt zero">0</span></div></div>
+      </div>
+    </div>
+
+    <div class="adv-card" id="adv-bls">
+      <div class="adv-card-top">
+        <div class="adv-icon">🫁</div>
+        <div class="adv-body">
+          <div class="adv-title">BLS</div>
+          <div class="adv-desc">一次救命処置。誰でも身につけておきたい基本。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="bls" data-doc-title="BLS">📄 資料 <span class="cnt zero">0</span></div></div>
+    </div>
+
+    <div class="adv-card" id="adv-disaster">
+      <div class="adv-card-top">
+        <div class="adv-icon">⛑️</div>
+        <div class="adv-body">
+          <div class="adv-title">災害</div>
+          <div class="adv-desc">災害医療の基礎と、その中でのPOCUSの位置づけ。</div>
+        </div>
+      </div>
+      <div class="docbar"><div class="docbtn" data-doc="disaster" data-doc-title="災害">📄 資料 <span class="cnt zero">0</span></div></div>
+    </div>
+
   </div>
 
-</div>
-
-<div class="library" id="library">
-  <div class="library-head"><h3>その他コンテンツ</h3><span>随時追加</span></div>
-  <div class="shelf">
-    <div class="shelf-item">非POCUS限定<br>メディカルラリー</div>
-    <div class="shelf-item">BLS</div>
-    <div class="shelf-item">災害医療</div>
-    <div class="shelf-item add">＋</div>
+  <!-- ===== 最後の呼びかけ：みんなで増やしていく ===== -->
+  <div class="invite-zone" id="invite">
+    <div class="invite-eyebrow">TO BE CONTINUED</div>
+    <div class="invite-title">このページは、<br>みんなで増やしていくものです。</div>
+    <p class="invite-desc">
+      ここに並んでいるのは、いまあるものだけ。<br><br>
+      実習やポリクリで<strong>いろんな科の先生に教わったこと</strong>、勉強会で聞いた話、自分で調べて分かったこと ——
+      エコーに限らず、<strong>どんな分野の学びでも大歓迎</strong>です。<br><br>
+      「これ、後輩に残しておきたいな」と思ったものがあれば、下の資料欄に入れるか、コアメンバーに声をかけてください。
+      新しい項目そのものを増やしてもらってもかまいません。
+    </p>
+    <div class="docbar"><div class="docbtn" data-doc="sharing" data-doc-title="みんなの学び共有">📄 みんなの学び共有 <span class="cnt zero">0</span></div></div>
+    <div class="invite-sign">学びを、次の代へ。</div>
   </div>
-</div>
 
-<div class="main">
   <div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>
+
 </div>
 
 <nav class="tabbar" id="main-tabbar">
@@ -407,26 +699,277 @@ body{color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;ov
   </a>
 </nav>
 
+<!-- ===== ミニマップ ===== -->
 <div class="overlay" id="mm">
   <div class="minimap">
     <div class="minimap-head">
       <h4>全体マップ</h4>
       <div class="close" id="mm-close">✕</div>
     </div>
+    <div class="mm-sec">BASIC</div>
     <div class="mm-node" data-jump="n1">① 理念・活動紹介</div>
-    <div class="mm-node" data-jump="n2">② 基本のキ</div>
-    <div class="mm-node" data-jump="n3">③ 予習教材</div>
-    <div class="mm-node" data-jump="n4">④ セミナー</div>
-    <div class="mm-node" data-jump="n5">⑤ 自主練ハンドブック</div>
-    <div class="mm-node" data-jump="n6">⑥ 認定アプリ</div>
-    <div class="mm-node" data-jump="n7">⑦ waza-ari</div>
-    <div class="mm-node" data-jump="n8">⑧ 10日間で学ぶ！エコーを用いたショック鑑別の基礎</div>
-    <div class="mm-node" data-jump="n9-cert">⑨ 認定試験</div>
-    <div class="mm-node" data-jump="n9">疾患辞典・ショック鑑別</div>
-    <div class="mm-node spl" data-jump="spl">SPL特化</div>
-    <div class="mm-node" data-jump="peak">＋αハイレベルコース</div>
-    <div class="mm-node" data-jump="library">その他コンテンツ</div>
+    <div class="mm-node" data-jump="n2">② K-PICSの部員として</div>
+    <div class="mm-node" data-jump="n3">③ エコーの基本のキ</div>
+    <div class="mm-node" data-jump="n4">④ 予習教材</div>
+    <div class="mm-node" data-jump="n5">⑤ セミナー</div>
+    <div class="mm-node" data-jump="n6">⑥ 疾患辞典</div>
+    <div class="mm-node" data-jump="n7">⑦ 自主練ハンドブック</div>
+    <div class="mm-node" data-jump="n8">⑧ 認定アプリ</div>
+    <div class="mm-node" data-jump="n9">⑨ waza-ari</div>
+    <div class="mm-node" data-jump="n10">⑩ 10日間で学ぶ！</div>
+    <div class="mm-node" data-jump="n11">⑪ 認定試験</div>
+    <div class="mm-sec">独立コンテンツ</div>
+    <div class="mm-node" data-jump="anatomy">解剖の理解を深める</div>
+    <div class="mm-sec">ADVANCED</div>
+    <div class="mm-node spl" data-jump="spl">SPL（Student POCUS League）</div>
+    <div class="mm-node" data-jump="adv-abdomen">腹部エコー</div>
+    <div class="mm-node" data-jump="adv-heart">心臓の詳細エコー</div>
+    <div class="mm-node" data-jump="adv-msk">運動器</div>
+    <div class="mm-node" data-jump="adv-rheuma">リウマチ</div>
+    <div class="mm-node" data-jump="adv-vexus">VExUS</div>
+    <div class="mm-node" data-jump="adv-cvc">中心静脈カテーテル</div>
+    <div class="mm-node" data-jump="adv-rally">メディカルラリー / 救急</div>
+    <div class="mm-node" data-jump="adv-bls">BLS</div>
+    <div class="mm-node" data-jump="adv-disaster">災害</div>
+    <div class="mm-sec">SHARE</div>
+    <div class="mm-node" data-jump="invite">みんなの学び共有</div>
     <div class="mm-note">タップでその場所へジャンプ</div>
+  </div>
+</div>
+
+<!-- ===== PDF資料モーダル ===== -->
+<div class="overlay" id="pdf-modal">
+  <div class="pdf-box">
+    <div class="pdf-head">
+      <div>
+        <div class="pdf-head-title" id="pdf-title">資料</div>
+        <div class="pdf-head-sub" id="pdf-sub"></div>
+      </div>
+      <div class="pdf-close" id="pdf-close">✕</div>
+    </div>
+    <div class="pdf-body">
+      <div id="pdf-list"></div>
+      <div class="pdf-upload" id="pdf-upload" style="display:none;">
+        <div class="pdf-upload-label">🔑 コアメンバー・先生：PDFを追加する</div>
+        <label class="pdf-drop" for="pdf-file-input">
+          タップしてPDFを選ぶ<br><span style="font-size:10.5px;color:var(--text-dim);">1ファイル20MBまで</span>
+        </label>
+        <input type="file" id="pdf-file-input" accept="application/pdf,.pdf" style="display:none;">
+      </div>
+      <div class="pdf-status" id="pdf-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 「K-PICSの部員として」モーダル（index.htmlと同じ内容） ===== -->
+<div class="guide-modal-overlay" id="guide-modal-overlay" onclick="closeGuideModalOnOverlay(event)">
+  <div class="guide-modal-box">
+    <div class="guide-modal-head">
+      <div class="guide-modal-title">K-PICSの部員として</div>
+      <button class="guide-modal-close" onclick="closeGuideModal()" aria-label="閉じる">✕</button>
+    </div>
+
+    <div class="gm-tabs" role="tablist" aria-label="K-PICSの部員として">
+      <button class="gm-tab active" role="tab" aria-selected="true"  aria-controls="gm-pane-0" id="gm-tab-0" onclick="switchGuideTab(0)">活動ルール</button>
+      <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-1" id="gm-tab-1" onclick="switchGuideTab(1)">注意事項</button>
+      <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-2" id="gm-tab-2" onclick="switchGuideTab(2)">チェック</button>
+      <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-3" id="gm-tab-3" onclick="switchGuideTab(3)">大事なこと</button>
+    </div>
+
+    <div class="guide-modal-body" id="guide-modal-body">
+
+      <!-- 1. K-PICS活動ルール -->
+      <section class="gm-pane active" role="tabpanel" id="gm-pane-0" aria-labelledby="gm-tab-0">
+        <div class="gm-date">最終更新：2026/09/08</div>
+        <div class="gm-lead">
+          K-PICSでは、地域医療支援センターを利用する地域枠学生をはじめ、東棟3階で働く職員の皆さんと気持ちよく共存し、安全に活動を継続できるよう、以下のルールで活動します。<br><br>
+          状況に応じて変更する場合があります。変更がある場合は、Slack等で随時お知らせします。
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">📅</span>活動日</div>
+          <div class="gm-list">
+            <div class="gm-list-item">原則として、火曜日・水曜日のいずれか1日に、セミナー・認定試験・勉強会などのK-PICS活動を行います</div>
+            <div class="gm-list-item">もう一方の曜日は、希望がある場合に自主練習日として活動できます（自主練希望者は代表・副代表に事前連絡をお願いします）</div>
+            <div class="gm-list-item">それ以外の曜日に活動を希望する場合は、事前に担当教員へ相談してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🕓</span>活動時間</div>
+          <div class="gm-list">
+            <div class="gm-list-item"><strong>16:30〜18:45</strong></div>
+            <div class="gm-list-item">18:45までに活動と片付けを終了します</div>
+            <div class="gm-list-item">19:00までに地域医療支援センターおよび病院から完全に退出してください</div>
+            <div class="gm-list-item">病院玄関が19:00に施錠されるため、時間厳守でお願いします</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">📍</span>活動場所</div>
+          <div class="gm-list">
+            <div class="gm-list-item">地域医療支援センター「研究室」</div>
+            <div class="gm-list-item">地域医療支援センターの会議や業務予定が優先です</div>
+            <div class="gm-list-item">センターの会議予定、担当教員の不在、施設管理上の事情などにより、予定していた活動を変更・中止することがあります。変更がある場合はSlack等で連絡しますので、活動前に最新の案内を確認してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🚪</span>入退館</div>
+          <div class="gm-list">
+            <div class="gm-list-item">一般枠の学生は、K-PICSと関係のない職員と一緒に東棟へ入館しないでください</div>
+            <div class="gm-list-item">入館する場合は、次のいずれかの方法でお願いします<br>① 地域医療枠・県民医療枠の学生と一緒に入館する<br>② Slack・グループLINE等で、中にいるK-PICSメンバーまたは担当教員へ連絡する</div>
+            <div class="gm-list-item">無断での入館や、関係のない職員に開錠を依頼することは避けてください</div>
+            <div class="gm-list-item">扉前のインターホンは使用しないでください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">✅</span>活動終了時の確認</div>
+          <div class="gm-lead" style="margin-bottom:10px;">最後に退出する人は、以下を確認してください。</div>
+          <div class="gm-list check">
+            <div class="gm-list-item">使用した机、椅子、エコー機器、備品を元の状態に戻す</div>
+            <div class="gm-list-item">エアコンと照明を切る</div>
+            <div class="gm-list-item">ゴミを室内に残さず、所定のごみステーションへ持っていく</div>
+            <div class="gm-list-item">忘れ物がないか確認する</div>
+            <div class="gm-list-item">窓、扉、施錠状況を確認する</div>
+            <div class="gm-list-item">19:00までに完全に退出する</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">👥</span>学外者が参加する活動</div>
+          <div class="gm-list">
+            <div class="gm-list-item">学外者（看護学部も含め）が参加する実習については、スキルスラボの使用を検討します</div>
+            <div class="gm-list-item">開錠や入退室方法は通常のK-PICS活動と異なるため、事前に担当教員へ確認してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">💬</span>相談・連絡</div>
+          <div class="gm-list">
+            <div class="gm-list-item">「自主練をしたい」「新しい内容に挑戦したい」「活動で困っている」などの希望や相談があれば、代表、副代表または担当教員へ連絡してください</div>
+          </div>
+        </div>
+
+        <div class="gm-note">
+          学びたい気持ちを大切にしながら、施設を利用する地域枠学生・職員にも配慮し、無理なく継続できる活動を一緒につくっていきましょう。
+        </div>
+      </section>
+
+      <!-- 2. エコー練習に関する注意事項 -->
+      <section class="gm-pane" role="tabpanel" id="gm-pane-1" aria-labelledby="gm-tab-1">
+        <div class="gm-lead">
+          K-PICSで使用しているエコー機器は、もともと大学の備品ではなく、蒸野先生のご協力のもと、開業医の先生方や院内の各診療科から譲り受けた貴重な機器です。購入当時は非常に高額な医療機器であり、皆さんの学習のためにご厚意で提供していただいています。また、こうした練習は<strong>地域医療支援センターのご協力のもと</strong>で行わせていただいています。<br><br>
+          今後も長く活動を継続していくため、入室のルールから機器の取り扱いまで、以下の点を必ず守ってエコー練習を行ってください。<br><br>
+          分からないことや困ったことがあれば、いつでもコアメンバーや担当教員まで気軽に聞いてください。
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🤫</span>周囲への配慮について</div>
+          <div class="gm-list">
+            <div class="gm-list-item">原則、会議室での練習とします</div>
+            <div class="gm-list-item">自習スペースの奥で練習する場合は、同じ空間で自習している学生や、カルテを確認されている先生方がいらっしゃいますので、大きな声や物音を立てすぎないよう、静かに練習してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🛏️</span>実施環境について</div>
+          <div class="gm-list">
+            <div class="gm-list-item">被験者のプライバシー保護のため、パーテーションで区切って実施してください</div>
+            <div class="gm-list-item">ベッドにゼリーが付着しないよう、ペーパー等を敷いてください。ついてしまった場合は、速やかに拭き取ってください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🔌</span>機器の取り扱いについて</div>
+          <div class="gm-list">
+            <div class="gm-list-item">エコー本体を移動させる際は、電源コードやプローブケーブルを車輪で踏まないよう注意してください。断線の原因となります</div>
+            <div class="gm-list-item">コード類は持ち上げるか、引っ掛けて床につかないようにしてください</div>
+            <div class="gm-list-item">プローブは非常に高価で繊細な機器です。落下させないよう丁寧に扱い、ベッドや机の端に放置しないでください</div>
+            <div class="gm-list-item">万が一、落下や破損などのトラブルが発生した場合は、速やかに報告してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🧹</span>使用後の片付けについて</div>
+          <div class="gm-list">
+            <div class="gm-list-item">プローブに付着したゼリーは必ず拭き取ってください</div>
+            <div class="gm-list-item">ベッド、エコー本体、ゼリー、パーテーション、拭き取りペーパー等は、使用後に元の場所へ戻してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🧴</span>プローブの消毒について</div>
+          <div class="gm-lead" style="margin-bottom:14px;">
+            以前はアルコールによる消毒はプローブ劣化の原因となるため最小限とされていましたが、近年は各メーカーともアルコール消毒に対応する機種が増えています。
+          </div>
+          <div class="gm-sublabel">健常者同士で行うエコー練習の場合</div>
+          <div class="gm-list">
+            <div class="gm-list-item">① 検査終了後にガーゼ等でゼリーを拭き取る</div>
+            <div class="gm-list-item">② 練習終了後にアルコールを含ませたガーゼやウェットティッシュで清拭する</div>
+          </div>
+          <div class="gm-sublabel">臨床実習中・患者さんへの検査の場合</div>
+          <div class="gm-list">
+            <div class="gm-list-item">標準予防策に従い、患者さんごとにアルコール消毒を行うことが望ましいです</div>
+          </div>
+        </div>
+
+        <div class="gm-note">
+          各メーカーの推奨する消毒方法については、以下をご参照ください。<br>
+          <a class="gm-link" href="https://www.jsum.or.jp/members/about/souchitoriatsukai/" target="_blank" rel="noopener">https://www.jsum.or.jp/members/about/souchitoriatsukai/</a>
+        </div>
+      </section>
+
+      <!-- 3. 自主練習時のチェックリスト -->
+      <section class="gm-pane" role="tabpanel" id="gm-pane-2" aria-labelledby="gm-tab-2">
+        <div class="gm-pane-title">自主練習時のチェックリスト</div>
+        <div class="gm-lead">
+          次に使用する人が気持ちよく練習できるよう、<strong>練習後は必ず片付け</strong>をお願いします。また、退出前に以下の項目をすべて確認してください。
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">📅</span>自主練習時のルール</div>
+          <div class="gm-list check">
+            <div class="gm-list-item">原則、火・水曜日以外に自主練習をする場合、<strong>事前に予約してください</strong></div>
+            <div class="gm-list-item">原則、<strong>19時までに退出</strong>してください</div>
+          </div>
+        </div>
+
+        <div class="gm-section">
+          <div class="gm-section-title"><span class="gm-icon">🧾</span>練習後のチェックリスト</div>
+          <div class="gm-list check">
+            <div class="gm-list-item">プローブやベッドに付着した<strong>エコーゼリーはきれいに拭き取りました</strong>か？</div>
+            <div class="gm-list-item">エコーゼリーや拭き取りペーパーは、<strong>所定の位置に戻しました</strong>か？</div>
+            <div class="gm-list-item">エコー機器のコードやプローブのケーブルは、<strong>引っ掛からないようにまとめました</strong>か？</div>
+            <div class="gm-list-item">エコー機器は<strong>元の場所に戻しました</strong>か？</div>
+            <div class="gm-list-item">ベッドは<strong>元の位置に戻しました</strong>か？</div>
+            <div class="gm-list-item">練習中に出たゴミは、<strong>ゴミ箱に捨てました</strong>か？</div>
+            <div class="gm-list-item">照明は<strong>消しました</strong>か？</div>
+            <div class="gm-list-item"><strong>忘れ物</strong>はありませんか？</div>
+          </div>
+        </div>
+
+        <div class="gm-note">
+          📣 最後にもう一度、<strong>練習前と同じ状態に戻っているか確認</strong>してから退出してください。皆さんが気持ちよく練習できる環境を保つため、ご協力よろしくお願いします！
+        </div>
+      </section>
+
+      <!-- 4. 何より大事なこと -->
+      <section class="gm-pane" role="tabpanel" id="gm-pane-3" aria-labelledby="gm-tab-3">
+        <div class="gm-closing" style="margin-top:4px;">
+          <div style="font-weight:800;font-size:15px;margin-bottom:10px;">🤝 相手への思いやりを忘れずに</div>
+          機器を大切に扱うことはもちろんですが、<strong>練習に協力してくださる方々や、患者さんへの配慮</strong>も忘れないようにしてください。<br><br>
+          <strong>エコーを当てる前には、必ず声掛けを。</strong><br><br>
+          特に臨床実習で患者さんにエコーを実施させていただく際には、技術だけでなく、<strong>相手への思いやりや礼節</strong>も意識して行動していただければと思います。エコーを当てさせてもらえること自体が、相手の協力あってのことです。<br><br>
+          いろいろな方への思いやりや配慮があってこそ、この活動は続けられます。<br><br>
+          K-PICSは、エコー技術だけでなく医療者としての姿勢も学べる場となることを目指しています。<br><br>
+          よろしくお願いいたします。
+        </div>
+      </section>
+
+      <button class="gm-ack-btn" onclick="closeGuideModal()">読みました</button>
+    </div>
   </div>
 </div>
 
@@ -438,31 +981,22 @@ window.addEventListener('DOMContentLoaded', function(){
 });
 
 // ===================== ドクターヘリの着地演出 =====================
-// ページを下にスクロールすると、ヘリの写真がゆっくり下降しながら
-// わずかに縮小し、ヘリポートに着地していくように見える。
-// 「動きを減らす」設定の端末では動かさない。
 (function initHeliLanding(){
   const hero = document.getElementById('heli-hero');
   const img  = document.getElementById('heli-img');
   if(!hero || !img) return;
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
   let ticking = false;
   function update(){
     ticking = false;
     const rect = hero.getBoundingClientRect();
     const h = rect.height || 1;
-    // ヒーローが画面外に出るまでの進捗（0〜1）
     let t = Math.min(1, Math.max(0, -rect.top / h));
-    // 上に少し寄せて配置した写真(-8%)を、スクロールに合わせて 0% まで下降させる
-    // ＝ ヘリがゆっくり降りて着地するように見える
     const y  = -8 + t * 8;
     const sc = 1.06 - t * 0.06;
     img.style.transform = `translateX(-50%) translateY(${y}%) scale(${sc})`;
   }
-  function onScroll(){
-    if(!ticking){ ticking = true; requestAnimationFrame(update); }
-  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll);
   update();
@@ -470,20 +1004,21 @@ window.addEventListener('DOMContentLoaded', function(){
 
 // ===================== スクロールで順番に浮き上がる演出 =====================
 (function initReveal(){
-  const targets = document.querySelectorAll('.tnode, .spl-zone, .peak, .library');
+  const targets = document.querySelectorAll('.tnode, .solo-zone, .spl-zone, .adv-card, .adv-head, .note-box, .invite-zone');
   if(!targets.length) return;
   targets.forEach(el => el.classList.add('reveal'));
   const obs = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
         entry.target.classList.add('in-view');
-        obs.unobserve(entry.target); // 一度表示したら監視終了
+        obs.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
   targets.forEach(el => obs.observe(el));
 })();
 
+// ===================== ミニマップ =====================
 document.getElementById('map-open').addEventListener('click', () => document.getElementById('mm').classList.add('show'));
 document.getElementById('mm-close').addEventListener('click', () => document.getElementById('mm').classList.remove('show'));
 document.querySelectorAll('.mm-node').forEach(el => {
@@ -493,6 +1028,262 @@ document.querySelectorAll('.mm-node').forEach(el => {
     if(target) setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 150);
   });
 });
+
+// ===================== 「部員として」モーダル =====================
+function switchGuideTab(index){
+  var tabs  = document.querySelectorAll('#guide-modal-overlay .gm-tab');
+  var panes = document.querySelectorAll('#guide-modal-overlay .gm-pane');
+  if(!tabs.length || !panes.length) return;
+  if(index < 0 || index >= tabs.length || index >= panes.length) return;
+  for(var i=0; i<tabs.length; i++){
+    var on = (i === index);
+    tabs[i].classList.toggle('active', on);
+    tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+  }
+  for(var j=0; j<panes.length; j++){ panes[j].classList.toggle('active', j === index); }
+  var body = document.getElementById('guide-modal-body');
+  if(body) body.scrollTop = 0;
+}
+function openGuideModal(){
+  switchGuideTab(0);
+  document.getElementById('guide-modal-overlay').classList.add('open');
+}
+function closeGuideModal(){
+  document.getElementById('guide-modal-overlay').classList.remove('open');
+}
+function closeGuideModalOnOverlay(e){
+  if(e.target.id === 'guide-modal-overlay') closeGuideModal();
+}
+document.getElementById('member-guide-open').addEventListener('click', openGuideModal);
+
+// ================================================================
+// PDF資料モジュール
+// ================================================================
+// やっていること：
+//  ・各コンテンツ（心臓の予習教材、VExUS…）に「資料」ボタンを置く
+//  ・ボタンを押すと、そのコンテンツに登録されたPDFの一覧が出る
+//  ・部員なら誰でも開ける／コアメンバーだけ「追加」「削除」ができる
+//
+// ファイルの実体は Supabase の Storage（ファイル置き場）に、
+// 「どのコンテンツのPDFか」という情報は content_files テーブルに入る。
+// ================================================================
+(function initDocs(){
+
+  const PDF_BUCKET = 'content-pdfs';   // Storageのバケット名
+  const PDF_TABLE  = 'content_files';  // テーブル名
+  const MAX_MB     = 20;               // 1ファイルの上限
+
+  let isCore   = false;   // ログイン中の人がコアメンバーかどうか
+  let counts   = {};      // { コンテンツキー: 件数 }
+  let openKey  = null;    // いま開いているコンテンツキー
+  let openName = '';
+
+  const modal   = document.getElementById('pdf-modal');
+  const elTitle = document.getElementById('pdf-title');
+  const elSub   = document.getElementById('pdf-sub');
+  const elList  = document.getElementById('pdf-list');
+  const elUp    = document.getElementById('pdf-upload');
+  const elFile  = document.getElementById('pdf-file-input');
+  const elStat  = document.getElementById('pdf-status');
+
+  function status(msg, kind){
+    if(!msg){ elStat.className = 'pdf-status'; elStat.textContent = ''; return; }
+    elStat.className = 'pdf-status show ' + (kind || 'info');
+    elStat.textContent = msg;
+  }
+
+  // ---- ログイン中の人がアップロードできる人かどうかを調べる ----
+  // app.js のお知らせ投稿と同じ基準：profiles の is_core_member または is_teacher。
+  // このページは index.html と違って app.js を読み込まないので、
+  // ここで自分のプロフィールを1回だけ取りにいく。
+  async function fetchIsCore(uid){
+    if(!uid) return false;
+    try{
+      const { data, error } = await _supabase
+        .from('profiles').select('*').eq('id', uid).maybeSingle();
+      if(error || !data) return false;
+      window.CURRENT_PROFILE = data;
+      return !!(data.is_core_member || data.is_teacher);
+    }catch(e){ return false; }
+  }
+
+  // ---- 全コンテンツのPDF件数をまとめて取る ----
+  async function loadCounts(){
+    try{
+      const { data, error } = await _supabase.from(PDF_TABLE).select('content_key');
+      if(error || !data) return;
+      counts = {};
+      data.forEach(r => { counts[r.content_key] = (counts[r.content_key] || 0) + 1; });
+      document.querySelectorAll('.docbtn').forEach(btn => {
+        const n = counts[btn.dataset.doc] || 0;
+        const cnt = btn.querySelector('.cnt');
+        cnt.textContent = n;
+        cnt.classList.toggle('zero', n === 0);
+      });
+    }catch(e){ /* テーブル未作成のときは何もしない */ }
+  }
+
+  function fmtSize(b){
+    if(!b && b !== 0) return '';
+    return b < 1024*1024 ? Math.round(b/1024) + ' KB' : (b/1024/1024).toFixed(1) + ' MB';
+  }
+  function fmtDate(s){
+    if(!s) return '';
+    const d = new Date(s);
+    return d.getFullYear() + '/' + ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2);
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ---- 一覧を描く ----
+  async function renderList(){
+    elList.innerHTML = '<div class="pdf-empty">読み込み中…</div>';
+    let rows = [];
+    try{
+      const { data, error } = await _supabase
+        .from(PDF_TABLE).select('*')
+        .eq('content_key', openKey)
+        .order('created_at', { ascending: false });
+      if(error) throw error;
+      rows = data || [];
+    }catch(e){
+      elList.innerHTML = '<div class="pdf-empty">資料を読み込めませんでした。<br>通信環境を確認して、開き直してみてください。</div>';
+      return;
+    }
+
+    if(!rows.length){
+      elList.innerHTML = '<div class="pdf-empty">まだ資料はありません。' +
+        (isCore ? '<br>下から追加できます。' : '<br>追加され次第、ここに表示されます。') + '</div>';
+      return;
+    }
+
+    elList.innerHTML = rows.map(r => `
+      <div class="pdf-item" data-path="${esc(r.storage_path)}" data-id="${esc(r.id)}">
+        <div class="pdf-item-ic">PDF</div>
+        <div class="pdf-item-body">
+          <div class="pdf-item-name">${esc(r.file_name || '資料')}</div>
+          <div class="pdf-item-meta">${fmtDate(r.created_at)}${r.size_bytes ? ' ・ ' + fmtSize(r.size_bytes) : ''}</div>
+        </div>
+        ${isCore ? '<button class="pdf-item-del">削除</button>' : ''}
+      </div>`).join('');
+
+    // 開く
+    elList.querySelectorAll('.pdf-item').forEach(item => {
+      item.addEventListener('click', async (ev) => {
+        if(ev.target.classList.contains('pdf-item-del')) return;
+        status('資料を開いています…', 'info');
+        const { data, error } = await _supabase.storage.from(PDF_BUCKET)
+          .createSignedUrl(item.dataset.path, 60 * 60);
+        if(error || !data){ status('資料を開けませんでした。', 'ng'); return; }
+        status('');
+        window.open(data.signedUrl, '_blank', 'noopener');
+      });
+    });
+
+    // 削除（コアメンバーのみ）
+    elList.querySelectorAll('.pdf-item-del').forEach(btn => {
+      btn.addEventListener('click', async (ev) => {
+        ev.stopPropagation();
+        const item = btn.closest('.pdf-item');
+        const name = item.querySelector('.pdf-item-name').textContent;
+        if(!window.confirm('「' + name + '」を削除します。よろしいですか？')) return;
+        status('削除しています…', 'info');
+        await _supabase.storage.from(PDF_BUCKET).remove([item.dataset.path]);
+        const { error } = await _supabase.from(PDF_TABLE).delete().eq('id', item.dataset.id);
+        if(error){ status('削除できませんでした。', 'ng'); return; }
+        status('削除しました。', 'ok');
+        await renderList();
+        await loadCounts();
+      });
+    });
+  }
+
+  // ---- アップロード（コアメンバーのみ） ----
+  elFile.addEventListener('change', async () => {
+    const file = elFile.files && elFile.files[0];
+    if(!file) return;
+    elFile.value = '';
+
+    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){
+      status('PDFファイルを選んでください。', 'ng'); return;
+    }
+    if(file.size > MAX_MB * 1024 * 1024){
+      status('ファイルが大きすぎます（' + MAX_MB + 'MBまで）。', 'ng'); return;
+    }
+
+    status('アップロード中…（大きいファイルは少し時間がかかります）', 'info');
+
+    // ファイル名に日本語や記号があっても壊れないよう、保存名は英数字だけにする
+    const path = openKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.pdf';
+
+    const up = await _supabase.storage.from(PDF_BUCKET)
+      .upload(path, file, { contentType: 'application/pdf', upsert: false });
+    if(up.error){
+      status('アップロードできませんでした。（' + up.error.message + '）', 'ng');
+      return;
+    }
+
+    const ins = await _supabase.from(PDF_TABLE).insert({
+      content_key : openKey,
+      file_name   : file.name,
+      storage_path: path,
+      size_bytes  : file.size,
+      uploaded_by : window.CURRENT_UID || null
+    });
+    if(ins.error){
+      // テーブルに書けなかったら、置いたファイルも消してつじつまを合わせる
+      await _supabase.storage.from(PDF_BUCKET).remove([path]);
+      status('登録できませんでした。（' + ins.error.message + '）', 'ng');
+      return;
+    }
+
+    status('アップロードしました。', 'ok');
+    await renderList();
+    await loadCounts();
+  });
+
+  // ---- モーダルの開閉 ----
+  function openModal(key, name){
+    openKey = key; openName = name;
+    elTitle.textContent = name;
+    elSub.textContent = key;
+    elUp.style.display = isCore ? 'block' : 'none';
+    status('');
+    modal.classList.add('show');
+    renderList();
+  }
+  function closeModal(){ modal.classList.remove('show'); openKey = null; }
+
+  document.querySelectorAll('.docbtn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault(); ev.stopPropagation();
+      openModal(btn.dataset.doc, btn.dataset.docTitle || '資料');
+    });
+  });
+  document.getElementById('pdf-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+  // ---- 起動 ----
+  // auth-guard.js が window.CURRENT_UID をセットするのを待ってから動く
+  (function waitForLogin(tries){
+    if(window.CURRENT_UID){
+      fetchIsCore(window.CURRENT_UID).then(v => {
+        isCore = v;
+        // 判定が終わる前にモーダルを開いていた場合に備えて、開いていれば描き直す
+        if(openKey){
+          elUp.style.display = isCore ? 'block' : 'none';
+          renderList();
+        }
+      });
+      loadCounts();
+      return;
+    }
+    if(tries > 40) { loadCounts(); return; }   // 保険：8秒であきらめて一覧だけ出す
+    setTimeout(() => waitForLogin(tries + 1), 200);
+  })(0);
+
+})();
 </script>
 </body>
 </html>
