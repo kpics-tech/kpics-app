@@ -41,9 +41,9 @@
   --spl:#D98A3D;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--black);height:100%;overflow:hidden;}
+html,body{background:var(--black);}
 body{
-  color:var(--text);font-family:"Noto Sans JP",sans-serif;
+  color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;
   -webkit-tap-highlight-color:transparent;
 }
 .bebas{font-family:"Bebas Neue",sans-serif;}
@@ -141,10 +141,10 @@ button{font-family:inherit;}
 /* ===================== HOME（1画面・スクロールなし） ===================== */
 #home-screen{display:none;}
 #home-screen.active{
-  /* 画面いっぱいに固定する。タブバーも同じ画面の下端に固定されるので、
-     端末やアドレスバーの状態にかかわらず、下に隙間ができない */
+  /* 他のページ（まなぶ・カレンダー）と同じ、普通に流れる作り。
+     中身がちょうど1画面に収まる高さにしてあるので、実質スクロールしない */
   display:flex;flex-direction:column;
-  position:fixed;inset:0;overflow:hidden;
+  min-height:100vh;min-height:100dvh;position:relative;
 }
 
 /* うっすら敷くプローブ写真 */
@@ -394,16 +394,13 @@ button{font-family:inherit;}
 }
 .sheet-row:hover{background:var(--card-hover);}
 .sheet-row:active{border-color:var(--orange);background:var(--card-hover);}
-.sheet-row-num{
-  font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);
-  width:22px;height:22px;border-radius:6px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
 .sheet-row-ic{
-  width:30px;height:30px;border-radius:8px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.2);
+  width:34px;height:34px;border-radius:10px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.2);
   display:flex;align-items:center;justify-content:center;color:var(--orange-light);flex-shrink:0;
+  transition:background .15s,color .15s,border-color .15s;
 }
-.sheet-row-ic svg{width:15px;height:15px;}
+.sheet-row-ic svg{width:16px;height:16px;}
+.sheet-row:active .sheet-row-ic{background:var(--orange);color:var(--black);border-color:var(--orange);}
 .sheet-row-body{flex:1;min-width:0;}
 .sheet-row-title{font-size:13.5px;font-weight:700;line-height:1.35;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .sheet-row-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;line-height:1.45;}
@@ -855,42 +852,42 @@ button{font-family:inherit;}
     </div>
     <div class="sheet-body">
       <a class="sheet-row" href="manabu.html#n3">
-        <div class="sheet-row-num">01</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">エコーの基本のキ</div><div class="sheet-row-desc">ゼロからのエコー入門</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#n4">
-        <div class="sheet-row-num">02</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">予習教材</div><div class="sheet-row-desc">セミナー前に読んでおきたい</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#n5">
-        <div class="sheet-row-num">03</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">セミナー資料</div><div class="sheet-row-desc">当日使った資料はこちら</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#n6">
-        <div class="sheet-row-num">04</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">疾患辞典</div><div class="sheet-row-desc">低学年向けのやさしい疾患解説</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-        <div class="sheet-row-num">05</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">waza-ari <span class="sheet-row-ext">外部 ↗</span></div><div class="sheet-row-desc">GE社のPOCUS動画。予習にも復習にも</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#n10">
-        <div class="sheet-row-num">06</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">ショックの基礎</div><div class="sheet-row-desc">10日間で学ぶ！エコーを用いたショック鑑別</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#anatomy">
-        <div class="sheet-row-num">07</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">解剖の理解</div><div class="sheet-row-desc">解剖が頭に入るほど、エコーは読める</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a class="sheet-row" href="manabu.html#spl-engineering">
-        <div class="sheet-row-num">08</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">工学系学習</div><div class="sheet-row-desc">超音波の原理・各モード。POCUS-LOOPほか</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -911,22 +908,22 @@ button{font-family:inherit;}
     </div>
     <div class="sheet-body">
       <a class="sheet-row accent" href="manabu.html#spl">
-        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 3h12v5a6 6 0 01-12 0z"/><path d="M6 5H3v2a3 3 0 003 3M18 5h3v2a3 3 0 01-3 3"/></svg></div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">SPL ― Student POCUS League</div><div class="sheet-row-desc">絵合わせ・工学系・メディカルラリー・過去問・ノウハウ集</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <div class="sheet-divider">FIELDS</div>
       <a class="sheet-row" href="manabu.html#adv-neck"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">頸部エコー</div><div class="sheet-row-desc">甲状腺</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-abdomen"><div class="sheet-row-ic">🫄</div><div class="sheet-row-body"><div class="sheet-row-title">腹部エコー</div><div class="sheet-row-desc">膵臓・6アプローチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-heart"><div class="sheet-row-ic">❤️</div><div class="sheet-row-body"><div class="sheet-row-title">心臓の詳細エコー</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-msk"><div class="sheet-row-ic">🦴</div><div class="sheet-row-body"><div class="sheet-row-title">運動器</div><div class="sheet-row-desc">肩・肘・膝・ゼロイチサイン・股関節</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-rheuma"><div class="sheet-row-ic">🖐️</div><div class="sheet-row-body"><div class="sheet-row-title">リウマチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-vexus"><div class="sheet-row-ic">🌊</div><div class="sheet-row-body"><div class="sheet-row-title">VExUS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-cvc"><div class="sheet-row-ic">💉</div><div class="sheet-row-body"><div class="sheet-row-title">中心静脈カテーテル</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-rally"><div class="sheet-row-ic">🚑</div><div class="sheet-row-body"><div class="sheet-row-title">メディカルラリー / 救急</div><div class="sheet-row-desc">JATEC</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-bls"><div class="sheet-row-ic">🫁</div><div class="sheet-row-body"><div class="sheet-row-title">BLS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#adv-disaster"><div class="sheet-row-ic">⛑️</div><div class="sheet-row-body"><div class="sheet-row-title">災害</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="sheet-row" href="manabu.html#advanced" style="margin-top:6px;border-style:dashed;"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">まなぶページで全体を見る</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-abdomen"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">腹部エコー</div><div class="sheet-row-desc">膵臓・6アプローチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-heart"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">心臓の詳細エコー</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-msk"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">運動器</div><div class="sheet-row-desc">肩・肘・膝・ゼロイチサイン・股関節</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-rheuma"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-4 0v5M14 10V4a2 2 0 00-4 0v2M10 10.5V6a2 2 0 00-4 0v8"/><path d="M18 8a2 2 0 114 0v6a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 012.83-2.82L7 15"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">リウマチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-vexus"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 12c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">VExUS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-cvc"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">中心静脈カテーテル</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-rally"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">メディカルラリー / 救急</div><div class="sheet-row-desc">JATEC</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-bls"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">BLS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-disaster"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">災害</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#advanced" style="margin-top:6px;border-style:dashed;"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">まなぶページで全体を見る</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </div>
@@ -944,12 +941,12 @@ button{font-family:inherit;}
     </div>
     <div class="sheet-body">
       <div class="sheet-row" role="button" tabindex="0" onclick="closeSheet('sheet-about'); openPurposeModal();">
-        <div class="sheet-row-num">01</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">このアプリの目的</div><div class="sheet-row-desc">学びを、次の代へ。</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div class="sheet-row" role="button" tabindex="0" onclick="closeSheet('sheet-about'); openDocs('app-howto','このアプリの使い方');">
-        <div class="sheet-row-num">02</div>
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
         <div class="sheet-row-body"><div class="sheet-row-title">このアプリの使い方</div><div class="sheet-row-desc">資料（PDF）で案内します。随時追加</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
