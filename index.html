@@ -41,10 +41,14 @@
   --spl:#D98A3D;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--black);height:100%;overflow:hidden;}
+html,body{background:var(--black);overflow:hidden;}
+html{height:100%;}
 body{
   color:var(--text);font-family:"Noto Sans JP",sans-serif;
   -webkit-tap-highlight-color:transparent;
+  /* 画面ぴったりの高さ。JSが実際の表示領域の高さを入れて上書きする */
+  height:100vh;height:100dvh;
+  display:flex;flex-direction:column;
 }
 .bebas{font-family:"Bebas Neue",sans-serif;}
 .mono{font-family:"JetBrains Mono",monospace;}
@@ -142,7 +146,7 @@ button{font-family:inherit;}
 #home-screen{display:none;}
 #home-screen.active{
   display:flex;flex-direction:column;
-  height:100vh;height:100dvh;overflow:hidden;position:relative;
+  flex:1;min-height:0;overflow:hidden;position:relative;
 }
 
 /* うっすら敷くプローブ写真 */
@@ -212,7 +216,7 @@ button{font-family:inherit;}
   position:relative;z-index:1;flex:1;min-height:0;
   display:flex;flex-direction:column;
   width:100%;max-width:640px;margin:0 auto;
-  padding:12px 16px calc(66px + env(safe-area-inset-bottom));
+  padding:12px 16px 12px;
 }
 
 /* ホーム画面に追加バナー（細い1行） */
@@ -317,6 +321,16 @@ button{font-family:inherit;}
 .tile.adv .tile-kicker{font-size:28px;}
 .tile.adv .tile-kicker small{color:var(--spl);}
 .tile.adv .chip{border-color:rgba(217,138,61,.28);color:#CFAF8A;}
+
+/* 幅の狭い端末：下段の2枚が3行に折り返さないよう少し詰める */
+@media (max-width:384px){
+  .tile.row{gap:9px;padding:11px 11px;}
+  .tile.row .tile-icon{width:29px;height:29px;}
+  .tile.row .tile-icon svg{width:15px;height:15px;}
+  .tile.row .tile-title{font-size:11.5px;}
+  .tile.row .tile-desc{font-size:9.5px;}
+  .tile.row .tile-chev{width:14px;height:14px;}
+}
 
 /* 背の低い画面（iPhone SE など）：詰めて1画面に収める */
 @media (max-height:720px){
@@ -578,12 +592,14 @@ button{font-family:inherit;}
 
 /* ===================== 下部タブバー ===================== */
 .tabbar{
-  position:fixed;left:0;right:0;bottom:0;z-index:300;
+  position:relative;z-index:300;flex-shrink:0;
   background:rgba(20,20,20,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-top:1px solid var(--border);
   display:flex;align-items:stretch;justify-content:space-around;
   padding-bottom:env(safe-area-inset-bottom);
 }
+/* ログイン画面のときは、後ろでタブバーが顔を出さないように隠す */
+#home-screen:not(.active) ~ .tabbar{visibility:hidden;}
 .tabbar-item{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   padding:9px 4px 8px;color:var(--text-dim);text-decoration:none;cursor:pointer;
@@ -1426,6 +1442,28 @@ document.getElementById('pdf-file-input').addEventListener('change', async funct
   _docsStatus('アップロードしました。', 'ok');
   _docsRender();
 });
+
+// ===================== 画面の高さを実測して合わせる =====================
+// スマホのブラウザは、アドレスバーの出入りで「画面の高さ」が変わる。
+// CSSの 100dvh だけだと端末によっては下に黒い隙間ができるので、
+// 実際に見えている高さを測って body に入れる。
+(function fitAppHeight(){
+  function apply(){
+    // 文字入力中はキーボードで高さが変わるので、いじらない
+    var a = document.activeElement;
+    if(a && ['INPUT','TEXTAREA','SELECT'].indexOf(a.tagName) >= 0) return;
+    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    if(h) document.body.style.height = Math.round(h) + 'px';
+  }
+  apply();
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', function(){ setTimeout(apply, 250); });
+  window.addEventListener('pageshow', apply);
+  if(window.visualViewport) window.visualViewport.addEventListener('resize', apply);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') setTimeout(apply, 60);
+  });
+})();
 
 // ===================== 画面が必ず最上部から表示されるようにする =====================
 function scrollAllToTop(){

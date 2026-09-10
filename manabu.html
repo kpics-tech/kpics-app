@@ -99,6 +99,15 @@ button{font-family:inherit;}
 .sec-title{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:.95;letter-spacing:.03em;margin-top:6px;font-weight:400;}
 .sec-sub{font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.75;}
 
+/* ホームから飛んできた項目を、一瞬光らせて教える */
+@keyframes flashRing{
+  0%{box-shadow:0 0 0 0 rgba(232,160,32,0);}
+  18%{box-shadow:0 0 0 4px rgba(232,160,32,.42);}
+  100%{box-shadow:0 0 0 14px rgba(232,160,32,0);}
+}
+.flash > .acc, .flash.acc{animation:flashRing 1.5s ease-out 1;border-radius:16px;}
+@media (prefers-reduced-motion: reduce){ .flash > .acc, .flash.acc{animation:none;} }
+
 /* ===== スクロールリビール ===== */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease), transform .7s var(--ease);}
 .reveal.in-view{opacity:1;transform:translateY(0);}
@@ -732,6 +741,7 @@ button{font-family:inherit;}
 
 
 
+
 <script src="auth-guard.js"></script>
 <script src="tabbar.js"></script>
 <script>
@@ -813,19 +823,55 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
 })();
 
 // ===================== ホームからのジャンプ（URLの #〜 で項目を開く） =====================
+// 例：manabu.html#n5 で開くと、⑤セミナーを開いた状態でそこまで移動する。
+//
+// 注意：auth-guard.js がログイン確認の間ページ全体を隠しているため、
+// その最中にスクロールしても効かない。表示されるのを待ってから動かす。
 (function openFromHash(){
+  if('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const NAV_H = 62;   // 上に貼り付く目次のぶんだけ余白をとる
+
+  function pageHidden(){
+    return getComputedStyle(document.documentElement).visibility === 'hidden';
+  }
+  function splashUp(){
+    const sp = document.getElementById('splash');
+    return sp && !sp.classList.contains('hide');
+  }
+  function scrollTo(el, smooth){
+    const y = el.getBoundingClientRect().top + window.scrollY - NAV_H;
+    window.scrollTo({ top: Math.max(0, y), behavior: smooth ? 'smooth' : 'auto' });
+  }
+
   function go(){
     const id = (location.hash || '').replace('#','');
     if(!id) return;
     const el = document.getElementById(id);
     if(!el) return;
+
+    // 先に開いて、隠れる演出も解除しておく（高さを確定させてから動かすため）
     const acc = el.classList.contains('acc') ? el : el.querySelector('.acc');
     openAcc(acc);
     el.classList.add('in-view');
     el.querySelectorAll('.reveal').forEach(x => x.classList.add('in-view'));
-    setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 650);
+
+    let tries = 0;
+    (function wait(){
+      // ログイン確認中／スプラッシュ表示中は、まだ動かしても意味がない
+      if((pageHidden() || splashUp()) && tries++ < 60){ setTimeout(wait, 100); return; }
+      scrollTo(el, false);
+      // 画像の読み込みでズレることがあるので、少し置いてもう一度合わせる
+      setTimeout(() => scrollTo(el, true), 320);
+      setTimeout(() => {
+        scrollTo(el, true);
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 1600);
+      }, 700);
+    })();
   }
+
   window.addEventListener('DOMContentLoaded', go);
+  window.addEventListener('load', go);
   window.addEventListener('hashchange', go);
 })();
 
