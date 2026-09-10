@@ -112,6 +112,8 @@ button{font-family:inherit;}
 .acc.open{border-color:rgba(232,160,32,.4);}
 .acc-head{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;}
 .acc-head:active{background:var(--card-hover);}
+.acc.static .acc-head{cursor:default;}
+.acc.static .acc-head:active{background:transparent;}
 .acc-title{flex:1;min-width:0;font-size:15.5px;font-weight:700;line-height:1.4;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .acc-arrow{flex-shrink:0;color:var(--text-dim);transition:transform .22s ease;}
 .acc.open .acc-arrow{transform:rotate(180deg);color:var(--orange);}
@@ -222,6 +224,21 @@ button{font-family:inherit;}
 .spl-pillars .acc-link:active{border-color:var(--spl);background:var(--spl-bg);}
 .spl-pillars .tbadge{color:var(--spl);border-color:rgba(217,138,61,.4);}
 .spl-pillars .tbadge.soon{color:var(--text-dim);border-color:var(--border-light);}
+/* 過去問・ノウハウ集をまとめるオレンジ枠 */
+.spl-group{
+  position:relative;margin-top:12px;padding:14px 12px 12px;border-radius:14px;
+  border:1px solid var(--orange);background:rgba(232,160,32,.05);
+  display:flex;flex-direction:column;gap:8px;
+}
+.spl-group-label{
+  font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);
+  letter-spacing:.1em;padding:0 2px 2px;
+}
+.spl-group .acc{background:rgba(0,0,0,.3);border-color:rgba(232,160,32,.3);border-radius:11px;}
+.spl-group .acc.open{border-color:var(--orange);}
+.spl-group .acc-head{padding:13px 14px;}
+.spl-group .acc-title{font-size:13.5px;}
+.spl-group .acc-body{padding:0 14px 14px;}
 
 /* advanced カード */
 .adv-list{display:flex;flex-direction:column;gap:10px;}
@@ -454,11 +471,11 @@ button{font-family:inherit;}
         <div class="acc-body">
           <p>各分野の実技セミナーです。開催情報はカレンダーをチェックしてください。当日使った資料は、それぞれの下から見られます。</p>
           <div class="subrows">
-            <div class="subrow"><div class="subrow-name">心臓</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-heart" data-doc-title="セミナー ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">肺・下肢静脈</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-lung-dvt" data-doc-title="セミナー ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">腹部</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-abdomen" data-doc-title="セミナー ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">血管穿刺</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-vascular-access" data-doc-title="セミナー ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
-            <div class="subrow"><div class="subrow-name">排泄ケア</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="seminar-excretion-care" data-doc-title="セミナー ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
+            <div class="subrow"><div class="subrow-name">心臓</div><div class="docbtn" data-doc="seminar-heart" data-doc-title="セミナー ｜ 心臓">📄 <span class="cnt zero">0</span></div></div>
+            <div class="subrow"><div class="subrow-name">肺・下肢静脈</div><div class="docbtn" data-doc="seminar-lung-dvt" data-doc-title="セミナー ｜ 肺・下肢静脈">📄 <span class="cnt zero">0</span></div></div>
+            <div class="subrow"><div class="subrow-name">腹部</div><div class="docbtn" data-doc="seminar-abdomen" data-doc-title="セミナー ｜ 腹部">📄 <span class="cnt zero">0</span></div></div>
+            <div class="subrow"><div class="subrow-name">血管穿刺</div><div class="docbtn" data-doc="seminar-vascular-access" data-doc-title="セミナー ｜ 血管穿刺">📄 <span class="cnt zero">0</span></div></div>
+            <div class="subrow"><div class="subrow-name">排泄ケア</div><div class="docbtn" data-doc="seminar-excretion-care" data-doc-title="セミナー ｜ 排泄ケア">📄 <span class="cnt zero">0</span></div></div>
           </div>
           <a class="acc-link" href="calendar.html"><span>📅 開催予定をカレンダーで見る</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -625,7 +642,7 @@ button{font-family:inherit;}
       </div>
 
       <div class="acc">
-        <div class="acc-head"><div class="acc-title">工学系学習 <span class="tbadge">SPLで実績あり</span></div>
+        <div class="acc-head"><div class="acc-title">工学系学習</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="acc-body">
@@ -651,34 +668,28 @@ button{font-family:inherit;}
         <div class="acc-body">
           <p>POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていきます。</p>
           <p><strong>症候別プロトコル（Googleドキュメント）と、SP台本フォルダ（ドライブ）</strong>は、どちらもメディカルラリーのページからひらけます。</p>
-          <a class="acc-link" href="medical-rally.html"><span>🚑 メディカルラリーのページへ</span>
+          <a class="acc-link" href="medical-rally.html"><span>🚑 POCUS特化メディカルラリーのページへ</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
       </div>
 
-      <div class="acc">
-        <div class="acc-head"><div class="acc-title">POCUS特化臨床推論 <span class="tbadge soon">構想中</span></div>
-          <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="acc-body">
-          <p>臨床推論勉強会の開催と、過去の良問ストック。全国展開アプリを制作予定です。</p>
-          <div class="steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text">事前共有：症候・検査所見をメンバーに予告</div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text">個人ワーク：各自で鑑別疾患を挙げる</div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text">解説：外来での思考フロー（内科外来マニュアル参照）を解説</div></div>
-            <div class="step"><div class="step-num">4</div><div class="step-text">グループ作問バトル：チームで作問・出題し合い、良問はアプリへ格納</div></div>
-          </div>
-          <div class="acc-note">問題ストックアプリ：開発予定</div>
-        </div>
+      <div class="acc static">
+        <div class="acc-head"><div class="acc-title">POCUS特化臨床推論 <span class="tbadge soon">構想中</span></div></div>
       </div>
+
+    </div>
+
+    <!-- 過去問・ノウハウ集：ドライブにまとめてあるもの -->
+    <div class="spl-group">
+      <div class="spl-group-label">SPLのストック ー ドライブにまとまっています</div>
 
       <div class="acc">
         <div class="acc-head"><div class="acc-title">過去問</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="acc-body">
-          <p>これまでのSPLで出題された問題のストックです。ドライブにまとめてあります。</p>
+          <p>これまでのSPLで出題された問題のストックです。</p>
           <a class="acc-link" id="spl-past-exam-link" href="#" target="_blank" rel="noopener"><span>📁 ドライブで過去問を見る</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -691,7 +702,7 @@ button{font-family:inherit;}
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="acc-body">
-          <p>出場した先輩が残してくれた、対策・コツ・反省。次に出る人が同じところでつまずかないように。ドライブにまとめてあります。</p>
+          <p>出場した先輩が残してくれた、対策・コツ・反省。次に出る人が同じところでつまずかないように。</p>
           <a class="acc-link" id="spl-knowhow-link" href="#" target="_blank" rel="noopener"><span>📁 ドライブでノウハウ集を見る</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -711,8 +722,8 @@ button{font-family:inherit;}
       <div class="acc-body">
         <p>基本の腹部から、一歩踏み込んだ内容です。</p>
         <div class="subrows">
-          <div class="subrow"><div class="subrow-name">膵臓</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">6アプローチ</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">膵臓</div><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">6アプローチ</div><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ">📄 <span class="cnt zero">0</span></div></div>
         </div>
       </div>
     </div>
@@ -733,11 +744,11 @@ button{font-family:inherit;}
       </div>
       <div class="acc-body">
         <div class="subrows" style="margin-top:2px;">
-          <div class="subrow"><div class="subrow-name">肩</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">肘</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">膝</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">ゼロイチサイン</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン">📄 <span class="cnt zero">0</span></div></div>
-          <div class="subrow"><div class="subrow-name">乳児・新生児の股関節エコー</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">肩</div><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">肘</div><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">膝</div><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">ゼロイチサイン</div><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">乳児・新生児の股関節エコー</div><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー">📄 <span class="cnt zero">0</span></div></div>
         </div>
       </div>
     </div>
@@ -779,7 +790,7 @@ button{font-family:inherit;}
       <div class="acc-body">
         <p>外傷初期診療をはじめとした救急領域。</p>
         <div class="subrows">
-          <div class="subrow"><div class="subrow-name">JATEC</div><span class="subrow-go">準備中</span><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急 ｜ JATEC">📄 <span class="cnt zero">0</span></div></div>
+          <div class="subrow"><div class="subrow-name">JATEC</div><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急 ｜ JATEC">📄 <span class="cnt zero">0</span></div></div>
         </div>
       </div>
     </div>
