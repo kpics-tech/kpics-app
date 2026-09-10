@@ -86,10 +86,15 @@ button{font-family:inherit;}
 
 /* ===== スティッキー目次 ===== */
 .snav{
-  position:sticky;top:0;z-index:60;
+  position:sticky;top:env(safe-area-inset-top);z-index:60;
   background:rgba(12,12,12,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
-  padding-top:env(safe-area-inset-top);
+}
+/* 画面上端（時計や電波が出ているあたり）を隠す帯。
+   目次が貼り付いた時に、その上を中身が流れて見えないようにする */
+.status-shade{
+  position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);
+  background:var(--black);z-index:70;pointer-events:none;
 }
 .snav-in{max-width:640px;margin:0 auto;display:flex;gap:6px;padding:8px 16px;overflow-x:auto;scrollbar-width:none;}
 .snav-in::-webkit-scrollbar{display:none;}
@@ -128,7 +133,7 @@ button{font-family:inherit;}
   content:"";position:absolute;left:17px;top:14px;bottom:8px;width:1px;
   background:linear-gradient(to bottom, var(--orange), rgba(232,160,32,.35) 60%, transparent);
 }
-.tnode{position:relative;margin-bottom:10px;scroll-margin-top:64px;}
+.tnode{position:relative;margin-bottom:10px;scroll-margin-top:var(--nav-off, 76px);}
 .tnode::before{
   content:attr(data-n);position:absolute;left:-48px;top:11px;width:36px;height:36px;border-radius:50%;
   background:var(--black);border:1px solid rgba(232,160,32,.55);box-shadow:0 0 0 5px var(--black);
@@ -140,7 +145,7 @@ button{font-family:inherit;}
 /* ===== アコーディオンカード ===== */
 .acc{
   background:linear-gradient(180deg, #1C1C1C, #171717);
-  border:1px solid var(--border);border-radius:16px;overflow:hidden;scroll-margin-top:64px;
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;scroll-margin-top:var(--nav-off, 76px);
   transition:border-color .2s, box-shadow .2s;
 }
 .acc.open{border-color:rgba(232,160,32,.45);box-shadow:0 14px 34px rgba(0,0,0,.4), inset 0 0 0 1px rgba(232,160,32,.06);}
@@ -213,7 +218,7 @@ button{font-family:inherit;}
 
 /* ===== 独立コンテンツ（解剖） ===== */
 .photo-card{
-  position:relative;margin:26px 0 0;border-radius:20px;overflow:hidden;scroll-margin-top:64px;
+  position:relative;margin:26px 0 0;border-radius:20px;overflow:hidden;scroll-margin-top:var(--nav-off, 76px);
   border:1px solid rgba(232,160,32,.35);
   background:radial-gradient(ellipse 110% 90% at 12% 0%, rgba(232,160,32,.16), transparent 62%), #151312;
   box-shadow:0 0 34px rgba(232,160,32,.07);
@@ -223,7 +228,7 @@ button{font-family:inherit;}
 
 /* ===== 帯（ADVANCED） ===== */
 .band{
-  position:relative;margin:36px -20px 4px;padding:42px 20px 34px;overflow:hidden;scroll-margin-top:52px;
+  position:relative;margin:36px -20px 4px;padding:42px 20px 34px;overflow:hidden;scroll-margin-top:var(--nav-off, 76px);
   background:radial-gradient(ellipse 80% 130% at 50% 118%, rgba(232,160,32,.17), transparent 62%);
   border-top:1px solid var(--border);border-bottom:1px solid var(--border);
 }
@@ -236,7 +241,7 @@ button{font-family:inherit;}
 
 /* ===== SPL ===== */
 .spl-zone{
-  position:relative;margin:18px 0 0;padding:22px 16px 16px;border-radius:20px;overflow:hidden;scroll-margin-top:64px;
+  position:relative;margin:18px 0 0;padding:22px 16px 16px;border-radius:20px;overflow:hidden;scroll-margin-top:var(--nav-off, 76px);
   background:
     radial-gradient(ellipse 90% 70% at 92% 4%, rgba(217,138,61,.22), transparent 60%),
     radial-gradient(ellipse 120% 100% at 20% 0%, var(--spl-bg), transparent 72%),
@@ -272,7 +277,7 @@ button{font-family:inherit;}
 
 /* ===== 呼びかけ ===== */
 .invite-zone{
-  position:relative;margin:36px 0 0;padding:30px 22px 26px;border-radius:22px;overflow:hidden;scroll-margin-top:64px;
+  position:relative;margin:36px 0 0;padding:30px 22px 26px;border-radius:22px;overflow:hidden;scroll-margin-top:var(--nav-off, 76px);
   background:radial-gradient(ellipse 120% 90% at 50% 0%, rgba(232,160,32,.14), transparent 68%), var(--card);
   border:1px solid var(--border);
 }
@@ -375,6 +380,7 @@ button{font-family:inherit;}
 </head>
 <body>
 
+<div class="status-shade" aria-hidden="true"></div>
 <div id="splash"><img class="splash-logo-img" src="assets/logo-icon-dark.png" alt="K-PICS"></div>
 
 <header class="top-header">
@@ -768,6 +774,7 @@ button{font-family:inherit;}
 
 
 
+
 <script src="auth-guard.js"></script>
 <script src="tabbar.js"></script>
 <script>
@@ -827,7 +834,7 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
       if(willOpen){
         setTimeout(() => {
           const r = head.getBoundingClientRect();
-          if(r.top < 60) acc.scrollIntoView({behavior:'smooth', block:'start'});
+          if(r.top < navOffset() - 20) acc.scrollIntoView({behavior:'smooth', block:'start'});
         }, 80);
       }
     });
@@ -843,9 +850,23 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
 //
 // 注意：auth-guard.js がログイン確認の間ページ全体を隠しているため、
 // その最中にスクロールしても効かない。表示されるのを待ってから動かす。
+// 目次が貼り付く位置＋高さ＋ゆとり。ジャンプ先を「目次の下に余裕をもって」置くための値。
+function navOffset(){
+  const nav = document.querySelector('.snav');
+  if(!nav) return 76;
+  const stuckTop = parseFloat(getComputedStyle(nav).top) || 0;   // ノッチぶん
+  return Math.round(stuckTop + nav.getBoundingClientRect().height + 26);
+}
+(function syncNavOffset(){
+  function apply(){ document.documentElement.style.setProperty('--nav-off', navOffset() + 'px'); }
+  apply();
+  window.addEventListener('load', apply);
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', function(){ setTimeout(apply, 250); });
+})();
+
 (function openFromHash(){
   if('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  const NAV_H = 62;   // 上に貼り付く目次のぶんだけ余白をとる
 
   function pageHidden(){
     return getComputedStyle(document.documentElement).visibility === 'hidden';
@@ -855,7 +876,7 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
     return sp && !sp.classList.contains('hide');
   }
   function scrollTo(el, smooth){
-    const y = el.getBoundingClientRect().top + window.scrollY - NAV_H;
+    const y = el.getBoundingClientRect().top + window.scrollY - navOffset();
     window.scrollTo({ top: Math.max(0, y), behavior: smooth ? 'smooth' : 'auto' });
   }
 
@@ -876,13 +897,15 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
       // ログイン確認中／スプラッシュ表示中は、まだ動かしても意味がない
       if((pageHidden() || splashUp()) && tries++ < 60){ setTimeout(wait, 100); return; }
       scrollTo(el, false);
-      // 画像の読み込みでズレることがあるので、少し置いてもう一度合わせる
-      setTimeout(() => scrollTo(el, true), 320);
+      // 開く動き・画像・フォントの読み込みで位置がズレるので、何度か合わせ直す
+      [340, 720, 1200].forEach(ms => setTimeout(() => scrollTo(el, true), ms));
+      if(document.fonts && document.fonts.ready){
+        document.fonts.ready.then(() => setTimeout(() => scrollTo(el, true), 60));
+      }
       setTimeout(() => {
-        scrollTo(el, true);
         el.classList.add('flash');
         setTimeout(() => el.classList.remove('flash'), 1600);
-      }, 700);
+      }, 760);
     })();
   }
 
@@ -919,7 +942,8 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
   let current = null;
   function update(){
     let best = secs[0].id;
-    for(const s of secs){ if(s.getBoundingClientRect().top <= 130) best = s.id; }
+    const line = navOffset() + 24;
+    for(const s of secs){ if(s.getBoundingClientRect().top <= line) best = s.id; }
     if(best !== current){ current = best; setActive(best); }
   }
   window.addEventListener('scroll', update, {passive:true});
