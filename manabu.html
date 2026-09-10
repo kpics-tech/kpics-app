@@ -628,7 +628,7 @@ button{font-family:inherit;}
     <div class="spl-title-ja">Student POCUS League</div>
     <div class="spl-pillars">
 
-      <div class="acc">
+      <div class="acc" id="spl-ematching">
         <div class="acc-head"><div class="acc-title">絵合わせアプリ</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -641,7 +641,7 @@ button{font-family:inherit;}
         </div>
       </div>
 
-      <div class="acc">
+      <div class="acc" id="spl-engineering">
         <div class="acc-head"><div class="acc-title">工学系学習</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -661,7 +661,7 @@ button{font-family:inherit;}
         </div>
       </div>
 
-      <div class="acc">
+      <div class="acc" id="spl-rally">
         <div class="acc-head"><div class="acc-title">POCUS特化メディカルラリー</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -684,7 +684,7 @@ button{font-family:inherit;}
     <div class="spl-group">
       <div class="spl-group-label">SPLのストック ー ドライブにまとまっています</div>
 
-      <div class="acc">
+      <div class="acc" id="spl-past">
         <div class="acc-head"><div class="acc-title">過去問</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -697,7 +697,7 @@ button{font-family:inherit;}
         </div>
       </div>
 
-      <div class="acc">
+      <div class="acc" id="spl-knowhow">
         <div class="acc-head"><div class="acc-title">先輩たちのノウハウ集</div>
           <svg class="acc-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -1173,6 +1173,25 @@ const SPL_KNOWHOW_DRIVE_URL   = 'https://drive.google.com/drive/folders/17ybVoBF
     if(url){ link.href = url; }
     else   { link.style.display = 'none'; note.style.display = 'block'; }
   });
+})();
+
+// ===================== ホームからのジャンプ（URLの #〜 で項目を開く） =====================
+// 例：manabu.html#n4 で開くと、④予習教材を開いた状態でそこまでスクロールする。
+(function openFromHash(){
+  function go(){
+    const id = (location.hash || '').replace('#','');
+    if(!id) return;
+    const el = document.getElementById(id);
+    if(!el) return;
+    const acc = el.classList.contains('acc') ? el : el.querySelector('.acc');
+    if(acc && acc.querySelector('.acc-body')) acc.classList.add('open');
+    // 浮き上がり演出の対象なら、先に表示状態にしておく
+    el.classList.add('in-view');
+    el.querySelectorAll('.reveal').forEach(x => x.classList.add('in-view'));
+    setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 650);
+  }
+  window.addEventListener('DOMContentLoaded', go);
+  window.addEventListener('hashchange', go);
 })();
 
 // ===================== アコーディオン（見出しタップで開閉） =====================

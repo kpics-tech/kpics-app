@@ -38,12 +38,13 @@
   --text:#F0F0F0;
   --text-muted:#888;
   --text-dim:#555;
+  --spl:#D98A3D;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--black);}
+html,body{background:var(--black);height:100%;overflow:hidden;}
 body{
-  color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;
-  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  color:var(--text);font-family:"Noto Sans JP",sans-serif;
+  -webkit-tap-highlight-color:transparent;
 }
 .bebas{font-family:"Bebas Neue",sans-serif;}
 .mono{font-family:"JetBrains Mono",monospace;}
@@ -56,6 +57,8 @@ button{font-family:inherit;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
 @keyframes pulse-ring{0%{transform:scale(.8);opacity:.6;}100%{transform:scale(2.2);opacity:0;}}
+@keyframes sheetUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes tileIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 .fade-up{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both;}
 .fade-in{animation:fadeIn .4s ease both;}
 
@@ -80,10 +83,10 @@ button{font-family:inherit;}
 #auth-screen{
   display:none;position:fixed;inset:0;background:var(--black);
   z-index:500;align-items:center;justify-content:center;padding:20px;
-  overflow-y:auto;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #auth-screen.active{display:flex;}
-.auth-wrap{width:100%;max-width:380px;}
+.auth-wrap{width:100%;max-width:380px;margin:auto;}
 .auth-hero{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:26px;text-align:center;}
 .auth-hero img{width:64px;}
 .auth-hero .name{font-family:"Bebas Neue",sans-serif;font-size:30px;letter-spacing:.08em;color:var(--text);}
@@ -135,13 +138,32 @@ button{font-family:inherit;}
 .auth-back-link:hover{color:var(--text-muted);}
 .auth-box-desc{font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:6px;}
 
-/* ===================== HOME ===================== */
-#home-screen{display:none;min-height:100vh;}
-#home-screen.active{display:block;}
+/* ===================== HOME（1画面・スクロールなし） ===================== */
+#home-screen{display:none;}
+#home-screen.active{
+  display:flex;flex-direction:column;
+  height:100vh;height:100dvh;overflow:hidden;position:relative;
+}
+
+/* うっすら敷くプローブ写真 */
+.home-bg{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;
+}
+.home-bg img{
+  position:absolute;right:-12%;bottom:-6%;width:88%;max-width:560px;height:auto;
+  opacity:.13;filter:saturate(1.1);
+  -webkit-mask-image:radial-gradient(ellipse at 70% 70%, #000 30%, transparent 72%);
+  mask-image:radial-gradient(ellipse at 70% 70%, #000 30%, transparent 72%);
+}
+.home-bg-glow{
+  position:absolute;left:50%;top:-30%;width:120%;max-width:900px;aspect-ratio:1.4;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 30%, rgba(232,160,32,.16), transparent 62%);
+}
 
 .home-header{
-  position:relative;padding:calc(22px + env(safe-area-inset-top)) 20px 28px;overflow:hidden;
-  background:radial-gradient(ellipse 120% 100% at 50% -20%, rgba(232,160,32,.16), transparent 60%);
+  position:relative;z-index:1;flex-shrink:0;
+  padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
   border-bottom:1px solid var(--border);
 }
 .home-header-top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;gap:8px;}
@@ -161,10 +183,300 @@ button{font-family:inherit;}
   min-width:15px;height:15px;border-radius:50%;padding:0 3px;
   display:flex;align-items:center;justify-content:center;
 }
-.announce-item{
-  background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:12px 14px;margin-bottom:8px;
+.logout-btn{
+  background:transparent;border:1px solid var(--border-light);color:var(--text-muted);
+  font-size:10px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+  padding:0;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
 }
+.logout-btn:hover{border-color:var(--orange);color:var(--orange);}
+.logout-btn-icon{display:block;width:15px;height:15px;}
+.logout-btn-text{display:none;}
+@media (min-width:640px){
+  .logout-btn{padding:7px 13px;width:auto;height:auto;border-radius:6px;gap:6px;font-size:11px;}
+  .logout-btn-text{display:inline;}
+  .logout-btn-icon{width:13px;height:13px;}
+}
+
+.greet{max-width:640px;margin:12px auto 0;display:flex;align-items:center;gap:11px;}
+.greet-avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--orange);color:var(--black);
+  display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;
+  font-size:18px;flex-shrink:0;box-shadow:0 4px 16px rgba(232,160,32,.3);
+}
+.greet-name{font-size:14.5px;font-weight:700;line-height:1.3;}
+.greet-sub{font-size:11px;color:var(--text-muted);margin-top:1px;font-family:"JetBrains Mono",monospace;letter-spacing:.02em;}
+
+/* ホーム本体：ヘッダーとタブバーの間をきっちり埋める */
+.home-body{
+  position:relative;z-index:1;flex:1;min-height:0;
+  display:flex;flex-direction:column;
+  width:100%;max-width:640px;margin:0 auto;
+  padding:12px 16px calc(66px + env(safe-area-inset-bottom));
+}
+
+/* ホーム画面に追加バナー（細い1行） */
+.install-banner{
+  display:none;align-items:center;gap:10px;flex-shrink:0;
+  background:var(--card);border:1px solid rgba(232,160,32,.3);border-radius:11px;
+  padding:9px 12px;margin-bottom:10px;cursor:pointer;
+}
+.install-banner-icon{font-size:15px;line-height:1;flex-shrink:0;}
+.install-banner-body{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.install-banner-title{font-size:11.5px;font-weight:700;white-space:nowrap;}
+.install-banner-desc{font-size:10.5px;color:var(--text-muted);}
+.install-banner-close{background:transparent;border:none;color:var(--text-dim);font-size:13px;cursor:pointer;padding:2px 4px;flex-shrink:0;}
+
+/* ===== タイルグリッド ===== */
+.home-grid{
+  flex:1;min-height:0;
+  display:grid;grid-template-columns:1fr 1fr;
+  grid-template-rows:1.25fr 1fr .98fr .72fr;
+  gap:10px;
+}
+.tile{
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--card);border:1px solid var(--border);border-radius:17px;
+  padding:13px 14px;text-decoration:none;color:var(--text);overflow:hidden;cursor:pointer;
+  min-height:0;min-width:0;
+  transition:transform .16s cubic-bezier(.16,1,.3,1), border-color .16s, background .16s;
+  animation:tileIn .55s cubic-bezier(.16,1,.3,1) both;
+}
+.tile:nth-child(1){animation-delay:.04s;} .tile:nth-child(2){animation-delay:.09s;}
+.tile:nth-child(3){animation-delay:.14s;} .tile:nth-child(4){animation-delay:.19s;}
+.tile:nth-child(5){animation-delay:.24s;} .tile:nth-child(6){animation-delay:.29s;}
+@media (prefers-reduced-motion:reduce){ .tile{animation:none;} }
+.tile:hover{background:var(--card-hover);border-color:var(--border-light);}
+.tile:active{transform:scale(.965);border-color:rgba(232,160,32,.55);}
+.tile.wide{grid-column:1 / -1;}
+.tile-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-shrink:0;}
+.tile-icon{
+  width:34px;height:34px;border-radius:10px;flex-shrink:0;
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.22);
+  display:flex;align-items:center;justify-content:center;color:var(--orange-light);
+}
+.tile-icon.solid{background:var(--orange);color:var(--black);border-color:var(--orange);}
+.tile-icon svg{width:17px;height:17px;}
+.tile-tag{
+  font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.04em;color:var(--text-dim);
+  border:1px solid var(--border-light);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0;
+}
+.tile-body{min-width:0;padding-top:8px;padding-right:18px;}
+.tile-title{font-size:13.5px;font-weight:700;line-height:1.3;}
+.tile-desc{font-size:10.5px;color:var(--text-muted);margin-top:3px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tile-chev{position:absolute;right:12px;bottom:14px;color:var(--text-dim);transition:transform .18s,color .18s;}
+.tile:hover .tile-chev{transform:translateX(2px);color:var(--orange);}
+
+/* 横並びの小タイル（最下段） */
+.tile.row{flex-direction:row;align-items:center;gap:11px;justify-content:flex-start;}
+.tile.row .tile-icon{width:32px;height:32px;}
+.tile.row .tile-body{flex:1;min-width:0;padding:0;}
+.tile.row .tile-title{font-size:12.5px;}
+.tile.row .tile-desc{margin-top:2px;font-size:10px;}
+.tile.row .tile-chev{position:static;flex-shrink:0;}
+
+/* 目玉タイル：INPUT */
+.tile.hero{
+  background:
+    radial-gradient(ellipse 90% 80% at 0% 0%, rgba(232,160,32,.22), transparent 60%),
+    linear-gradient(160deg, #1E1708, var(--card) 70%);
+  border-color:rgba(232,160,32,.4);
+  box-shadow:0 0 0 1px rgba(232,160,32,.08) inset, 0 12px 36px rgba(232,160,32,.08);
+}
+.tile-kicker{
+  font-family:"Bebas Neue",sans-serif;font-size:32px;letter-spacing:.06em;line-height:.95;
+  color:#fff;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+}
+.tile-kicker small{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.14em;color:var(--orange);}
+.tile-sub{font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.4;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;overflow:hidden;max-height:54px;padding-right:22px;}
+.chips.oneline{
+  flex-wrap:nowrap;max-height:26px;padding-right:0;
+  -webkit-mask-image:linear-gradient(to right, #000 82%, transparent 100%);
+  mask-image:linear-gradient(to right, #000 82%, transparent 100%);
+}
+.chip{
+  font-size:10px;line-height:1;padding:5px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.1);color:var(--text-muted);background:rgba(0,0,0,.28);
+}
+.tile.hero .chip{border-color:rgba(232,160,32,.25);color:#D9C39A;}
+.tile.hero .tile-chev{bottom:16px;}
+.tile-wm{
+  position:absolute;right:-6%;top:50%;width:46%;max-width:150px;height:auto;aspect-ratio:1;
+  transform:translateY(-46%) rotate(-8deg);color:var(--orange);opacity:.07;pointer-events:none;
+}
+.tile.adv .tile-wm{color:var(--spl);opacity:.09;right:-4%;}
+
+/* 応用タイル：ADVANCED */
+.tile.adv{
+  background:
+    radial-gradient(ellipse 70% 120% at 100% 0%, rgba(217,138,61,.24), transparent 60%),
+    #131313;
+  border-color:rgba(217,138,61,.45);
+}
+.tile.adv .tile-kicker{font-size:28px;}
+.tile.adv .tile-kicker small{color:var(--spl);}
+.tile.adv .chip{border-color:rgba(217,138,61,.28);color:#CFAF8A;}
+
+/* 背の低い画面（iPhone SE など）：詰めて1画面に収める */
+@media (max-height:720px){
+  .home-header{padding-bottom:9px;}
+  .greet{margin-top:9px;}
+  .greet-avatar{width:32px;height:32px;font-size:15px;}
+  .greet-name{font-size:13.5px;}
+  .greet-sub{font-size:10px;}
+  .home-body{padding-top:9px;}
+  .install-banner{padding:7px 11px;margin-bottom:8px;}
+  .install-banner-body{flex-wrap:nowrap;overflow:hidden;}
+  .install-banner-desc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .home-grid{gap:8px;grid-template-rows:1.12fr 1fr .86fr .66fr;}
+  .tile{padding:10px 12px;border-radius:15px;}
+  .tile-icon{width:28px;height:28px;border-radius:8px;}
+  .tile-icon svg{width:15px;height:15px;}
+  .tile-body{padding-top:5px;}
+  .tile-title{font-size:12.5px;}
+  .tile-desc{font-size:10px;margin-top:2px;}
+  .tile-kicker{font-size:26px;}
+  .tile.adv .tile-kicker{font-size:23px;}
+  .tile-sub{font-size:10px;margin-top:4px;}
+  .chips{flex-wrap:nowrap;max-height:24px;margin-top:6px;padding-right:0;
+    -webkit-mask-image:linear-gradient(to right, #000 82%, transparent 100%);
+    mask-image:linear-gradient(to right, #000 82%, transparent 100%);}
+  .chip{font-size:9.5px;padding:4px 7px;}
+  .tile.hero .tile-chev{display:none;}
+  .tile.row{gap:9px;}
+  .tile.row .tile-icon{width:28px;height:28px;}
+  .tile.row .tile-desc{display:none;}
+  .tile.row .tile-title{font-size:12px;}
+}
+
+/* ===================== ボトムシート（INPUT／ADVANCED／アプリについて） ===================== */
+.sheet-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  z-index:650;display:none;align-items:flex-end;justify-content:center;
+}
+.sheet-overlay.open{display:flex;}
+.sheet{
+  width:100%;max-width:560px;max-height:86vh;max-height:86dvh;
+  background:var(--dark);border:1px solid var(--border);border-bottom:none;border-radius:22px 22px 0 0;
+  display:flex;flex-direction:column;animation:sheetUp .34s cubic-bezier(.16,1,.3,1) both;
+}
+@media (min-width:560px){
+  .sheet-overlay{align-items:center;padding:20px;}
+  .sheet{border-radius:18px;border-bottom:1px solid var(--border);}
+}
+.sheet-grab{width:38px;height:4px;border-radius:4px;background:var(--border-light);margin:10px auto 0;flex-shrink:0;}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sheet-kicker{font-family:"Bebas Neue",sans-serif;font-size:26px;letter-spacing:.05em;line-height:1;}
+.sheet-kicker span{color:var(--orange);}
+.sheet-sub{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.5;}
+.sheet-close{
+  width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);
+  color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;
+}
+.sheet-body{padding:12px 16px calc(20px + env(safe-area-inset-bottom));overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sheet-row{
+  display:flex;align-items:center;gap:12px;padding:12px 13px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:7px;
+  text-decoration:none;color:var(--text);cursor:pointer;transition:border-color .15s, background .15s;
+}
+.sheet-row:hover{background:var(--card-hover);}
+.sheet-row:active{border-color:var(--orange);background:var(--card-hover);}
+.sheet-row-num{
+  font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--orange);
+  width:22px;height:22px;border-radius:6px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sheet-row-ic{
+  width:30px;height:30px;border-radius:8px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.2);
+  display:flex;align-items:center;justify-content:center;color:var(--orange-light);flex-shrink:0;
+}
+.sheet-row-ic svg{width:15px;height:15px;}
+.sheet-row-body{flex:1;min-width:0;}
+.sheet-row-title{font-size:13.5px;font-weight:700;line-height:1.35;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.sheet-row-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;line-height:1.45;}
+.sheet-row-ext{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--orange);border:1px solid rgba(232,160,32,.3);border-radius:4px;padding:1px 5px;}
+.sheet-row-chev{color:var(--text-dim);flex-shrink:0;}
+.sheet-divider{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;color:var(--text-dim);margin:12px 4px 8px;}
+.sheet-row.accent{border-color:rgba(217,138,61,.45);background:linear-gradient(135deg, rgba(217,138,61,.12), var(--card) 60%);}
+.sheet-row.accent .sheet-row-ic{background:rgba(217,138,61,.12);border-color:rgba(217,138,61,.35);color:var(--spl);}
+
+/* ===================== 「このアプリの目的」モーダル（DNA写真つき） ===================== */
+.purpose-hero{position:relative;height:190px;overflow:hidden;flex-shrink:0;border-radius:18px 18px 0 0;}
+.purpose-hero img{
+  position:absolute;left:50%;top:50%;width:150%;max-width:none;height:auto;
+  transform:translate(-50%,-50%) rotate(-12deg);opacity:.9;
+}
+.purpose-hero-tint{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, rgba(232,160,32,.55), rgba(184,122,16,.55));
+  mix-blend-mode:color;
+}
+.purpose-hero-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, rgba(12,12,12,.35) 0%, rgba(12,12,12,.15) 40%, var(--dark) 100%);
+}
+.purpose-hero-copy{position:absolute;left:22px;right:22px;bottom:16px;}
+.purpose-eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--orange-light);text-shadow:0 1px 8px rgba(0,0,0,.9);}
+.purpose-title{font-weight:900;font-size:26px;line-height:1.3;margin-top:6px;text-shadow:0 2px 18px rgba(0,0,0,.8);}
+.purpose-title .accent{color:var(--orange);}
+.purpose-body{padding:18px 22px 28px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.purpose-lead{font-size:13px;color:var(--text-muted);line-height:1.95;}
+.purpose-lead strong{color:var(--text);}
+.cycle-grid{display:flex;flex-direction:column;margin-top:20px;position:relative;}
+.cycle-item{
+  display:flex;align-items:flex-start;gap:14px;background:var(--card);
+  border:1px solid var(--border);border-radius:12px;padding:14px 15px;position:relative;
+}
+.cycle-item + .cycle-item{margin-top:20px;}
+.cycle-item + .cycle-item::before{
+  content:"";position:absolute;left:30px;top:-21px;width:2px;height:20px;
+  background:linear-gradient(to bottom, transparent, var(--orange));opacity:.55;
+}
+.cycle-item:nth-child(even){margin-left:14px;}
+.cycle-item:nth-child(odd){margin-right:14px;}
+.cycle-num{
+  width:30px;height:30px;border-radius:50%;background:var(--orange-bg);
+  border:1px solid rgba(232,160,32,.35);color:var(--orange);
+  font-family:"Bebas Neue",sans-serif;font-size:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.cycle-body{flex:1;}
+.cycle-title{font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.cycle-desc{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
+.cycle-loop{margin-top:18px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;}
+.purpose-note{
+  margin-top:22px;background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.3);border-radius:10px;
+  color:var(--text);font-size:12.5px;line-height:1.9;padding:15px 16px;text-align:center;
+}
+
+/* ===================== 共通モーダル（お知らせ／部員として／目的） ===================== */
+.guide-modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:700;
+  align-items:flex-end;justify-content:center;
+}
+.guide-modal-overlay.open{display:flex;}
+@media (min-width:560px){ .guide-modal-overlay{align-items:center;padding:20px;} }
+.guide-modal-box{
+  background:var(--dark);border:1px solid var(--border);border-radius:18px 18px 0 0;
+  width:100%;max-width:520px;max-height:90vh;max-height:90dvh;display:flex;flex-direction:column;overflow:hidden;
+  animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both;
+}
+@media (min-width:560px){ .guide-modal-box{border-radius:16px;} }
+.guide-modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.guide-modal-title{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;}
+.guide-modal-close{
+  width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);
+  color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;
+}
+.guide-modal-close.float{position:absolute;top:14px;right:14px;z-index:2;background:rgba(12,12,12,.7);backdrop-filter:blur(6px);}
+.guide-modal-body{padding:20px 20px 28px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+
+/* お知らせ */
+.announce-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
 .announce-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .announce-item-author{font-size:11.5px;font-weight:700;color:var(--orange-light);}
 .announce-item-time{font-size:10px;color:var(--text-dim);}
@@ -178,353 +490,18 @@ button{font-family:inherit;}
   resize:vertical;min-height:64px;outline:none;
 }
 .announce-textarea:focus{border-color:var(--orange);}
-.announce-post-btn{
-  margin-top:8px;padding:9px 16px;background:var(--orange);color:var(--black);
-  border:none;border-radius:7px;font-weight:700;font-size:12.5px;cursor:pointer;
-}
+.announce-post-btn{margin-top:8px;padding:9px 16px;background:var(--orange);color:var(--black);border:none;border-radius:7px;font-weight:700;font-size:12.5px;cursor:pointer;}
 .announce-empty{color:var(--text-muted);font-size:12.5px;padding:20px 0;text-align:center;}
-.logout-btn{
-  background:transparent;border:1px solid var(--border-light);color:var(--text-muted);
-  font-size:10px;cursor:pointer;transition:all .15s;
-  white-space:nowrap;flex-shrink:0;
-  padding:0;width:32px;height:32px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-}
-.logout-btn:hover{border-color:var(--orange);color:var(--orange);}
-.logout-btn-icon{display:block;width:15px;height:15px;}
-.logout-btn-text{display:none;}
-@media (min-width:640px){
-  .logout-btn{
-    padding:7px 13px;width:auto;height:auto;border-radius:6px;
-    gap:6px;font-size:11px;
-  }
-  .logout-btn-text{display:inline;}
-  .logout-btn-icon{width:13px;height:13px;}
-}
 
-.greet{max-width:640px;margin:24px auto 0;display:flex;align-items:center;gap:14px;}
-.greet-avatar{
-  width:50px;height:50px;border-radius:50%;background:var(--orange);color:var(--black);
-  display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;
-  font-size:22px;flex-shrink:0;box-shadow:0 4px 16px rgba(232,160,32,.3);
-}
-.greet-name{font-size:17px;font-weight:700;line-height:1.3;}
-.greet-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
-
-.home-main{max-width:640px;margin:0 auto;padding:26px 20px 8px;}
-
-.sec-label{
-  font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--orange);
-  text-transform:uppercase;margin:24px 0 10px;display:flex;align-items:center;gap:8px;
-}
-.sec-label:first-child{margin-top:0;}
-.sec-label::after{content:"";flex:1;height:1px;background:var(--border);}
-
-.menu-group{display:flex;flex-direction:column;gap:6px;}
-.menu-card{
-  display:flex;align-items:center;gap:12px;background:var(--card);
-  border:1px solid var(--border);border-radius:12px;padding:12px 14px;
-  cursor:pointer;text-decoration:none;color:var(--text);transition:all .18s;
-  position:relative;overflow:hidden;
-}
-.menu-card:hover{background:var(--card-hover);border-color:var(--border-light);transform:translateY(-1px);}
-.menu-card:active{transform:translateY(0) scale(.97);background:var(--card-hover);}
-.menu-card.disabled{cursor:default;opacity:.55;pointer-events:none;}
-.menu-card.disabled:hover{background:var(--card);transform:none;border-color:var(--border);}
-.badge-published{color:#7fe0a0;background:rgba(80,200,120,.12);border-color:rgba(80,200,120,.4);}
-.core-publish-toggle{
-  display:flex;align-items:center;gap:8px;margin-top:6px;padding:9px 12px;
-  background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:8px;
-  font-size:11px;color:var(--orange-light);cursor:pointer;
-}
-.core-publish-toggle input{accent-color:var(--orange);width:15px;height:15px;flex-shrink:0;}
-.menu-card.primary{border-color:rgba(232,160,32,.35);background:linear-gradient(135deg, rgba(232,160,32,.1), var(--card) 60%);position:relative;overflow:hidden;}
-.menu-card-watermark{position:absolute;right:-16px;top:-16px;width:78px;height:78px;opacity:.12;pointer-events:none;}
-.menu-icon{
-  width:36px;height:36px;border-radius:9px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  background:var(--orange-bg);color:var(--orange-light);
-}
-.menu-icon.solid{background:var(--orange);color:var(--black);}
-.menu-icon.lg{width:44px;height:44px;border-radius:11px;}
-.menu-body{flex:1;min-width:0;}
-.menu-title{font-size:13.5px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.menu-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.35;}
-.menu-chevron{color:var(--text-dim);flex-shrink:0;transition:transform .18s;}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.quick-tile{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:12px 14px;text-decoration:none;color:var(--text);transition:all .18s;
-  position:relative;overflow:hidden;display:block;
-}
-.quick-tile:hover{background:var(--card-hover);border-color:var(--border-light);transform:translateY(-1px);}
-.quick-tile:active{transform:translateY(0) scale(.97);background:var(--card-hover);}
-.quick-tile-icon{
-  width:32px;height:32px;border-radius:8px;background:var(--orange-bg);color:var(--orange-light);
-  display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:8px;
-}
-.quick-tile-title{font-size:12.5px;font-weight:700;line-height:1.3;}
-.quick-tile-desc{font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.3;}
-.quick-tile-ext{position:absolute;top:10px;right:10px;font-size:9px;color:var(--text-dim);}
-.menu-card:hover .menu-chevron{transform:translateX(2px);color:var(--orange);}
-.badge-soon{
-  font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--text-dim);
-  background:var(--black);border:1px solid var(--border-light);padding:2px 6px;
-  border-radius:4px;font-family:"JetBrains Mono",monospace;
-}
-.badge-ext{
-  font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.25);padding:2px 6px;border-radius:4px;
-  font-family:"JetBrains Mono",monospace;letter-spacing:.02em;
-}
-
-/* ===== 写真をうっすら敷くゾーン（クイックアクセス内） ===== */
-.qa-photo{
-  position:relative;margin:14px -20px 0;padding:20px 20px 16px;overflow:hidden;
-}
-.qa-photo-img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  opacity:.3;pointer-events:none;
-}
-/* スクロールで横に流れる写真（救急車の駆け抜け演出用） */
-.qa-photo-img.qa-pan{
-  width:155%;max-width:none;right:auto;
-  will-change:transform;
-}
-.qa-photo-shade{
-  position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to bottom, var(--black) 0%, transparent 16%, transparent 84%, var(--black) 100%);
-}
-.qa-photo-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
-.qa-photo-inner .sec-label:first-child{margin-top:0;}
-.qa-photo .menu-card{background:rgba(24,24,24,.88);}
-.qa-photo .menu-card:hover{background:rgba(32,32,32,.92);}
-.qa-photo .menu-card.primary{background:linear-gradient(135deg, rgba(232,160,32,.12), rgba(24,24,24,.9) 60%);}
-.qa-photo .menu-card.disabled:hover{background:rgba(24,24,24,.88);}
-
-/* K-PICSロゴ区切りゾーン：その他とストーリーゾーンの間の余白を埋める */
-.emblem-divider{height:110px;padding:0;margin-top:0;}
-
-.install-banner{
-  display:flex;align-items:flex-start;gap:12px;background:var(--card);
-  border:1px solid rgba(232,160,32,.3);border-radius:12px;padding:14px 14px;
-  margin-bottom:10px;cursor:pointer;transition:all .15s;
-}
-.install-banner:hover{background:var(--card-hover);border-color:var(--orange);}
-.install-banner-icon{font-size:20px;line-height:1.3;flex-shrink:0;}
-.install-banner-body{flex:1;min-width:0;}
-.install-banner-title{font-size:13px;font-weight:700;}
-.install-banner-desc{font-size:11.5px;color:var(--text-muted);margin-top:4px;line-height:1.6;}
-.install-banner-close{
-  background:transparent;border:none;color:var(--text-dim);font-size:13px;cursor:pointer;
-  padding:2px 4px;flex-shrink:0;
-}
-
-/* ===================== ストーリーゾーン（らせん背景） ===================== */
-.story-zone{position:relative;margin-top:0;}
-.story-sticky{
-  position:sticky;top:0;height:100vh;height:100dvh;margin-bottom:-100vh;margin-bottom:-100dvh;
-  z-index:0;overflow:hidden;pointer-events:none;
-}
-.story-glow{
-  position:absolute;left:50%;top:50%;width:120vw;max-width:760px;aspect-ratio:1;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle, rgba(232,160,32,.10), transparent 62%);
-}
-.story-bg-img{
-  position:absolute;left:50%;top:50%;
-  width:min(160vw,760px);height:auto;
-  transform:translate(-50%,-50%);
-  opacity:0;will-change:transform,opacity;
-  filter:saturate(1.05);
-  -webkit-mask-image:radial-gradient(circle, #000 48%, transparent 74%);
-  mask-image:radial-gradient(circle, #000 48%, transparent 74%);
-}
-.story-fade-top{
-  position:absolute;left:0;right:0;top:0;height:130px;
-  background:linear-gradient(to bottom, var(--black), transparent);
-}
-.story-fade-bottom{
-  position:absolute;left:0;right:0;bottom:0;height:130px;
-  background:linear-gradient(to top, var(--black), transparent);
-}
-.story-content{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 20px 40px;}
-
-/* ゾーン冒頭のヒーロー */
-.story-hero{
-  min-height:44vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:36px 0 30px;
-}
-.story-hero-logo{width:84px;margin:0 auto 22px;filter:drop-shadow(0 6px 24px rgba(232,160,32,.25));}
-.story-hero-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;
-  color:var(--text-muted);margin-bottom:16px;
-}
-.story-hero-title{
-  font-weight:900;font-size:clamp(30px,9vw,46px);line-height:1.35;letter-spacing:.01em;
-  text-shadow:0 2px 24px rgba(0,0,0,.8);
-}
-.story-hero-title .accent{color:var(--orange);}
-.story-hero-sub{
-  font-size:13.5px;color:var(--text-muted);line-height:1.9;margin-top:18px;
-  max-width:420px;text-shadow:0 1px 12px rgba(0,0,0,.9);
-}
-.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:38px;opacity:.6;}
-.scroll-hint-label{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.22em;color:var(--text-muted);}
-.scroll-hint-line{
-  width:1px;height:26px;background:linear-gradient(to bottom, var(--orange), transparent);
-  animation:scrollHintMove 1.6s ease-in-out infinite;
-}
-@keyframes scrollHintMove{
-  0%{transform:scaleY(.4);opacity:.3;}
-  50%{transform:scaleY(1);opacity:1;}
-  100%{transform:scaleY(.4);opacity:.3;}
-}
-
-.story-section{margin-bottom:56px;}
-.story-section:last-child{margin-bottom:0;}
-.story-eyebrow{
-  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
-  color:var(--orange);margin-bottom:10px;font-weight:600;
-}
-.story-h2{
-  font-weight:900;font-size:23px;line-height:1.4;margin-bottom:18px;letter-spacing:.01em;
-  text-shadow:0 2px 18px rgba(0,0,0,.8);
-}
-.story-lead{
-  font-size:12.5px;color:var(--text-muted);line-height:1.75;
-  text-shadow:0 1px 10px rgba(0,0,0,.9);
-}
-
-/* スクロールリビール */
-.reveal{
-  opacity:0;transform:translateY(28px);
-  transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
-}
-.reveal.in-view{opacity:1;transform:translateY(0);}
-@media (prefers-reduced-motion: reduce){
-  .reveal{opacity:1;transform:none;transition:none;}
-}
-
-/* ストーリーゾーン内のカード（背景がほんのり透けるよう半透明ベース） */
-.portal-card{
-  background:rgba(18,18,18,.9);border:1px solid var(--border);border-radius:12px;
-  padding:18px 18px 20px;margin-bottom:10px;position:relative;
-}
-.portal-card.disabled{opacity:.6;}
-.portal-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.portal-card-icon{
-  width:38px;height:38px;border-radius:10px;background:var(--orange-bg);
-  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
-}
-.portal-card-title{font-size:14.5px;font-weight:700;flex:1;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.portal-card-desc{font-size:12.5px;color:var(--text-muted);line-height:1.75;}
-.portal-card-desc strong{color:var(--text);font-weight:700;}
-.portal-card-tag{
-  font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.25);padding:2px 7px;border-radius:4px;
-  font-family:"JetBrains Mono",monospace;letter-spacing:.02em;white-space:nowrap;
-}
-.portal-card-tag.muted{color:var(--text-dim);background:rgba(12,12,12,.85);border-color:var(--border-light);}
-.portal-card-link{
-  display:inline-flex;align-items:center;gap:5px;margin-top:12px;
-  font-size:12.5px;font-weight:700;color:var(--orange);text-decoration:none;
-}
-.portal-card-link:hover{color:var(--orange-light);}
-.portal-card-note{
-  margin-top:10px;font-size:11px;color:var(--text-dim);
-  background:rgba(12,12,12,.85);border:1px solid var(--border);border-radius:8px;
-  padding:8px 11px;line-height:1.6;
-}
-.philosophy-note{
-  background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.3);border-radius:10px;
-  color:var(--text);font-size:12.5px;line-height:1.9;padding:16px 16px;text-align:center;
-  margin-top:14px;
-}
-
-/* 教育循環：らせんに沿うように左右にずれるステップ */
-.cycle-grid{display:flex;flex-direction:column;gap:0;margin-top:20px;position:relative;}
-.cycle-item{
-  display:flex;align-items:flex-start;gap:14px;background:rgba(18,18,18,.9);
-  border:1px solid var(--border);border-radius:12px;padding:15px 16px;
-  position:relative;
-}
-.cycle-item + .cycle-item{margin-top:22px;}
-.cycle-item + .cycle-item::before{
-  content:"";position:absolute;left:30px;top:-23px;width:2px;height:22px;
-  background:linear-gradient(to bottom, transparent, var(--orange));opacity:.55;
-}
-.cycle-item:nth-child(even){margin-left:16px;}
-.cycle-item:nth-child(odd){margin-right:16px;}
-.cycle-num{
-  width:30px;height:30px;border-radius:50%;background:var(--orange-bg);
-  border:1px solid rgba(232,160,32,.35);color:var(--orange);
-  font-family:"Bebas Neue",sans-serif;font-size:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.cycle-body{flex:1;}
-.cycle-title{font-size:13.5px;font-weight:700;margin-bottom:3px;}
-.cycle-desc{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
-.cycle-loop{
-  margin-top:20px;text-align:center;font-family:"JetBrains Mono",monospace;
-  font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;
-}
-
-.mini-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.mini-step{display:flex;align-items:center;gap:10px;}
-.mini-step-num{
-  width:22px;height:22px;border-radius:50%;background:rgba(12,12,12,.85);
-  border:1px solid var(--border-light);color:var(--text-muted);
-  font-family:"JetBrains Mono",monospace;font-size:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.mini-step-text{font-size:12px;color:var(--text-muted);line-height:1.5;}
-
-.footer-note{
-  text-align:center;font-size:11px;color:var(--text-dim);margin-top:44px;line-height:1.8;
-}
-.footer-note img{height:16px;width:auto;display:inline-block;vertical-align:middle;opacity:.5;margin-right:5px;}
-
-/* ===== 自主練 注意事項モーダル ===== */
-.guide-modal-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:700;
-  align-items:flex-end;justify-content:center;
-}
-.guide-modal-overlay.open{display:flex;}
-@media (min-width:560px){ .guide-modal-overlay{align-items:center;padding:20px;} }
-.guide-modal-box{
-  background:var(--dark);border:1px solid var(--border);border-radius:18px 18px 0 0;
-  width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;
-  animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both;
-}
-@media (min-width:560px){ .guide-modal-box{border-radius:16px;} }
-.guide-modal-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.guide-modal-title{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;}
-.guide-modal-close{
-  width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);
-  color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;
-}
-.guide-modal-body{padding:20px 20px 28px;overflow-y:auto;}
+/* 部員としてモーダル */
 .gm-lead{font-size:12.5px;color:var(--text-muted);line-height:1.85;margin-bottom:22px;}
 .gm-section{margin-bottom:20px;}
-.gm-section-title{
-  display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--orange);
-  margin-bottom:10px;
-}
-.gm-section-title .gm-icon{
-  width:24px;height:24px;border-radius:7px;background:var(--orange-bg);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:12px;
-}
+.gm-section-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--orange);margin-bottom:10px;}
+.gm-section-title .gm-icon{width:24px;height:24px;border-radius:7px;background:var(--orange-bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
 .gm-list{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 14px;}
 .gm-list-item{font-size:12.5px;line-height:1.7;color:var(--text);padding-left:14px;position:relative;}
 .gm-list-item::before{content:"";position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--orange);}
-.gm-note{
-  margin-top:24px;font-size:12px;color:var(--text-muted);line-height:1.85;
-  background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:10px;padding:14px 15px;
-}
+.gm-note{margin-top:24px;font-size:12px;color:var(--text-muted);line-height:1.85;background:var(--orange-bg);border:1px solid rgba(232,160,32,.25);border-radius:10px;padding:14px 15px;}
 .gm-note strong{color:var(--orange);}
 .gm-link{color:var(--orange);text-decoration:underline;word-break:break-all;}
 .gm-closing{margin-top:20px;font-size:12.5px;color:var(--text-muted);line-height:1.85;text-align:center;}
@@ -534,11 +511,7 @@ button{font-family:inherit;}
   border:none;border-radius:9px;cursor:pointer;background:var(--orange);color:var(--black);transition:all .2s;
 }
 .gm-ack-btn:hover{background:var(--orange-light);transform:translateY(-1px);}
-
-/* --- 部員としてモーダル：タブ切替 --- */
-.gm-tabs{
-  display:flex;gap:5px;flex-shrink:0;padding:12px 14px;border-bottom:1px solid var(--border);
-}
+.gm-tabs{display:flex;gap:5px;flex-shrink:0;padding:12px 14px;border-bottom:1px solid var(--border);}
 .gm-tab{
   flex:1 1 0;min-width:0;padding:9px 4px;border-radius:8px;cursor:pointer;
   border:1px solid var(--border);background:var(--card);color:var(--text-muted);
@@ -554,24 +527,13 @@ button{font-family:inherit;}
 @media (prefers-reduced-motion:reduce){ .gm-pane.active{animation:none;} }
 .gm-date{font-size:11px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:12px;}
 .gm-pane-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;}
-
-/* チェックリスト風の四角マーカー（読むだけ・操作なし） */
 .gm-list.check .gm-list-item{padding-left:24px;}
-.gm-list.check .gm-list-item::before{
-  content:"";left:0;top:3px;width:13px;height:13px;border-radius:3px;
-  background:transparent;border:1.5px solid var(--orange);
-}
-.gm-sublabel{
-  font-size:12.5px;font-weight:700;color:var(--text);
-  margin:0 0 8px;padding-left:2px;
-}
+.gm-list.check .gm-list-item::before{content:"";left:0;top:3px;width:13px;height:13px;border-radius:3px;background:transparent;border:1.5px solid var(--orange);}
+.gm-sublabel{font-size:12.5px;font-weight:700;color:var(--text);margin:0 0 8px;padding-left:2px;}
 .gm-list + .gm-sublabel{margin-top:16px;}
 
 /* インストール手順モーダル */
-.guide-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;
-  align-items:flex-end;justify-content:center;
-}
+.guide-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;align-items:flex-end;justify-content:center;}
 .guide-overlay.open{display:flex;}
 @media (min-width:560px){ .guide-overlay{align-items:center;padding:20px;} }
 .guide-box{
@@ -582,32 +544,37 @@ button{font-family:inherit;}
 @media (min-width:560px){ .guide-box{border-radius:16px;} }
 .guide-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .guide-title{font-family:"Bebas Neue",sans-serif;font-size:21px;letter-spacing:.04em;}
-.guide-close{
-  width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);
-  color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;
-}
+.guide-close{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
 .guide-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;}
 .guide-step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
-.guide-step-num{
-  width:26px;height:26px;border-radius:50%;background:var(--orange);color:var(--black);
-  font-family:"Bebas Neue",sans-serif;font-size:14px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:2px;
-}
+.guide-step-num{width:26px;height:26px;border-radius:50%;background:var(--orange);color:var(--black);font-family:"Bebas Neue",sans-serif;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .guide-step-body{flex:1;}
 .guide-step-text{font-size:13.5px;line-height:1.6;}
-.guide-step-visual{
-  margin-top:8px;background:var(--black);border:1px solid var(--border);border-radius:10px;
-  padding:12px 14px;display:flex;align-items:center;gap:10px;
-}
-.guide-share-icon{
-  width:34px;height:34px;border-radius:8px;background:#1c8cf0;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
+.guide-step-visual{margin-top:8px;background:var(--black);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.guide-share-icon{width:34px;height:34px;border-radius:8px;background:#1c8cf0;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .guide-share-icon svg{width:18px;height:18px;}
 .guide-step-visual-label{font-size:12px;color:var(--text-muted);}
-.guide-note{
-  font-size:11px;color:var(--text-dim);text-align:center;margin-top:6px;line-height:1.7;
-}
+.guide-note{font-size:11px;color:var(--text-dim);text-align:center;margin-top:6px;line-height:1.7;}
+
+/* ===================== PDF資料モーダル（アプリの使い方） ===================== */
+.pdf-item{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 13px;margin-bottom:8px;color:var(--text);cursor:pointer;}
+.pdf-item:active{border-color:var(--orange);}
+.pdf-item-ic{width:32px;height:32px;border-radius:8px;background:rgba(240,96,96,.12);border:1px solid rgba(240,96,96,.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#F06060;flex-shrink:0;font-family:"JetBrains Mono",monospace;}
+.pdf-item-body{flex:1;min-width:0;}
+.pdf-item-name{font-size:12.5px;font-weight:700;line-height:1.4;word-break:break-all;}
+.pdf-item-meta{font-size:10px;color:var(--text-dim);margin-top:3px;font-family:"JetBrains Mono",monospace;}
+.pdf-item-del{flex-shrink:0;background:none;border:1px solid var(--border-light);color:var(--text-dim);border-radius:7px;font-size:10px;padding:5px 8px;cursor:pointer;}
+.pdf-item-del:active{color:#F06060;border-color:#F06060;}
+.pdf-empty{text-align:center;font-size:12px;color:var(--text-muted);padding:26px 10px;line-height:1.8;}
+.pdf-upload{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
+.pdf-upload-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;}
+.pdf-drop{border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;display:block;}
+.pdf-drop:active{border-color:var(--orange);color:var(--orange-light);}
+.pdf-status{margin-top:10px;font-size:11.5px;line-height:1.6;display:none;border-radius:8px;padding:9px 11px;}
+.pdf-status.show{display:block;}
+.pdf-status.ok{color:#7fe0a0;background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.35);}
+.pdf-status.ng{color:#F06060;background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);}
+.pdf-status.info{color:var(--text-muted);background:var(--card);border:1px solid var(--border);}
 
 /* ===================== 下部タブバー ===================== */
 .tabbar{
@@ -627,8 +594,11 @@ button{font-family:inherit;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
 
-body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bottom));}
-
+/* 背の高い画面では余白が間延びしないよう、グリッドの高さに上限 */
+@media (min-height:900px){
+  .home-body{justify-content:center;}
+  .home-grid{flex:0 0 auto;height:640px;}
+}
 </style>
 </head>
 <body class="has-tabbar">
@@ -710,8 +680,13 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
   </div>
 </div>
 
-<!-- ===== HOME SCREEN ===== -->
+<!-- ===== HOME SCREEN（1画面） ===== -->
 <div id="home-screen">
+
+  <div class="home-bg" aria-hidden="true">
+    <div class="home-bg-glow"></div>
+    <img src="assets/hero-probe.jpg" alt="" loading="lazy">
+  </div>
 
   <div class="home-header">
     <div class="home-header-top">
@@ -739,497 +714,101 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
     </div>
   </div>
 
-  <!-- ============ クイックアクセス ============ -->
-  <div class="home-main">
+  <div class="home-body">
 
-    <div id="install-banner" class="install-banner" style="display:none;" onclick="openInstallGuide()">
+    <div id="install-banner" class="install-banner" onclick="openInstallGuide()">
       <div class="install-banner-icon">📲</div>
       <div class="install-banner-body">
-        <div class="install-banner-title">K-PICSをホーム画面に追加できます</div>
-        <div class="install-banner-desc">タップして手順を見る</div>
+        <span class="install-banner-title">ホーム画面に追加できます</span>
+        <span class="install-banner-desc">タップして手順を見る</span>
       </div>
       <button class="install-banner-close" onclick="event.stopPropagation(); dismissInstallBanner()" aria-label="閉じる">✕</button>
     </div>
 
-    <div class="sec-label">はじめに</div>
-    <div class="menu-group">
-      <div class="menu-card" onclick="openGuideModal()" role="button" tabindex="0">
-        <div class="menu-icon solid"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">K-PICSの部員として</div>
-          <div class="menu-desc">活動ルール・注意事項・チェックリスト。まず最初に必ずお読みください</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>
+    <div class="home-grid">
 
-    <div class="sec-label">認定試験</div>
-    <div class="menu-group">
-      <a class="menu-card primary" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener">
-        <svg class="menu-card-watermark" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1"><path d="M8 21l4-7 4 7M12 3a4 4 0 00-4 4c0 2 1 3 4 6 3-3 4-4 4-6a4 4 0 00-4-4z"/></svg>
-        <div class="menu-icon solid lg"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-7 4 7M12 3a4 4 0 00-4 4c0 2 1 3 4 6 3-3 4-4 4-6a4 4 0 00-4-4z"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">認定試験受験予定の方はこちら <span class="badge-ext">認定アプリへ</span></div>
-          <div class="menu-desc">進捗の登録・確認はこちらの認定アプリで行います</div>
+      <!-- INPUT -->
+      <div class="tile hero wide" id="tile-input" role="button" tabindex="0" onclick="openSheet('sheet-input')">
+        <div class="tile-top">
+          <div>
+            <div class="tile-kicker">INPUT <small>8 CONTENTS</small></div>
+            <div class="tile-sub">知識を入れる ― 基本のキから工学系まで</div>
+          </div>
+          <div class="tile-icon solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
         </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="tile-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        <div class="chips">
+          <span class="chip">基本のキ</span><span class="chip">予習教材</span><span class="chip">セミナー資料</span><span class="chip">疾患辞典</span>
+          <span class="chip">waza-ari</span><span class="chip">ショックの基礎</span><span class="chip">解剖の理解</span><span class="chip">工学系学習</span>
+        </div>
+        <svg class="tile-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- 自主練ハンドブック -->
+      <a class="tile" href="technique.html">
+        <div class="tile-top">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></div>
+        </div>
+        <div class="tile-body">
+          <div class="tile-title">自主練ハンドブック</div>
+          <div class="tile-desc">画像でサッと確認</div>
+        </div>
+        <svg class="tile-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-    </div>
 
-    <div class="sec-label">よく使う機能</div>
-    <div class="quick-grid">
-      <a class="quick-tile" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-        <span class="quick-tile-ext">外部 ↗</span>
-        <div class="quick-tile-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="quick-tile-title">Waza-ari</div>
+      <!-- 認定アプリ -->
+      <a class="tile" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener">
+        <div class="tile-top">
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l4-7 4 7M12 3a4 4 0 00-4 4c0 2 1 3 4 6 3-3 4-4 4-6a4 4 0 00-4-4z"/></svg></div>
+          <span class="tile-tag">外部 ↗</span>
+        </div>
+        <div class="tile-body">
+          <div class="tile-title">認定アプリ</div>
+          <div class="tile-desc">自主練の記録・認定試験</div>
+        </div>
+        <svg class="tile-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <a class="quick-tile" href="technique.html">
-        <div class="quick-tile-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></div>
-        <div class="quick-tile-title">自主練ハンドブック</div>
-      </a>
-      <a class="quick-tile" href="documents.html">
-        <div class="quick-tile-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg></div>
-        <div class="quick-tile-title">資料</div>
-        <div class="quick-tile-desc">セミナー資料はこちら</div>
-      </a>
-      <a class="quick-tile" href="calendar.html">
-        <div class="quick-tile-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-        <div class="quick-tile-title">カレンダー</div>
-      </a>
-    </div>
 
-    <div class="sec-label">手技練習に</div>
-    <div class="menu-group">
-      <a class="menu-card" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
-        <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">Waza-ari <span class="badge-ext">外部 ↗</span></div>
-          <div class="menu-desc">GE社が提供するPOCUS動画コンテンツ。予習・復習に</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="technique.html">
-        <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">自主練ハンドブック</div>
-          <div class="menu-desc">プローブ・当てる部位・見える画面を画像でサッと確認</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a class="menu-card" href="https://kpics-tech.github.io/-/" target="_blank" rel="noopener">
-        <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">絵合わせアプリ</div>
-          <div class="menu-desc">超音波画像を再現してタイムを測る練習ツール</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-
-    <!-- プローブ写真をうっすら敷くゾーン：超音波について詳しくなろう -->
-    <div class="qa-photo">
-      <img class="qa-photo-img" src="assets/hero-probe.jpg" alt="" style="opacity:.32;" loading="lazy">
-      <div class="qa-photo-shade"></div>
-      <div class="qa-photo-inner">
-
-        <div class="sec-label">超音波について詳しくなろう</div>
-        <div class="menu-group">
-          <a class="menu-card" href="https://kpics-tech.github.io/pocus-loop/" target="_blank" rel="noopener">
-            <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 10-2 5"/><path d="M20 5v6h-6"/></svg></div>
-            <div class="menu-body">
-              <div class="menu-title">POCUS-LOOP</div>
-              <div class="menu-desc">超音波の原理・各モードをインプット＋問題演習で学ぶ</div>
-            </div>
-            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a class="menu-card" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">
-            <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 21v-4h6v4"/><path d="M8 7h1M8 11h1M15 7h1M15 11h1"/></svg></div>
-            <div class="menu-body">
-              <div class="menu-title">キャノン超音波講座 <span class="badge-ext">外部 ↗</span></div>
-              <div class="menu-desc">キャノンメディカルによる教育コンテンツ</div>
-            </div>
-            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a class="menu-card" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">
-            <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h5v16H6a2 2 0 00-2 2V5z"/><path d="M20 5a2 2 0 00-2-2h-5v16h5a2 2 0 012 2V5z"/></svg></div>
-            <div class="menu-body">
-              <div class="menu-title">JSUM Ultrasound Path <span class="badge-ext">外部 ↗</span></div>
-              <div class="menu-desc">日本超音波医学会のeラーニング</div>
-            </div>
-            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 救急車写真：スクロールで駆け抜けるゾーン -->
-    <div class="qa-photo">
-      <img class="qa-photo-img qa-pan" src="assets/bg-ambulance.jpg" alt="" style="opacity:.34;" loading="lazy">
-      <div class="qa-photo-shade"></div>
-      <div class="qa-photo-inner">
-
-        <div class="sec-label">POCUSを臨床で活かそう</div>
-        <div class="menu-group">
-          <div id="shock-menu-wrap">
-            <a class="menu-card disabled" id="shock-menu-link" href="shock-pocus-10days.html">
-              <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
-              <div class="menu-body">
-                <div class="menu-title">10日間で学ぶ！エコーを用いたショック鑑別の基礎 <span class="badge-soon" id="shock-status-badge">非公開</span></div>
-                <div class="menu-desc">ABCDE評価から4大ショックの鑑別、POCUSの当て方まで1日1テーマで</div>
-              </div>
-              <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <label class="core-publish-toggle" id="shock-core-toggle" style="display:none;">
-              <input type="checkbox" id="shock-publish-checkbox" onchange="toggleContentPublish('shock_pocus_10days', this.checked, this)">
-              <span>コアメンバー設定：このコンテンツを部員に公開する</span>
-            </label>
+      <!-- ADVANCED -->
+      <div class="tile adv wide" id="tile-advanced" role="button" tabindex="0" onclick="openSheet('sheet-advanced')">
+        <div class="tile-top">
+          <div>
+            <div class="tile-kicker">ADVANCED <small>応用ルート</small></div>
+            <div class="tile-sub">SPLを目玉に、興味のあるところへ</div>
           </div>
-          <a class="menu-card" href="medical-rally.html">
-            <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18M5 4h11l-2 4 2 4H5"/></svg></div>
-            <div class="menu-body">
-              <div class="menu-title">POCUS特化メディカルラリー</div>
-              <div class="menu-desc">症候別プロトコル・SP台本のストック</div>
-            </div>
-            <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <div class="menu-card disabled">
-            <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2a5 5 0 015 5c0 3-2.5 4-2.5 7M9 22h6M12 17v2"/></svg></div>
-            <div class="menu-body">
-              <div class="menu-title">POCUS特化臨床推論 <span class="badge-soon">検討中</span></div>
-              <div class="menu-desc">全国展開アプリ制作予定</div>
-            </div>
-          </div>
+          <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
         </div>
-
-      </div>
-    </div>
-
-    <div class="sec-label">その他</div>
-    <div class="menu-group" data-section="other">
-      <a class="menu-card" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">
-        <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16 8 14 14 8 16 10 10 16 8"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">FAST Journey</div>
-          <div class="menu-desc">FASTの基本を習得する初学者向けアプリ</div>
-        </div>
-        <svg class="menu-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <div class="menu-card disabled">
-        <div class="menu-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></svg></div>
-        <div class="menu-body">
-          <div class="menu-title">解剖VR <span class="badge-soon">未定</span></div>
-          <div class="menu-desc">構想段階のコンテンツです</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ============ ストーリーゾーン（読み物ポータル） ============ -->
-  <div class="story-zone" id="story-zone">
-
-    <!-- スクロールと共に回転するらせん背景 -->
-    <div class="story-sticky" aria-hidden="true">
-      <div class="story-glow"></div>
-      <img class="story-bg-img" id="story-bg-img" src="assets/bg-dna.jpg" alt="" loading="lazy">
-      <div class="story-fade-top"></div>
-      <div class="story-fade-bottom"></div>
-    </div>
-
-    <div class="story-content">
-
-      <!-- ゾーン冒頭 -->
-      <div class="story-hero">
-        <img class="story-hero-logo" src="assets/logo-icon-dark.png" alt="K-PICS">
-        <div class="story-hero-eyebrow">K - P I C S 　部員専用ポータル</div>
-        <div class="story-hero-title">学びを、<span class="accent">次の代へ。</span></div>
-        <div class="story-hero-sub">認定試験・エコー手技・勉強会・競技練習など<br>K-PICSの学習リソースへアクセスしよう</div>
-        <div class="scroll-hint">
-          <span class="scroll-hint-label">SCROLL</span>
-          <span class="scroll-hint-line"></span>
+        <svg class="tile-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <div class="chips oneline">
+          <span class="chip">SPL</span><span class="chip">腹部</span><span class="chip">心臓</span><span class="chip">運動器</span><span class="chip">リウマチ</span><span class="chip">VExUS</span><span class="chip">CVC</span><span class="chip">救急</span><span class="chip">BLS</span><span class="chip">災害</span>
         </div>
       </div>
 
-      <!-- このポータルの目的 -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">このポータルの目的</div>
-        <div class="story-h2">学びを<span style="color:var(--orange);">次の代へ</span>と引き継いでいく</div>
-        <div class="story-lead">先輩が積み上げてきた知識・技術・経験を、このポータルに集約し、次の世代へ確実につなぐ。K-PICSは「やってみた人が教える」学生主体の教育循環システムを目指している。</div>
-        <div class="cycle-grid">
-          <div class="cycle-item">
-            <div class="cycle-num">1</div>
-            <div class="cycle-body">
-              <div class="cycle-title">学習・練習する</div>
-              <div class="cycle-desc">このポータルのリソースを活用して技術・知識を磨く</div>
-            </div>
-          </div>
-          <div class="cycle-item">
-            <div class="cycle-num">2</div>
-            <div class="cycle-body">
-              <div class="cycle-title">認定試験に挑む</div>
-              <div class="cycle-desc">一定水準に達したと評価され、バッジが付与される</div>
-            </div>
-          </div>
-          <div class="cycle-item">
-            <div class="cycle-num">3</div>
-            <div class="cycle-body">
-              <div class="cycle-title">指導者側へまわる</div>
-              <div class="cycle-desc">バッジ取得者が後輩の指導を担い、学びを引き継ぐ</div>
-            </div>
-          </div>
-          <div class="cycle-item">
-            <div class="cycle-num">4</div>
-            <div class="cycle-body">
-              <div class="cycle-title">学びを深め、広げる</div>
-              <div class="cycle-desc">より深い学びと経験を積み、後輩への指導、他大学との連携、地域への還元へとつなげていく</div>
-            </div>
-          </div>
+      <!-- K-PICSの部員として -->
+      <div class="tile row" role="button" tabindex="0" onclick="openGuideModal()">
+        <div class="tile-icon solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div class="tile-body">
+          <div class="tile-title">K-PICSの部員として</div>
+          <div class="tile-desc">必読</div>
         </div>
-        <div class="cycle-loop">↻ そしてまた、次の代へ</div>
+        <svg class="tile-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
 
-      <!-- K-PICSの理念 -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">K-PICSの理念</div>
-        <div class="story-h2">超音波の先にある<span style="color:var(--orange);">医療人育成</span></div>
-        <div class="portal-card">
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            K-PICSは、超音波を学ぶためだけの団体ではありません。<br>
-            私たちの目的は、<strong>「地域医療・救急医療・災害医療の現場で活躍できる医療人を育成すること」</strong>です。超音波教育はそのための重要な手段の一つですが、ゴールではありません。私たちは超音波だけでなく、救急医療、災害医療、BLS、地域医療など幅広い学びを通して、将来地域社会に貢献できる力を身につけることを目指しています。
-          </div>
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            また、知識や資格は取得して終わりではありません。学んだことを地域へ還元し、市民向け講習会や救命教育、地域イベントなどを通して、和歌山の医療や安全に貢献することもK-PICSの大切な使命です。
-          </div>
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            K-PICSは大学の中だけで完結する団体ではありません。地域の医療機関、消防、行政、教育機関、企業、他大学、全国の学生団体など、多くの方々とのつながりによって成り立っています。私たちはそのつながりを大切にしながら、人と人を結ぶハブとして活動していきます。
-          </div>
-          <div class="portal-card-desc" style="margin-bottom:14px;">
-            そして、和歌山だけでなく全国にも目を向けます。<strong>「和歌山から全国へ」</strong>という視点を持ち、全国の仲間と協力しながら学生教育の発展に貢献していきます。
-          </div>
-          <div class="portal-card-desc">
-            これまでのK-PICSは、多くの学生、先生方、地域の皆様、そして全国の仲間たちの支えによって築かれてきました。私たちはその歴史に感謝しながら、時代に合わせて進化し続けます。
-          </div>
+      <!-- アプリについて -->
+      <div class="tile row" role="button" tabindex="0" onclick="openSheet('sheet-about')">
+        <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></div>
+        <div class="tile-body">
+          <div class="tile-title">アプリについて</div>
+          <div class="tile-desc">目的・使い方</div>
         </div>
-        <div class="philosophy-note">
-          超音波を学ぶためだけに活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。
-        </div>
-      </div>
-
-      <!-- 01 認定試験制度 -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">01 · Certification</div>
-        <div class="story-h2">認定試験制度</div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🏆</div>
-            <div class="portal-card-title">認定試験とは？</div>
-          </div>
-          <div class="portal-card-desc">エコー手技が一定水準に達したと評価されると合格し、<strong>バッジが付与される</strong>。バッジ取得者は指導者側にまわり、後輩の育成を担う。これがK-PICSの核心、<strong>学生主体の教育循環システム</strong>だ。</div>
-          <div class="portal-card-note">📅 直近の認定試験：2026年8月2日<br>試験にエントリーするには、まず認定アプリへの登録が必要です。</div>
-          <a class="portal-card-link" href="https://kpics-tech.github.io/requirements/" target="_blank" rel="noopener">認定アプリへ登録する
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">📝</div>
-            <div class="portal-card-title">自主練の進め方</div>
-          </div>
-          <div class="portal-card-desc">認定アプリは、セミナーを<strong>受けっぱなしで終わらせない</strong>ための仕組み。受講後に自主練を積み重ねて、実際に技術を身につけてもらうことが目的だ。</div>
-          <div class="mini-steps">
-            <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">セミナー受講日を選択</div></div>
-            <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">練習日を入力</div></div>
-            <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">適切な画像をアップロード</div></div>
-          </div>
-          <div class="portal-card-desc" style="margin-top:12px;">アップロードすると、多田先生やバッジ取得者が<strong>Pass / Keep</strong>を判定。Keepの場合はフィードバックがもらえるので、それを元にまた練習。<strong>セミナーを受講し、全断面Passすると、認定試験の受験資格</strong>が得られる。</div>
-          <div class="portal-card-note">
-            ・異なる日に練習する場合は、同じ被検者にエコーを当ててOK<br>
-            ・同じ日にまとめて練習する場合は、別の3人に当てて撮像すること<br><br>
-            ・血管穿刺のみ特別ルール：スチューデントドクターは針の扱いに十分注意した上で自主練可。低学年は自主練なし、セミナー受講のみでOK
-          </div>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🔄</div>
-            <div class="portal-card-title">教育循環の仕組み</div>
-          </div>
-          <div class="portal-card-desc">教わる側 → 練習 → 試験合格 → 教える側。この循環を回し続けることで、部のレベルが世代をまたいで積み上がっていく。</div>
-        </div>
-      </div>
-
-      <!-- 02 手技・練習 -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">02 · Practice</div>
-        <div class="story-h2">手技練習に</div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🎥</div>
-            <div class="portal-card-title">Waza-ari <span class="portal-card-tag">外部 ↗</span></div>
-          </div>
-          <div class="portal-card-desc">GE社（Versana）が提供するPOCUS動画コンテンツ。「腹部領域」「心臓領域」「血管領域」「運動器/表在領域」「排泄ケア領域」について、非常に分かりやすい動画が見られる。異常所見や症例の解説もあるので、バンバン見てほしい。セミナーの予習にも復習にも最適。</div>
-          <a class="portal-card-link" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">Waza-ariを見る
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🩺</div>
-            <div class="portal-card-title">自主練ハンドブック</div>
-          </div>
-          <div class="portal-card-desc">部位ごとに、プローブ・当てる部位・見える画面を画像中心でまとめた自主練用のハンドブック。よくある失敗例・コツは部員みんなで書き込み・編集していく。<strong>自主練の時に最適！</strong></div>
-          <div class="portal-card-note">セミナー受講や先輩からの指導などで基本的な手技を一度学んだことがある方を対象としています。ゼロから学ぶための教材ではなく、復習や自主練習の補助として活用してください。</div>
-          <a class="portal-card-link" href="technique.html">自主練ハンドブックへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🎯</div>
-            <div class="portal-card-title">絵合わせ練習</div>
-          </div>
-          <div class="portal-card-desc">提示された超音波画像を実際に再現し、タイムを測る練習ツール。1人3枚×3人で計9枚のリレー形式。Student POCUS League（SPL）の競技種目の一つだが、<strong>出場しない人も練習に最適！</strong></div>
-          <div class="portal-card-note">第4回SPL戦績：機材トラブルありながら99秒で全国1位 🥇<br>練習では1:08を記録したことも。</div>
-          <a class="portal-card-link" href="https://kpics-tech.github.io/-/" target="_blank" rel="noopener">絵合わせ練習アプリへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- 03 超音波の知識を深める -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">03 · Knowledge</div>
-        <div class="story-h2">超音波について詳しくなろう</div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">⚙️</div>
-            <div class="portal-card-title">工学系知識の学習 <span class="portal-card-tag">SPLで実績あり</span></div>
-          </div>
-          <div class="portal-card-desc">超音波とは何か？機器の原理・各モードの解説など。<strong>超音波専門医試験</strong>でも問われる範囲。これを理解するとエコーの見え方が変わる。POCUS-LOOPでは<strong>インプットと問題演習</strong>ができ、今後レクチャーの追加も予定している（随時改良中）。</div>
-          <a class="portal-card-link" href="https://kpics-tech.github.io/pocus-loop/" target="_blank" rel="noopener">POCUS-LOOPアプリへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🏥</div>
-            <div class="portal-card-title">キャノン超音波講座 <span class="portal-card-tag">外部 ↗</span></div>
-          </div>
-          <div class="portal-card-desc">キャノンメディカルによる超音波教育コンテンツ。体系的に学べる良質な無料リソース。</div>
-          <a class="portal-card-link" href="https://www.medical.canon/jp/lecture/index.html" target="_blank" rel="noopener">講座サイトへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">📖</div>
-            <div class="portal-card-title">JSUM Ultrasound Path <span class="portal-card-tag">外部 ↗</span></div>
-          </div>
-          <div class="portal-card-desc">日本超音波医学会によるeラーニング。専門医レベルの知識へのアクセス。</div>
-          <a class="portal-card-link" href="https://www.jsum.or.jp/ulpath/" target="_blank" rel="noopener">ULPATHへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- 04 POCUSを臨床で活かそう -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">04 · Activity</div>
-        <div class="story-h2">POCUSを臨床で活かそう</div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">⚡</div>
-            <div class="portal-card-title">10日間で学ぶ！エコーを用いたショック鑑別の基礎</div>
-          </div>
-          <div class="portal-card-desc">ショック状態の患者さんを前にして、何を見て、何を考え、どこにエコーを当てるのか。ABCDE評価から4大ショックの鑑別、POCUSの当て方までを1日1テーマ・10日間で追いかける初学者向け教材。「なぜそこにプローブを当てるのか」が腑に落ちると、日々の手技練習にも一段と身が入るはず。低学年の方もぜひ学んでみてください。</div>
-          <a class="portal-card-link" href="shock-pocus-10days.html">10日間コースへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🚑</div>
-            <div class="portal-card-title">POCUS特化メディカルラリー</div>
-          </div>
-          <div class="portal-card-desc">POCUSに特化したメディカルラリー症例台本。症候別プロトコルとSP（模擬患者）演技台本をストックしていく。</div>
-          <a class="portal-card-link" href="medical-rally.html">メディカルラリーへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🧠</div>
-            <div class="portal-card-title">臨床推論勉強会</div>
-          </div>
-          <div class="portal-card-desc">開催のお知らせ・過去の良問ストックへのアクセスはこちら。</div>
-          <div class="mini-steps">
-            <div class="mini-step"><div class="mini-step-num">1</div><div class="mini-step-text">事前共有：症候・検査所見をメンバーに予告</div></div>
-            <div class="mini-step"><div class="mini-step-num">2</div><div class="mini-step-text">個人ワーク：各自で鑑別疾患を挙げる</div></div>
-            <div class="mini-step"><div class="mini-step-num">3</div><div class="mini-step-text">解説：外来での思考フロー（内科外来マニュアル参照）を解説</div></div>
-            <div class="mini-step"><div class="mini-step-num">4</div><div class="mini-step-text">グループ作問バトル：チームで作問・出題し合い、良問はアプリへ格納</div></div>
-          </div>
-          <div class="portal-card-note">問題ストックアプリ：開発予定</div>
-        </div>
-      </div>
-
-      <!-- 05 その他コンテンツ -->
-      <div class="story-section reveal">
-        <div class="story-eyebrow">05 · More</div>
-        <div class="story-h2">その他</div>
-
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🧭</div>
-            <div class="portal-card-title">FAST Journey</div>
-          </div>
-          <div class="portal-card-desc">完全初学者がFASTの基本を習得できるようになることを目標に作成したアプリ。</div>
-          <a class="portal-card-link" href="https://wj-medtech.github.io/fast_journey/" target="_blank" rel="noopener">FAST Journeyへ
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
-        <div class="portal-card disabled">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">🧬</div>
-            <div class="portal-card-title">解剖VR <span class="portal-card-tag muted">未定</span></div>
-          </div>
-          <div class="portal-card-desc">構想段階のコンテンツです。詳細は未定です。</div>
-        </div>
-      </div>
-
-      <!-- 募集 -->
-      <div class="story-section reveal">
-        <div class="portal-card">
-          <div class="portal-card-head">
-            <div class="portal-card-icon">📣</div>
-            <div class="portal-card-title">新しい項目を追加したい方、大歓迎です</div>
-          </div>
-          <div class="portal-card-desc">「こんな項目があったらいいな」「自分の作ったアプリや学習リソースも追加してみたい」と思った方は、ぜひ気軽に開発者まで声をかけてください。<br><br>開発者自身も、プログラミング未経験の状態からこのアプリを作りました。最近はAIの力を借りながら開発できる時代なので、思っているより始めやすいと思います。<br><br>これから一緒に改善したり、機能を増やしたり、将来引き継いでくださる方がいれば、とても嬉しいです。学んだことや進め方はできる限り共有しますし、詳しい方がいれば、ぜひ教えていただきながら一緒により良いものを作っていけたらと思っています。</div>
-        </div>
-
-        <div class="footer-note">
-          <img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。
-        </div>
+        <svg class="tile-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
 
     </div>
   </div>
-
 </div>
 
-<!-- 下部タブバー -->
+<!-- ===== 下部タブバー ===== -->
 <nav class="tabbar" id="main-tabbar">
   <a class="tabbar-item" data-tab="home" href="index.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
@@ -1249,7 +828,182 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
   </a>
 </nav>
 
-<!-- お知らせモーダル：一覧表示＋（コア・先生のみ）投稿フォーム -->
+<!-- ===== シート：INPUT ===== -->
+<div class="sheet-overlay" id="sheet-input" onclick="closeSheetOnOverlay(event,'sheet-input')">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-kicker">IN<span>PUT</span></div>
+        <div class="sheet-sub">知識を入れる。タップすると「まなぶ」の該当項目が開きます。</div>
+      </div>
+      <div class="sheet-close" onclick="closeSheet('sheet-input')">✕</div>
+    </div>
+    <div class="sheet-body">
+      <a class="sheet-row" href="manabu.html#n3">
+        <div class="sheet-row-num">01</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">エコーの基本のキ</div><div class="sheet-row-desc">ゼロからのエコー入門</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#n4">
+        <div class="sheet-row-num">02</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">予習教材</div><div class="sheet-row-desc">セミナー前に読んでおきたい</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#n5">
+        <div class="sheet-row-num">03</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">セミナー資料</div><div class="sheet-row-desc">当日使った資料はこちら</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#n6">
+        <div class="sheet-row-num">04</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">疾患辞典</div><div class="sheet-row-desc">低学年向けのやさしい疾患解説</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="https://www.gehealthcare.co.jp/products/ultrasound/versana/echo-waza-ari/pocus" target="_blank" rel="noopener">
+        <div class="sheet-row-num">05</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">waza-ari <span class="sheet-row-ext">外部 ↗</span></div><div class="sheet-row-desc">GE社のPOCUS動画。予習にも復習にも</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#n10">
+        <div class="sheet-row-num">06</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">ショックの基礎</div><div class="sheet-row-desc">10日間で学ぶ！エコーを用いたショック鑑別</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#anatomy">
+        <div class="sheet-row-num">07</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">解剖の理解</div><div class="sheet-row-desc">解剖が頭に入るほど、エコーは読める</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="sheet-row" href="manabu.html#spl-engineering">
+        <div class="sheet-row-num">08</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">工学系学習</div><div class="sheet-row-desc">超音波の原理・各モード。POCUS-LOOPほか</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== シート：ADVANCED ===== -->
+<div class="sheet-overlay" id="sheet-advanced" onclick="closeSheetOnOverlay(event,'sheet-advanced')">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-kicker">ADVAN<span>CED</span></div>
+        <div class="sheet-sub">応用ルート。興味のあるところから、どこへでも。</div>
+      </div>
+      <div class="sheet-close" onclick="closeSheet('sheet-advanced')">✕</div>
+    </div>
+    <div class="sheet-body">
+      <a class="sheet-row accent" href="manabu.html#spl">
+        <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 3h12v5a6 6 0 01-12 0z"/><path d="M6 5H3v2a3 3 0 003 3M18 5h3v2a3 3 0 01-3 3"/></svg></div>
+        <div class="sheet-row-body"><div class="sheet-row-title">SPL ― Student POCUS League</div><div class="sheet-row-desc">絵合わせ・工学系・メディカルラリー・過去問・ノウハウ集</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="sheet-divider">FIELDS</div>
+      <a class="sheet-row" href="manabu.html#adv-abdomen"><div class="sheet-row-ic">🫄</div><div class="sheet-row-body"><div class="sheet-row-title">腹部エコー</div><div class="sheet-row-desc">膵臓・6アプローチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-heart"><div class="sheet-row-ic">❤️</div><div class="sheet-row-body"><div class="sheet-row-title">心臓の詳細エコー</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-msk"><div class="sheet-row-ic">🦴</div><div class="sheet-row-body"><div class="sheet-row-title">運動器</div><div class="sheet-row-desc">肩・肘・膝・ゼロイチサイン・股関節</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-rheuma"><div class="sheet-row-ic">🖐️</div><div class="sheet-row-body"><div class="sheet-row-title">リウマチ</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-vexus"><div class="sheet-row-ic">🌊</div><div class="sheet-row-body"><div class="sheet-row-title">VExUS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-cvc"><div class="sheet-row-ic">💉</div><div class="sheet-row-body"><div class="sheet-row-title">中心静脈カテーテル</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-rally"><div class="sheet-row-ic">🚑</div><div class="sheet-row-body"><div class="sheet-row-title">メディカルラリー / 救急</div><div class="sheet-row-desc">JATEC</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-bls"><div class="sheet-row-ic">🫁</div><div class="sheet-row-body"><div class="sheet-row-title">BLS</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#adv-disaster"><div class="sheet-row-ic">⛑️</div><div class="sheet-row-body"><div class="sheet-row-title">災害</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="sheet-row" href="manabu.html#advanced" style="margin-top:6px;border-style:dashed;"><div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div><div class="sheet-row-body"><div class="sheet-row-title">まなぶページで全体を見る</div></div><svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== シート：アプリについて ===== -->
+<div class="sheet-overlay" id="sheet-about" onclick="closeSheetOnOverlay(event,'sheet-about')">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-kicker">ABOUT <span>K-PICS APP</span></div>
+        <div class="sheet-sub">このアプリについて</div>
+      </div>
+      <div class="sheet-close" onclick="closeSheet('sheet-about')">✕</div>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-row" role="button" tabindex="0" onclick="closeSheet('sheet-about'); openPurposeModal();">
+        <div class="sheet-row-num">01</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">このアプリの目的</div><div class="sheet-row-desc">学びを、次の代へ。</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="sheet-row" role="button" tabindex="0" onclick="closeSheet('sheet-about'); openDocs('app-howto','このアプリの使い方');">
+        <div class="sheet-row-num">02</div>
+        <div class="sheet-row-body"><div class="sheet-row-title">このアプリの使い方</div><div class="sheet-row-desc">資料（PDF）で案内します。随時追加</div></div>
+        <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== このアプリの目的（DNA写真つき） ===== -->
+<div class="guide-modal-overlay" id="purpose-modal-overlay" onclick="if(event.target.id==='purpose-modal-overlay') closePurposeModal()">
+  <div class="guide-modal-box" style="position:relative;">
+    <button class="guide-modal-close float" onclick="closePurposeModal()" aria-label="閉じる">✕</button>
+    <div class="purpose-hero">
+      <img src="assets/bg-dna.jpg" alt="">
+      <div class="purpose-hero-tint"></div>
+      <div class="purpose-hero-shade"></div>
+      <div class="purpose-hero-copy">
+        <div class="purpose-eyebrow">このポータルの目的</div>
+        <div class="purpose-title">学びを、<span class="accent">次の代へ。</span></div>
+      </div>
+    </div>
+    <div class="purpose-body">
+      <div class="purpose-lead">先輩が積み上げてきた知識・技術・経験を、このポータルに集約し、次の世代へ確実につなぐ。K-PICSは<strong>「やってみた人が教える」学生主体の教育循環システム</strong>を目指している。</div>
+      <div class="cycle-grid">
+        <div class="cycle-item">
+          <div class="cycle-num">1</div>
+          <div class="cycle-body"><div class="cycle-title">学習・練習する</div><div class="cycle-desc">このポータルのリソースを活用して技術・知識を磨く</div></div>
+        </div>
+        <div class="cycle-item">
+          <div class="cycle-num">2</div>
+          <div class="cycle-body"><div class="cycle-title">認定試験に挑む</div><div class="cycle-desc">一定水準に達したと評価され、バッジが付与される</div></div>
+        </div>
+        <div class="cycle-item">
+          <div class="cycle-num">3</div>
+          <div class="cycle-body"><div class="cycle-title">指導者側へまわる</div><div class="cycle-desc">バッジ取得者が後輩の指導を担い、学びを引き継ぐ</div></div>
+        </div>
+        <div class="cycle-item">
+          <div class="cycle-num">4</div>
+          <div class="cycle-body"><div class="cycle-title">学びを深め、広げる</div><div class="cycle-desc">より深い学びと経験を積み、後輩への指導、他大学との連携、地域への還元へとつなげていく</div></div>
+        </div>
+      </div>
+      <div class="cycle-loop">↻ そしてまた、次の代へ</div>
+      <div class="purpose-note">超音波を学ぶためだけに活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PDF資料モーダル（アプリの使い方） ===== -->
+<div class="guide-modal-overlay" id="pdf-modal" onclick="if(event.target.id==='pdf-modal') closeDocs()">
+  <div class="guide-modal-box">
+    <div class="guide-modal-head">
+      <div>
+        <div class="guide-modal-title" id="pdf-title">資料</div>
+        <div style="font-size:10.5px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;margin-top:3px;" id="pdf-sub"></div>
+      </div>
+      <button class="guide-modal-close" onclick="closeDocs()" aria-label="閉じる">✕</button>
+    </div>
+    <div class="guide-modal-body">
+      <div id="pdf-list"></div>
+      <div class="pdf-upload" id="pdf-upload" style="display:none;">
+        <div class="pdf-upload-label">🔑 コアメンバー・先生：PDFを追加する</div>
+        <label class="pdf-drop" for="pdf-file-input">タップしてPDFを選ぶ<br><span style="font-size:10.5px;color:var(--text-dim);">1ファイル20MBまで／何個でも追加できます</span></label>
+        <input type="file" id="pdf-file-input" accept="application/pdf,.pdf" style="display:none;">
+      </div>
+      <div class="pdf-status" id="pdf-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== お知らせモーダル ===== -->
 <div class="guide-modal-overlay" id="announcement-modal-overlay" onclick="closeAnnouncementModalOnOverlay(event)">
   <div class="guide-modal-box">
     <div class="guide-modal-head">
@@ -1270,6 +1024,7 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
   </div>
 </div>
 
+<!-- ===== K-PICSの部員として ===== -->
 <div class="guide-modal-overlay" id="guide-modal-overlay" onclick="closeGuideModalOnOverlay(event)">
   <div class="guide-modal-box">
     <div class="guide-modal-head">
@@ -1286,14 +1041,12 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
 
     <div class="guide-modal-body" id="guide-modal-body">
 
-      <!-- ============ 1. K-PICS活動ルール ============ -->
       <section class="gm-pane active" role="tabpanel" id="gm-pane-0" aria-labelledby="gm-tab-0">
         <div class="gm-date">最終更新：2026/09/08</div>
         <div class="gm-lead">
           K-PICSでは、地域医療支援センターを利用する地域枠学生をはじめ、東棟3階で働く職員の皆さんと気持ちよく共存し、安全に活動を継続できるよう、以下のルールで活動します。<br><br>
           状況に応じて変更する場合があります。変更がある場合は、Slack等で随時お知らせします。
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">📅</span>活動日</div>
           <div class="gm-list">
@@ -1302,7 +1055,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">それ以外の曜日に活動を希望する場合は、事前に担当教員へ相談してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🕓</span>活動時間</div>
           <div class="gm-list">
@@ -1312,7 +1064,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">病院玄関が19:00に施錠されるため、時間厳守でお願いします</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">📍</span>活動場所</div>
           <div class="gm-list">
@@ -1321,7 +1072,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">センターの会議予定、担当教員の不在、施設管理上の事情などにより、予定していた活動を変更・中止することがあります。変更がある場合はSlack等で連絡しますので、活動前に最新の案内を確認してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🚪</span>入退館</div>
           <div class="gm-list">
@@ -1331,7 +1081,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">扉前のインターホンは使用しないでください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">✅</span>活動終了時の確認</div>
           <div class="gm-lead" style="margin-bottom:10px;">最後に退出する人は、以下を確認してください。</div>
@@ -1344,7 +1093,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">19:00までに完全に退出する</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">👥</span>学外者が参加する活動</div>
           <div class="gm-list">
@@ -1352,27 +1100,21 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">開錠や入退室方法は通常のK-PICS活動と異なるため、事前に担当教員へ確認してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">💬</span>相談・連絡</div>
           <div class="gm-list">
             <div class="gm-list-item">「自主練をしたい」「新しい内容に挑戦したい」「活動で困っている」などの希望や相談があれば、代表、副代表または担当教員へ連絡してください</div>
           </div>
         </div>
-
-        <div class="gm-note">
-          学びたい気持ちを大切にしながら、施設を利用する地域枠学生・職員にも配慮し、無理なく継続できる活動を一緒につくっていきましょう。
-        </div>
+        <div class="gm-note">学びたい気持ちを大切にしながら、施設を利用する地域枠学生・職員にも配慮し、無理なく継続できる活動を一緒につくっていきましょう。</div>
       </section>
 
-      <!-- ============ 2. エコー練習に関する注意事項 ============ -->
       <section class="gm-pane" role="tabpanel" id="gm-pane-1" aria-labelledby="gm-tab-1">
         <div class="gm-lead">
           K-PICSで使用しているエコー機器は、もともと大学の備品ではなく、蒸野先生のご協力のもと、開業医の先生方や院内の各診療科から譲り受けた貴重な機器です。購入当時は非常に高額な医療機器であり、皆さんの学習のためにご厚意で提供していただいています。また、こうした練習は<strong>地域医療支援センターのご協力のもと</strong>で行わせていただいています。<br><br>
           今後も長く活動を継続していくため、入室のルールから機器の取り扱いまで、以下の点を必ず守ってエコー練習を行ってください。<br><br>
           分からないことや困ったことがあれば、いつでもコアメンバーや担当教員まで気軽に聞いてください。
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🤫</span>周囲への配慮について</div>
           <div class="gm-list">
@@ -1380,7 +1122,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">自習スペースの奥で練習する場合は、同じ空間で自習している学生や、カルテを確認されている先生方がいらっしゃいますので、大きな声や物音を立てすぎないよう、静かに練習してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🛏️</span>実施環境について</div>
           <div class="gm-list">
@@ -1388,7 +1129,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">ベッドにゼリーが付着しないよう、ペーパー等を敷いてください。ついてしまった場合は、速やかに拭き取ってください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🔌</span>機器の取り扱いについて</div>
           <div class="gm-list">
@@ -1398,7 +1138,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">万が一、落下や破損などのトラブルが発生した場合は、速やかに報告してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🧹</span>使用後の片付けについて</div>
           <div class="gm-list">
@@ -1406,12 +1145,9 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">ベッド、エコー本体、ゼリー、パーテーション、拭き取りペーパー等は、使用後に元の場所へ戻してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🧴</span>プローブの消毒について</div>
-          <div class="gm-lead" style="margin-bottom:14px;">
-            以前はアルコールによる消毒はプローブ劣化の原因となるため最小限とされていましたが、近年は各メーカーともアルコール消毒に対応する機種が増えています。
-          </div>
+          <div class="gm-lead" style="margin-bottom:14px;">以前はアルコールによる消毒はプローブ劣化の原因となるため最小限とされていましたが、近年は各メーカーともアルコール消毒に対応する機種が増えています。</div>
           <div class="gm-sublabel">健常者同士で行うエコー練習の場合</div>
           <div class="gm-list">
             <div class="gm-list-item">① 検査終了後にガーゼ等でゼリーを拭き取る</div>
@@ -1422,20 +1158,12 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">標準予防策に従い、患者さんごとにアルコール消毒を行うことが望ましいです</div>
           </div>
         </div>
-
-        <div class="gm-note">
-          各メーカーの推奨する消毒方法については、以下をご参照ください。<br>
-          <a class="gm-link" href="https://www.jsum.or.jp/members/about/souchitoriatsukai/" target="_blank" rel="noopener">https://www.jsum.or.jp/members/about/souchitoriatsukai/</a>
-        </div>
+        <div class="gm-note">各メーカーの推奨する消毒方法については、以下をご参照ください。<br><a class="gm-link" href="https://www.jsum.or.jp/members/about/souchitoriatsukai/" target="_blank" rel="noopener">https://www.jsum.or.jp/members/about/souchitoriatsukai/</a></div>
       </section>
 
-      <!-- ============ 3. 自主練習時のチェックリスト ============ -->
       <section class="gm-pane" role="tabpanel" id="gm-pane-2" aria-labelledby="gm-tab-2">
         <div class="gm-pane-title">自主練習時のチェックリスト</div>
-        <div class="gm-lead">
-          次に使用する人が気持ちよく練習できるよう、<strong>練習後は必ず片付け</strong>をお願いします。また、退出前に以下の項目をすべて確認してください。
-        </div>
-
+        <div class="gm-lead">次に使用する人が気持ちよく練習できるよう、<strong>練習後は必ず片付け</strong>をお願いします。また、退出前に以下の項目をすべて確認してください。</div>
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">📅</span>自主練習時のルール</div>
           <div class="gm-list check">
@@ -1443,7 +1171,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item">原則、<strong>19時までに退出</strong>してください</div>
           </div>
         </div>
-
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🧾</span>練習後のチェックリスト</div>
           <div class="gm-list check">
@@ -1457,13 +1184,9 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
             <div class="gm-list-item"><strong>忘れ物</strong>はありませんか？</div>
           </div>
         </div>
-
-        <div class="gm-note">
-          📣 最後にもう一度、<strong>練習前と同じ状態に戻っているか確認</strong>してから退出してください。皆さんが気持ちよく練習できる環境を保つため、ご協力よろしくお願いします！
-        </div>
+        <div class="gm-note">📣 最後にもう一度、<strong>練習前と同じ状態に戻っているか確認</strong>してから退出してください。皆さんが気持ちよく練習できる環境を保つため、ご協力よろしくお願いします！</div>
       </section>
 
-      <!-- ============ 4. 何より大事なこと ============ -->
       <section class="gm-pane" role="tabpanel" id="gm-pane-3" aria-labelledby="gm-tab-3">
         <div class="gm-closing" style="margin-top:4px;">
           <div style="font-weight:800;font-size:15px;margin-bottom:10px;">🤝 相手への思いやりを忘れずに</div>
@@ -1489,7 +1212,6 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
       <button class="guide-close" onclick="closeGuide('guide-overlay-ios')">✕</button>
     </div>
     <div class="guide-sub">iPhoneの「Safari」というアプリでこのページを開いている場合の手順です。Chromeなど他のアプリで開いている場合は、一度Safariで開き直してください。</div>
-
     <div class="guide-step">
       <div class="guide-step-num">1</div>
       <div class="guide-step-body">
@@ -1502,21 +1224,14 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
         </div>
       </div>
     </div>
-
     <div class="guide-step">
       <div class="guide-step-num">2</div>
-      <div class="guide-step-body">
-        <div class="guide-step-text">出てきたメニューを下にスクロールして、「ホーム画面に追加」を探してタップします。</div>
-      </div>
+      <div class="guide-step-body"><div class="guide-step-text">出てきたメニューを下にスクロールして、「ホーム画面に追加」を探してタップします。</div></div>
     </div>
-
     <div class="guide-step">
       <div class="guide-step-num">3</div>
-      <div class="guide-step-body">
-        <div class="guide-step-text">右上の「追加」をタップすれば完了です。ホーム画面にK-PICSのアイコンが追加されます。</div>
-      </div>
+      <div class="guide-step-body"><div class="guide-step-text">右上の「追加」をタップすれば完了です。ホーム画面にK-PICSのアイコンが追加されます。</div></div>
     </div>
-
     <div class="guide-note">すでに追加したアイコンが正しく表示されない場合は、一度そのアイコンを削除してから、Safariのタブを閉じて開き直し、もう一度この手順をやり直してください。</div>
   </div>
 </div>
@@ -1529,28 +1244,18 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
       <button class="guide-close" onclick="closeGuide('guide-overlay-android')">✕</button>
     </div>
     <div class="guide-sub">Chromeでこのページを開いている場合の手順です。</div>
-
     <div class="guide-step">
       <div class="guide-step-num">1</div>
-      <div class="guide-step-body">
-        <div class="guide-step-text">右上の「︙」（点が縦に3つ並んだアイコン）をタップします。</div>
-      </div>
+      <div class="guide-step-body"><div class="guide-step-text">右上の「︙」（点が縦に3つ並んだアイコン）をタップします。</div></div>
     </div>
-
     <div class="guide-step">
       <div class="guide-step-num">2</div>
-      <div class="guide-step-body">
-        <div class="guide-step-text">「アプリをインストール」または「ホーム画面に追加」をタップします。</div>
-      </div>
+      <div class="guide-step-body"><div class="guide-step-text">「アプリをインストール」または「ホーム画面に追加」をタップします。</div></div>
     </div>
-
     <div class="guide-step">
       <div class="guide-step-num">3</div>
-      <div class="guide-step-body">
-        <div class="guide-step-text">確認画面が出たら「インストール」または「追加」をタップすれば完了です。</div>
-      </div>
+      <div class="guide-step-body"><div class="guide-step-text">確認画面が出たら「インストール」または「追加」をタップすれば完了です。</div></div>
     </div>
-
     <div class="guide-note">すでに追加したアイコンが正しく表示されない場合は、一度そのアイコンを削除してから、Chromeのタブを閉じて開き直し、もう一度この手順をやり直してください。</div>
   </div>
 </div>
@@ -1558,30 +1263,50 @@ body.has-tabbar .story-content{padding-bottom:calc(70px + env(safe-area-inset-bo
 <script src="app.js"></script>
 <script src="tabbar.js"></script>
 <script>
+// ===================== ボトムシート（INPUT／ADVANCED／アプリについて） =====================
+function openSheet(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.add('open');
+  const body = el.querySelector('.sheet-body');
+  if(body) body.scrollTop = 0;
+}
+function closeSheet(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.remove('open');
+}
+function closeSheetOnOverlay(e, id){
+  if(e.target.id === id) closeSheet(id);
+}
+
+// ===================== このアプリの目的 =====================
+function openPurposeModal(){
+  const el = document.getElementById('purpose-modal-overlay');
+  el.classList.add('open');
+  const body = el.querySelector('.purpose-body');
+  if(body) body.scrollTop = 0;
+}
+function closePurposeModal(){
+  document.getElementById('purpose-modal-overlay').classList.remove('open');
+}
+
 // ===================== K-PICSの部員として：4部構成モーダル =====================
-// タブ（活動ルール／注意事項／チェックリスト／大事なこと）を切り替える。
-// 表示はCSSの .active クラスだけで制御し、切替時は本文を最上部へ戻す。
 function switchGuideTab(index){
   var tabs  = document.querySelectorAll('#guide-modal-overlay .gm-tab');
   var panes = document.querySelectorAll('#guide-modal-overlay .gm-pane');
   if(!tabs.length || !panes.length) return;
   if(index < 0 || index >= tabs.length || index >= panes.length) return;
-
   for(var i=0; i<tabs.length; i++){
     var on = (i === index);
     tabs[i].classList.toggle('active', on);
     tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
   }
-  for(var j=0; j<panes.length; j++){
-    panes[j].classList.toggle('active', j === index);
-  }
-
+  for(var j=0; j<panes.length; j++){ panes[j].classList.toggle('active', j === index); }
   var body = document.getElementById('guide-modal-body');
   if(body) body.scrollTop = 0;
 }
-
 function openGuideModal(){
-  switchGuideTab(0); // 開くたびに1つ目のタブから
+  switchGuideTab(0);
   document.getElementById('guide-modal-overlay').classList.add('open');
 }
 function closeGuideModal(){
@@ -1591,127 +1316,129 @@ function closeGuideModalOnOverlay(e){
   if(e.target.id === 'guide-modal-overlay') closeGuideModal();
 }
 
-// ===================== スクロールで順番に浮き上がる演出 =====================
-let _revealObserver = null;
-function setupRevealObserver(){
-  const targets = document.querySelectorAll('.reveal');
-  if(!targets.length) return;
-  if(_revealObserver) _revealObserver.disconnect();
-  _revealObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        _revealObserver.unobserve(entry.target); // 一度表示したら監視終了
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  targets.forEach(el => _revealObserver.observe(el));
+// ===================== PDF資料（このアプリの使い方） =====================
+// manabu.html と同じ仕組み・同じ Supabase の置き場を使う。
+// 閲覧は部員全員、追加・削除はコアメンバー・先生（app.js の CURRENT_PROFILE で判定）。
+const PDF_BUCKET = 'content-pdfs';
+const PDF_TABLE  = 'content_files';
+const PDF_MAX_MB = 20;
+let _docsKey = null;
+
+function _docsStatus(msg, kind){
+  const el = document.getElementById('pdf-status');
+  if(!msg){ el.className = 'pdf-status'; el.textContent = ''; return; }
+  el.className = 'pdf-status show ' + (kind || 'info');
+  el.textContent = msg;
 }
-window.addEventListener('DOMContentLoaded', setupRevealObserver);
+function _docsCanEdit(){
+  const p = window.CURRENT_PROFILE;
+  return !!(p && (p.is_core_member || p.is_teacher));
+}
+function _esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function _fmtDate(s){ if(!s) return ''; const d=new Date(s); return d.getFullYear()+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+('0'+d.getDate()).slice(-2); }
+function _fmtSize(b){ if(!b && b!==0) return ''; return b<1024*1024 ? Math.round(b/1024)+' KB' : (b/1024/1024).toFixed(1)+' MB'; }
 
-// ===================== らせん背景のスクロール演出 =====================
-// スクロール量に合わせて、ストーリーゾーン背景のらせん画像が回転・拡大しながら
-// フェードイン／フェードアウトする。「動きを減らす」設定(OSのアクセシビリティ)の
-// 端末では回転させず、うっすら表示するだけにする。
-(function initStoryScroll(){
-  const zone = document.getElementById('story-zone');
-  const img  = document.getElementById('story-bg-img');
-  if(!zone || !img) return;
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduceMotion){
-    img.style.opacity = '.3';
+async function _docsRender(){
+  const list = document.getElementById('pdf-list');
+  const canEdit = _docsCanEdit();
+  list.innerHTML = '<div class="pdf-empty">読み込み中…</div>';
+  let rows = [];
+  try{
+    const { data, error } = await _supabase.from(PDF_TABLE).select('*').eq('content_key', _docsKey).order('created_at', {ascending:false});
+    if(error) throw error;
+    rows = data || [];
+  }catch(e){
+    list.innerHTML = '<div class="pdf-empty">資料を読み込めませんでした。<br>通信環境を確認して、開き直してみてください。</div>';
     return;
   }
-
-  let ticking = false;
-  function update(){
-    ticking = false;
-    const rect = zone.getBoundingClientRect();
-    const vh = window.innerHeight;
-
-    // ゾーン内をどれだけスクロールしたかの進捗（0〜1）
-    const total = Math.max(rect.height - vh, 1);
-    let p = (-rect.top) / total;
-    p = Math.min(1, Math.max(0, p));
-
-    // 回転と拡大
-    const rot = p * 220;            // ゾーンを通過する間に220度回転
-    const sc  = 1.15 + p * 0.35;    // 少しずつ拡大（回転しても隅まで覆うよう大きめに）
-    img.style.transform = `translate(-50%,-50%) rotate(${rot}deg) scale(${sc})`;
-
-    // ゾーンの出入りで自然にフェード
-    const enter = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.35)));
-    const exit  = Math.min(1, Math.max(0, rect.bottom / (vh * 0.35)));
-    const op = 0.5 * Math.min(enter, exit);
-    img.style.opacity = op.toFixed(3);
+  if(!rows.length){
+    list.innerHTML = '<div class="pdf-empty">まだ資料はありません。' + (canEdit ? '<br>下から追加できます。' : '<br>追加され次第、ここに表示されます。') + '</div>';
+    return;
   }
-  function onScroll(){
-    if(!ticking){ ticking = true; requestAnimationFrame(update); }
-  }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  window.addEventListener('DOMContentLoaded', update);
-  update();
-})();
+  list.innerHTML = rows.map(r => `
+    <div class="pdf-item" data-path="${_esc(r.storage_path)}" data-id="${_esc(r.id)}">
+      <div class="pdf-item-ic">PDF</div>
+      <div class="pdf-item-body">
+        <div class="pdf-item-name">${_esc(r.file_name || '資料')}</div>
+        <div class="pdf-item-meta">${_fmtDate(r.created_at)}${r.size_bytes ? ' ・ ' + _fmtSize(r.size_bytes) : ''}</div>
+      </div>
+      ${canEdit ? '<button class="pdf-item-del">削除</button>' : ''}
+    </div>`).join('');
 
-// ===================== 救急車が駆け抜けるパン演出 =====================
-// .qa-pan の写真は幅155%で配置してあり、そのゾーンが画面を通過する間に
-// 写真を左から右へスライドさせる。救急車が走り抜けていくように見える。
-// 「動きを減らす」設定の端末では動かさない。
-(function initPanZones(){
-  const imgs = document.querySelectorAll('.qa-pan');
-  if(!imgs.length) return;
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  let ticking = false;
-  function update(){
-    ticking = false;
-    const vh = window.innerHeight;
-    imgs.forEach(img=>{
-      const zone = img.parentElement;
-      const rect = zone.getBoundingClientRect();
-      if(rect.bottom < 0 || rect.top > vh) return; // 画面外なら何もしない
-      // ゾーンが画面下から現れて上に抜けるまでの進捗（0〜1）
-      let t = (vh - rect.top) / (vh + rect.height);
-      t = Math.min(1, Math.max(0, t));
-      // 写真を -35% → 0% へスライド（画面の中を右方向へ駆け抜ける）
-      const x = -35 + t * 35;
-      img.style.transform = `translateX(${x}%)`;
+  list.querySelectorAll('.pdf-item').forEach(item => {
+    item.addEventListener('click', async (ev) => {
+      if(ev.target.classList.contains('pdf-item-del')) return;
+      _docsStatus('資料を開いています…', 'info');
+      const { data, error } = await _supabase.storage.from(PDF_BUCKET).createSignedUrl(item.dataset.path, 60*60);
+      if(error || !data){ _docsStatus('資料を開けませんでした。', 'ng'); return; }
+      _docsStatus('');
+      window.open(data.signedUrl, '_blank', 'noopener');
     });
+  });
+  list.querySelectorAll('.pdf-item-del').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      ev.stopPropagation();
+      const item = btn.closest('.pdf-item');
+      const name = item.querySelector('.pdf-item-name').textContent;
+      if(!window.confirm('「' + name + '」を削除します。よろしいですか？')) return;
+      _docsStatus('削除しています…', 'info');
+      await _supabase.storage.from(PDF_BUCKET).remove([item.dataset.path]);
+      const { error } = await _supabase.from(PDF_TABLE).delete().eq('id', item.dataset.id);
+      if(error){ _docsStatus('削除できませんでした。', 'ng'); return; }
+      _docsStatus('削除しました。', 'ok');
+      _docsRender();
+    });
+  });
+}
+
+function openDocs(key, title){
+  _docsKey = key;
+  document.getElementById('pdf-title').textContent = title || '資料';
+  document.getElementById('pdf-sub').textContent = key;
+  document.getElementById('pdf-upload').style.display = _docsCanEdit() ? 'block' : 'none';
+  _docsStatus('');
+  document.getElementById('pdf-modal').classList.add('open');
+  _docsRender();
+}
+function closeDocs(){
+  document.getElementById('pdf-modal').classList.remove('open');
+  _docsKey = null;
+}
+
+document.getElementById('pdf-file-input').addEventListener('change', async function(){
+  const file = this.files && this.files[0];
+  if(!file) return;
+  this.value = '';
+  if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ _docsStatus('PDFファイルを選んでください。', 'ng'); return; }
+  if(file.size > PDF_MAX_MB*1024*1024){ _docsStatus('ファイルが大きすぎます（' + PDF_MAX_MB + 'MBまで）。', 'ng'); return; }
+  _docsStatus('アップロード中…（大きいファイルは少し時間がかかります）', 'info');
+  const path = _docsKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + '.pdf';
+  const up = await _supabase.storage.from(PDF_BUCKET).upload(path, file, {contentType:'application/pdf', upsert:false});
+  if(up.error){ _docsStatus('アップロードできませんでした。（' + up.error.message + '）', 'ng'); return; }
+  const ins = await _supabase.from(PDF_TABLE).insert({
+    content_key:_docsKey, file_name:file.name, storage_path:path, size_bytes:file.size, uploaded_by:window.CURRENT_UID || null
+  });
+  if(ins.error){
+    await _supabase.storage.from(PDF_BUCKET).remove([path]);
+    _docsStatus('登録できませんでした。（' + ins.error.message + '）', 'ng'); return;
   }
-  function onScroll(){
-    if(!ticking){ ticking = true; requestAnimationFrame(update); }
-  }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  update();
-})();
+  _docsStatus('アップロードしました。', 'ok');
+  _docsRender();
+});
 
 // ===================== 画面が必ず最上部から表示されるようにする =====================
-// PWA起動時などにスクロール位置がズレてヘッダーが隠れてしまう問題への対策。
-// （ページが長くなったため、アプリ切り替えで戻ってきた時のジャンプは
-//  起こらないよう、visibilitychangeでのリセットは行わない）
 function scrollAllToTop(){
   window.scrollTo(0,0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
 }
 window.addEventListener('load', scrollAllToTop);
-window.addEventListener('pageshow', function(e){
-  // 戻る操作でのキャッシュ復帰時は位置を保持し、通常表示時のみ最上部へ
-  if(!e.persisted) scrollAllToTop();
-});
+window.addEventListener('pageshow', function(e){ if(!e.persisted) scrollAllToTop(); });
 
 // ===================== 初回起動時にロゴ画像が描画されない不具合への対策 =====================
-// iOSのPWA再起動直後、アニメーションが関わる要素内の画像が最初の1回だけ
-// 描画されないWebKit側の既知の不具合への対策。一瞬だけ無害なtransformを
-// 与えて戻すことで強制的に再描画させる。
 function forceRepaint(){
   document.body.style.transform = 'translateZ(0)';
-  requestAnimationFrame(()=>{
-    document.body.style.transform = '';
-  });
+  requestAnimationFrame(()=>{ document.body.style.transform = ''; });
 }
 window.addEventListener('load', forceRepaint);
 window.addEventListener('pageshow', forceRepaint);
