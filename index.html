@@ -214,7 +214,8 @@ button{font-family:inherit;}
   position:relative;z-index:1;flex:1;min-height:0;
   display:flex;flex-direction:column;
   width:100%;max-width:640px;margin:0 auto;
-  padding:12px 16px var(--tabbar-pad, 78px);
+  /* タブバー（56px前後）＋iPhoneのホームバー分だけ下を空ける */
+  padding:12px 16px calc(var(--tabbar-pad, 78px) + env(safe-area-inset-bottom));
 }
 
 /* ホーム画面に追加バナー（細い1行） */
@@ -233,7 +234,8 @@ button{font-family:inherit;}
 .home-grid{
   flex:1;min-height:0;
   display:grid;grid-template-columns:1fr 1fr;
-  grid-template-rows:1.25fr 1fr .98fr .72fr;
+  /* 2段目（自主練ハンドブック／認定アプリ）を少し低くして、全体を1画面に収めやすく */
+  grid-template-rows:1.22fr .80fr 1fr .76fr;
   gap:10px;
 }
 .tile{
@@ -341,7 +343,7 @@ button{font-family:inherit;}
   .install-banner{padding:7px 11px;margin-bottom:8px;}
   .install-banner-body{flex-wrap:nowrap;overflow:hidden;}
   .install-banner-desc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .home-grid{gap:8px;grid-template-rows:1.12fr 1fr .86fr .66fr;}
+  .home-grid{gap:8px;grid-template-rows:1.12fr .78fr .88fr .70fr;}
   .tile{padding:10px 12px;border-radius:15px;}
   .tile-icon{width:28px;height:28px;border-radius:8px;}
   .tile-icon svg{width:15px;height:15px;}
