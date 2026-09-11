@@ -578,6 +578,7 @@ button{font-family:inherit;}
 .pdf-upload{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
 .pdf-upload-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;}
 .pdf-drop{border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;display:block;}
+.pdf-file{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
 .pdf-drop:active{border-color:var(--orange);color:var(--orange-light);}
 .pdf-status{margin-top:10px;font-size:11.5px;line-height:1.6;display:none;border-radius:8px;padding:9px 11px;}
 .pdf-status.show{display:block;}
@@ -1007,8 +1008,8 @@ button{font-family:inherit;}
       <div id="pdf-list"></div>
       <div class="pdf-upload" id="pdf-upload" style="display:none;">
         <div class="pdf-upload-label">🔑 コアメンバー・先生：PDFを追加する</div>
-        <label class="pdf-drop" for="pdf-file-input">タップしてPDFを選ぶ<br><span style="font-size:10.5px;color:var(--text-dim);">1ファイル20MBまで／何個でも追加できます</span></label>
-        <input type="file" id="pdf-file-input" accept="application/pdf,.pdf" style="display:none;">
+        <div class="pdf-drop" id="pdf-drop" role="button" tabindex="0">タップしてPDFを選ぶ<br><span style="font-size:10.5px;color:var(--text-dim);">1ファイル20MBまで／何個でも追加できます</span></div>
+        <input class="pdf-file" type="file" id="pdf-file-input" accept="application/pdf,.pdf">
       </div>
       <div class="pdf-status" id="pdf-status"></div>
     </div>
@@ -1342,6 +1343,17 @@ function _docsStatus(msg, kind){
   el.className = 'pdf-status show ' + (kind || 'info');
   el.textContent = msg;
 }
+// Supabaseのエラー文は英語なので、よくあるものを日本語に言い換える
+function _friendlyError(raw){
+  const m = String(raw || '');
+  if(/bucket not found/i.test(m)) return 'ファイルの置き場が見つかりません。Supabaseの Storage に「content-pdfs」があるか確認してください。';
+  if(/row-level security|violates|not authorized|permission/i.test(m)) return 'アップロードの権限がないと言われました。profiles の is_core_member が true か確認してください。';
+  if(/maximum allowed size|payload too large|413|entity too large/i.test(m)) return 'ファイルが大きすぎると言われました。バケットの「File size limit」を確認してください。';
+  if(/jwt|token|not authenticated|session/i.test(m)) return 'ログイン情報が切れているようです。ログインし直してからお試しください。';
+  if(/no content provided|empty|0 bytes/i.test(m)) return 'ファイルの中身が空のまま送られました。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。';
+  if(/failed to fetch|network|load failed/i.test(m)) return '通信に失敗しました。電波のいい場所でもう一度お試しください。';
+  return m;
+}
 function _docsCanEdit(){
   const p = window.CURRENT_PROFILE;
   return !!(p && (p.is_core_member || p.is_teacher));
@@ -1417,43 +1429,80 @@ function closeDocs(){
   _docsKey = null;
 }
 
-document.getElementById('pdf-file-input').addEventListener('change', async function(){
-  const file = this.files && this.files[0];
-  if(!file) return;
-  this.value = '';
-  if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ _docsStatus('PDFファイルを選んでください。', 'ng'); return; }
-  if(file.size > PDF_MAX_MB*1024*1024){ _docsStatus('ファイルが大きすぎます（' + PDF_MAX_MB + 'MBまで）。', 'ng'); return; }
-  _docsStatus('アップロード中…（大きいファイルは少し時間がかかります）', 'info');
-  const path = _docsKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + '.pdf';
-  const up = await _supabase.storage.from(PDF_BUCKET).upload(path, file, {contentType:'application/pdf', upsert:false});
-  if(up.error){ _docsStatus('アップロードできませんでした。（' + up.error.message + '）', 'ng'); return; }
-  const ins = await _supabase.from(PDF_TABLE).insert({
-    content_key:_docsKey, file_name:file.name, storage_path:path, size_bytes:file.size, uploaded_by:window.CURRENT_UID || null
-  });
-  if(ins.error){
-    await _supabase.storage.from(PDF_BUCKET).remove([path]);
-    _docsStatus('登録できませんでした。（' + ins.error.message + '）', 'ng'); return;
+(function(){
+  var drop = document.getElementById('pdf-drop'), input = document.getElementById('pdf-file-input');
+  if(drop && input){
+    drop.addEventListener('click', function(){ input.click(); });
+    drop.addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); input.click(); }
+    });
   }
-  _docsStatus('アップロードしました。', 'ok');
-  _docsRender();
-});
-
-// ===================== タブバーのぶんの余白を実測する =====================
-// タブバーは画面の下端に固定されているので、タイルがその下に隠れないよう
-// タブバーの実際の高さ（端末のホームバーぶんを含む）を測って余白にする。
-(function fitTabbarPad(){
-  function apply(){
-    var tb = document.getElementById('main-tabbar');
-    if(!tb) return;
-    var h = tb.getBoundingClientRect().height;
-    if(h > 0) document.documentElement.style.setProperty('--tabbar-pad', Math.round(h + 10) + 'px');
-  }
-  apply();
-  window.addEventListener('load', apply);
-  window.addEventListener('resize', apply);
-  window.addEventListener('orientationchange', function(){ setTimeout(apply, 250); });
-  window.addEventListener('pageshow', apply);
 })();
+
+// ファイルの中身を先に読み切る（iPhoneでは input をリセットすると参照が切れるため）
+function _readFile(file){
+  if(file.arrayBuffer) return file.arrayBuffer();
+  return new Promise(function(resolve, reject){
+    var r = new FileReader();
+    r.onload  = function(){ resolve(r.result); };
+    r.onerror = function(){ reject(r.error || new Error('read failed')); };
+    r.readAsArrayBuffer(file);
+  });
+}
+
+document.getElementById('pdf-file-input').addEventListener('change', async function(){
+  const input = this;
+  const file = input.files && input.files[0];
+  if(!file) return;
+  try{
+    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ _docsStatus('PDFファイルを選んでください。', 'ng'); return; }
+    if(file.size > PDF_MAX_MB*1024*1024){
+      _docsStatus('このファイルは ' + (file.size/1024/1024).toFixed(1) + 'MB あります。' + PDF_MAX_MB + 'MBまでにしてください。', 'ng'); return;
+    }
+    if(!window.CURRENT_UID){ _docsStatus('ログイン情報が読み込めていません。ページを開き直してみてください。', 'ng'); return; }
+
+    _docsStatus('ファイルを読み込んでいます…', 'info');
+    let buf;
+    try{ buf = await _readFile(file); }
+    catch(e){
+      _docsStatus('ファイルを読み込めませんでした。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。', 'ng');
+      console.error('[K-PICS] read error', e); return;
+    }
+    if(!buf || !buf.byteLength){
+      _docsStatus('ファイルの中身が空でした。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。', 'ng'); return;
+    }
+
+    const blob = new Blob([buf], {type:'application/pdf'});
+    _docsStatus('アップロード中…（' + (blob.size/1024/1024).toFixed(1) + 'MB）', 'info');
+
+    const path = _docsKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + '.pdf';
+    let up;
+    try{ up = await _supabase.storage.from(PDF_BUCKET).upload(path, blob, {contentType:'application/pdf', upsert:false}); }
+    catch(e){ up = {error:e}; }
+    if(up && up.error){
+      _docsStatus('アップロードできませんでした。' + _friendlyError(up.error.message || up.error), 'ng');
+      console.error('[K-PICS] upload error', up.error); return;
+    }
+
+    let ins;
+    try{
+      ins = await _supabase.from(PDF_TABLE).insert({
+        content_key:_docsKey, file_name:file.name, storage_path:path, size_bytes:blob.size, uploaded_by:window.CURRENT_UID || null
+      });
+    }catch(e){ ins = {error:e}; }
+    if(ins && ins.error){
+      await _supabase.storage.from(PDF_BUCKET).remove([path]);
+      _docsStatus('ファイルは送れましたが、一覧に登録できませんでした。' + _friendlyError(ins.error.message || ins.error), 'ng');
+      console.error('[K-PICS] insert error', ins.error); return;
+    }
+
+    _docsStatus('アップロードしました。', 'ok');
+    _docsRender();
+  } finally {
+    // リセットは最後に（先にやるとiPhoneでファイルの中身が消える）
+    input.value = '';
+  }
+});
 
 // ===================== 画面が必ず最上部から表示されるようにする =====================
 function scrollAllToTop(){

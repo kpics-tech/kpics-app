@@ -333,6 +333,9 @@ button{font-family:inherit;}
 .pdf-upload{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
 .pdf-upload-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
 .pdf-drop{border:1.5px dashed var(--border-light);border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;font-size:12px;color:var(--text-muted);line-height:1.7;display:block;}
+/* display:none だと端末によってファイル選択が開かないので、見えないだけの状態にする */
+.pdf-file{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
+.pdf-hint{margin-top:12px;font-size:11.5px;color:var(--text-dim);line-height:1.8;text-align:center;}
 .pdf-drop:active{border-color:var(--orange);color:var(--orange-light);}
 .pdf-status{margin-top:10px;font-size:11.5px;line-height:1.6;display:none;border-radius:8px;padding:9px 11px;}
 .pdf-status.show{display:block;}
@@ -548,10 +551,10 @@ button{font-family:inherit;}
       <div id="pdf-list"></div>
       <div class="pdf-upload" id="pdf-upload" style="display:none;">
         <div class="pdf-upload-label">🔑 コアメンバー・先生：PDFを追加する</div>
-        <label class="pdf-drop" for="pdf-file-input">
+        <div class="pdf-drop" id="pdf-drop" role="button" tabindex="0">
           タップしてPDFを選ぶ<br><span style="font-size:10.5px;color:var(--text-dim);">1ファイル20MBまで／何個でも追加できます</span>
-        </label>
-        <input type="file" id="pdf-file-input" accept="application/pdf,.pdf" style="display:none;">
+        </div>
+        <input class="pdf-file" type="file" id="pdf-file-input" accept="application/pdf,.pdf">
       </div>
       <div class="pdf-status" id="pdf-status"></div>
     </div>
@@ -765,6 +768,8 @@ button{font-family:inherit;}
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -1024,6 +1029,26 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     elStat.textContent = msg;
   }
 
+  // Supabaseのエラー文は英語なので、よくあるものを日本語に言い換える
+  function friendlyError(raw){
+    const m = String(raw || '');
+    if(/bucket not found/i.test(m))
+      return 'ファイルの置き場が見つかりません。Supabaseの Storage に「content-pdfs」という名前のバケットがあるか確認してください。';
+    if(/row-level security|violates|not authorized|permission/i.test(m))
+      return 'アップロードの権限がないと言われました。Supabaseの profiles で、あなたの行の is_core_member が true になっているか確認してください。';
+    if(/maximum allowed size|payload too large|413|entity too large/i.test(m))
+      return 'ファイルが大きすぎると言われました。Supabaseの Storage → content-pdfs → 設定 にある「File size limit」を確認してください。';
+    if(/jwt|token|not authenticated|session/i.test(m))
+      return 'ログイン情報が切れているようです。一度ログアウトして、入り直してからお試しください。';
+    if(/already exists|duplicate/i.test(m))
+      return '同じ名前で保存されてしまいました。もう一度お試しください。';
+    if(/no content provided|empty|0 bytes/i.test(m))
+      return 'ファイルの中身が空のまま送られました。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。';
+    if(/failed to fetch|network|load failed/i.test(m))
+      return '通信に失敗しました。電波のいい場所で、もう一度お試しください。';
+    return m;
+  }
+
   // ログイン中の人がアップロードできる人か（app.js のお知らせ投稿と同じ基準）
   async function fetchIsCore(uid){
     if(!uid) return false;
@@ -1114,33 +1139,111 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     });
   }
 
+  // 「タップしてPDFを選ぶ」→ ファイル選択を開く
+  const elDrop = document.getElementById('pdf-drop');
+  if(elDrop){
+    elDrop.addEventListener('click', () => elFile.click());
+    elDrop.addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); elFile.click(); }
+    });
+  }
+
+  // ファイルの中身を先に読み切る。
+  // iPhoneでは input をリセットするとファイルの参照が切れてしまうため、
+  // 送る前に必ずメモリへ読み込んでおく（これをしないと中身が空で送られる）。
+  function readFile(file){
+    if(file.arrayBuffer) return file.arrayBuffer();
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload  = () => resolve(r.result);
+      r.onerror = () => reject(r.error || new Error('read failed'));
+      r.readAsArrayBuffer(file);
+    });
+  }
+
   elFile.addEventListener('change', async () => {
     const file = elFile.files && elFile.files[0];
     if(!file) return;
-    elFile.value = '';
-    if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ status('PDFファイルを選んでください。', 'ng'); return; }
-    if(file.size > MAX_MB * 1024 * 1024){ status('ファイルが大きすぎます（' + MAX_MB + 'MBまで）。', 'ng'); return; }
-    status('アップロード中…（大きいファイルは少し時間がかかります）', 'info');
-    const path = openKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.pdf';
-    const up = await _supabase.storage.from(PDF_BUCKET).upload(path, file, { contentType: 'application/pdf', upsert: false });
-    if(up.error){ status('アップロードできませんでした。（' + up.error.message + '）', 'ng'); return; }
-    const ins = await _supabase.from(PDF_TABLE).insert({
-      content_key: openKey, file_name: file.name, storage_path: path, size_bytes: file.size, uploaded_by: window.CURRENT_UID || null
-    });
-    if(ins.error){
-      await _supabase.storage.from(PDF_BUCKET).remove([path]);
-      status('登録できませんでした。（' + ins.error.message + '）', 'ng'); return;
+
+    try{
+      if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){
+        status('PDFファイルを選んでください。', 'ng'); return;
+      }
+      if(file.size > MAX_MB * 1024 * 1024){
+        status('このファイルは ' + (file.size/1024/1024).toFixed(1) + 'MB あります。' + MAX_MB + 'MBまでにしてください。', 'ng'); return;
+      }
+      if(!window.CURRENT_UID){
+        status('ログイン情報が読み込めていません。ページを開き直してみてください。', 'ng'); return;
+      }
+
+      status('ファイルを読み込んでいます…', 'info');
+      let buf;
+      try{
+        buf = await readFile(file);
+      }catch(e){
+        status('ファイルを読み込めませんでした。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。', 'ng');
+        console.error('[K-PICS] read error', e);
+        return;
+      }
+      if(!buf || !buf.byteLength){
+        status('ファイルの中身が空でした。iCloudやGoogleドライブにだけ置いてあるファイルは、一度端末にダウンロードしてからお試しください。', 'ng');
+        return;
+      }
+
+      const blob = new Blob([buf], { type: 'application/pdf' });
+      status('アップロード中…（' + (blob.size/1024/1024).toFixed(1) + 'MB）', 'info');
+
+      const path = openKey + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.pdf';
+      let up;
+      try{
+        up = await _supabase.storage.from(PDF_BUCKET).upload(path, blob, { contentType: 'application/pdf', upsert: false });
+      }catch(e){ up = { error: e }; }
+      if(up && up.error){
+        status('アップロードできませんでした。' + friendlyError(up.error.message || up.error), 'ng');
+        console.error('[K-PICS] upload error', up.error);
+        return;
+      }
+
+      let ins;
+      try{
+        ins = await _supabase.from(PDF_TABLE).insert({
+          content_key: openKey, file_name: file.name, storage_path: path, size_bytes: blob.size, uploaded_by: window.CURRENT_UID || null
+        });
+      }catch(e){ ins = { error: e }; }
+      if(ins && ins.error){
+        await _supabase.storage.from(PDF_BUCKET).remove([path]);
+        status('ファイルは送れましたが、一覧に登録できませんでした。' + friendlyError(ins.error.message || ins.error), 'ng');
+        console.error('[K-PICS] insert error', ins.error);
+        return;
+      }
+
+      status('アップロードしました。', 'ok');
+      await renderList();
+      await loadCounts();
+    } finally {
+      // 入力欄のリセットは、すべて終わってから（先にやるとiPhoneで中身が消える）
+      elFile.value = '';
     }
-    status('アップロードしました。', 'ok');
-    await renderList();
-    await loadCounts();
   });
+
+  function applyUploadVisibility(){
+    elUp.style.display = isCore ? 'block' : 'none';
+    let hint = document.getElementById('pdf-hint');
+    if(!hint){
+      hint = document.createElement('div');
+      hint.id = 'pdf-hint';
+      hint.className = 'pdf-hint';
+      elUp.parentNode.insertBefore(hint, elUp.nextSibling);
+    }
+    hint.textContent = isCore ? '' : '資料の追加は、コアメンバーと先生のみが行えます。';
+    hint.style.display = isCore ? 'none' : 'block';
+  }
 
   function openModal(key, name){
     openKey = key;
     elTitle.textContent = name;
     elSub.textContent = key;
-    elUp.style.display = isCore ? 'block' : 'none';
+    applyUploadVisibility();
     status('');
     modal.classList.add('show');
     renderList();
@@ -1160,7 +1263,7 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     if(window.CURRENT_UID){
       fetchIsCore(window.CURRENT_UID).then(v => {
         isCore = v;
-        if(openKey){ elUp.style.display = isCore ? 'block' : 'none'; renderList(); }
+        if(openKey){ applyUploadVisibility(); renderList(); }
       });
       loadCounts();
       return;
