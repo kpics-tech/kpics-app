@@ -315,6 +315,32 @@ body.has-tabbar .main{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
 
 /* 下部タブバーとFAB（＋ボタン）が重ならないよう、FABをタブバーの上にずらす */
 .fab{bottom:calc(24px + 64px + env(safe-area-inset-bottom)) !important;}
+
+/* ===================== カテゴリ色分け ===================== */
+/* 追加・編集モーダルのカテゴリ選択ボタン */
+.cat-picker{display:flex;flex-wrap:wrap;gap:7px;}
+.cat-opt{
+  font-size:11.5px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer;
+  background:var(--card);border:1px solid var(--border-light);color:var(--text-muted);
+  font-family:inherit;transition:all .15s;line-height:1.3;
+}
+.cat-opt:active{transform:scale(.95);}
+
+/* カレンダー下の凡例（どの色が何か） */
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:12px;}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--text-muted);}
+.cal-legend-dot{width:8px;height:8px;border-radius:3px;flex-shrink:0;}
+
+/* 予定カードのカテゴリバッジ */
+.evt-cat-badge{
+  display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;
+  letter-spacing:.03em;vertical-align:middle;margin-left:6px;white-space:nowrap;
+}
+/* 詳細画面のカテゴリチップ */
+.detail-cat-chip{
+  display:inline-block;font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;
+  letter-spacing:.03em;margin-bottom:12px;
+}
 </style>
 </head>
 <body class="has-tabbar">
@@ -356,6 +382,7 @@ body.has-tabbar .main{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
     <div class="cal-dow sat">土</div>
   </div>
   <div class="cal-grid" id="cal-grid" style="margin-top:5px;"></div>
+  <div class="cal-legend" id="cal-legend"></div>
 
   <div class="agenda-label" id="agenda-label">今後の予定</div>
   <div class="agenda-list" id="agenda-list">
@@ -422,6 +449,9 @@ body.has-tabbar .main{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
 
     <div class="f-label">イベント名 <span style="color:var(--orange);">*</span></div>
     <input class="field" id="f-title" placeholder="例：FAST講習会">
+
+    <div class="f-label">カテゴリ</div>
+    <div class="cat-picker" id="f-category"></div>
 
     <div class="field-row">
       <div class="field-col">
