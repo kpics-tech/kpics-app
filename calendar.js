@@ -25,6 +25,27 @@ _supabase.auth.onAuthStateChange((event, session)=>{
 
 // ---------- 状態 ----------
 const MONTH_NAMES = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+
+// ---------- カテゴリと色 ----------
+// 色を変えたい時・カテゴリを増やしたい時は、この5行を書き換えるだけでOK。
+// key は Supabase に保存される文字なので、あとから変えると過去の予定は「その他」扱いになります。
+const CATEGORIES = [
+  { key:'BASIC',    label:'BASIC',    color:'#E8A020' }, // オレンジ
+  { key:'ADVANCED', label:'ADVANCED', color:'#E0606A' }, // 赤
+  { key:'他大',     label:'他大',     color:'#6FA8E0' }, // 青
+  { key:'自主練',   label:'自主練',   color:'#7AC88C' }, // 緑
+  { key:'その他',   label:'その他',   color:'#9B8FD0' }, // 紫
+];
+const DEFAULT_CATEGORY = 'その他';
+
+// イベントからカテゴリ情報（色など）を取り出す。未設定なら「その他」扱い。
+function catOf(e){
+  return CATEGORIES.find(c => c.key === (e && e.category)) ||
+         CATEGORIES.find(c => c.key === DEFAULT_CATEGORY) ||
+         CATEGORIES[CATEGORIES.length - 1];
+}
+// 色を薄くする（#E8A020 + "1A" → 10%くらいの薄い色）
+function tint(hex, aa){ return hex + aa; }
 let viewYear, viewMonth; // 0-indexed month
 let EVENTS = []; // 全イベント {id,title,event_date,event_time,location,description,created_by,created_by_name}
 let selectedDateStr = null;
@@ -81,9 +102,12 @@ function renderCalendar(){
     let inner = `<div class="cal-daynum">${d}</div>`;
     if(dayEvents.length){
       const shown = dayEvents.slice(0,2);
-      inner += shown.map(e=>`<div class="cal-evt-mini">${escapeHtml(e.title)}</div>`).join('');
+      inner += shown.map(e=>{
+        const c = catOf(e);
+        return `<div class="cal-evt-mini" style="color:${c.color};background:${tint(c.color,'1F')};">${escapeHtml(e.title)}</div>`;
+      }).join('');
       if(dayEvents.length>2){
-        inner += `<div class="cal-evt-mini" style="opacity:.7;">+${dayEvents.length-2}件</div>`;
+        inner += `<div class="cal-evt-mini" style="color:var(--text-muted);background:rgba(255,255,255,.05);">+${dayEvents.length-2}件</div>`;
       }
     }
     cell.innerHTML = inner;
@@ -133,14 +157,15 @@ function renderAgenda(){
 
   list.innerHTML = items.map(e=>{
     const d = new Date(e.event_date+'T00:00:00');
+    const c = catOf(e);
     return `
-    <div class="evt-card" onclick="openDetail('${e.id}')">
-      <div class="evt-date-chip">
-        <div class="d">${d.getDate()}</div>
-        <div class="m">${MONTH_NAMES[d.getMonth()]}</div>
+    <div class="evt-card" onclick="openDetail('${e.id}')" style="border-left:3px solid ${c.color};">
+      <div class="evt-date-chip" style="background:${tint(c.color,'1F')};">
+        <div class="d" style="color:${c.color};">${d.getDate()}</div>
+        <div class="m" style="color:${c.color};">${MONTH_NAMES[d.getMonth()]}</div>
       </div>
       <div class="evt-body">
-        <div class="evt-title">${escapeHtml(e.title)}</div>
+        <div class="evt-title">${escapeHtml(e.title)}<span class="evt-cat-badge" style="color:${c.color};background:${tint(c.color,'1F')};">${escapeHtml(c.label)}</span></div>
         <div class="evt-meta">
           ${e.event_time ? `<div class="evt-meta-item">🕐 ${escapeHtml(e.event_time)}</div>` : ''}
           ${e.location ? `<div class="evt-meta-item">📍 ${escapeHtml(e.location)}</div>` : ''}
@@ -193,7 +218,9 @@ function openDetail(id){
   document.getElementById('detail-title-h').textContent = e.title;
   const d = new Date(e.event_date+'T00:00:00');
   const dow = ['日','月','火','水','木','金','土'][d.getDay()];
+  const cat = catOf(e);
   document.getElementById('detail-body').innerHTML = `
+    <div class="detail-cat-chip" style="color:${cat.color};background:${tint(cat.color,'1F')};border:1px solid ${tint(cat.color,'55')};">${escapeHtml(cat.label)}</div>
     <div class="detail-meta-row"><span class="ic">📅</span> ${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${dow}）</div>
     ${e.event_time ? `<div class="detail-meta-row"><span class="ic">🕐</span> ${escapeHtml(e.event_time)}</div>` : ''}
     ${e.location ? `<div class="detail-meta-row"><span class="ic">📍</span> ${escapeHtml(e.location)}</div>` : ''}
@@ -461,10 +488,58 @@ function closeOnOverlay(ev, id){
 }
 
 // ---------- 追加・編集モーダル ----------
+// いま選ばれているカテゴリ（モーダルの中だけで使う）
+let formCategory = DEFAULT_CATEGORY;
+
+// カテゴリ選択ボタンを作る（最初に1回だけ）
+function renderCategoryPicker(){
+  const box = document.getElementById('f-category');
+  if(!box) return;
+  box.innerHTML = CATEGORIES.map(c =>
+    `<button type="button" class="cat-opt" data-cat="${escapeHtml(c.key)}">${escapeHtml(c.label)}</button>`
+  ).join('');
+  box.querySelectorAll('.cat-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      formCategory = btn.dataset.cat;
+      applyCategoryPicker();
+    });
+  });
+  applyCategoryPicker();
+}
+
+// 選ばれているボタンだけ色を塗る
+function applyCategoryPicker(){
+  const box = document.getElementById('f-category');
+  if(!box) return;
+  box.querySelectorAll('.cat-opt').forEach(btn=>{
+    const c = CATEGORIES.find(x => x.key === btn.dataset.cat);
+    if(btn.dataset.cat === formCategory){
+      btn.style.background  = c.color;
+      btn.style.borderColor = c.color;
+      btn.style.color       = '#0C0C0C';
+    } else {
+      btn.style.background  = '';
+      btn.style.borderColor = '';
+      btn.style.color       = '';
+    }
+  });
+}
+
+// カレンダー下の凡例（色の説明）を作る
+function renderLegend(){
+  const el = document.getElementById('cal-legend');
+  if(!el) return;
+  el.innerHTML = CATEGORIES.map(c =>
+    `<div class="cal-legend-item"><span class="cal-legend-dot" style="background:${c.color};"></span>${escapeHtml(c.label)}</div>`
+  ).join('');
+}
+
 function openCreateModal(){
   editingId = null;
   document.getElementById('form-title-h').textContent = 'イベントを追加';
   document.getElementById('f-title').value = '';
+  formCategory = DEFAULT_CATEGORY;
+  applyCategoryPicker();
   document.getElementById('f-date').value = selectedDateStr || todayStr();
   document.getElementById('f-time').value = '';
   document.getElementById('f-location').value = '';
@@ -481,6 +556,8 @@ function openEditModal(id){
   editingId = id;
   document.getElementById('form-title-h').textContent = 'イベントを編集';
   document.getElementById('f-title').value = e.title || '';
+  formCategory = catOf(e).key;
+  applyCategoryPicker();
   document.getElementById('f-date').value = e.event_date || '';
   document.getElementById('f-time').value = e.event_time || '';
   document.getElementById('f-location').value = e.location || '';
@@ -511,6 +588,7 @@ async function submitForm(){
   const payload = {
     title, event_date: date, event_time: time || null,
     location: location || null, description: desc || null,
+    category: formCategory || DEFAULT_CATEGORY,
   };
 
   let error;
@@ -544,4 +622,6 @@ async function confirmDelete(id){
 
 // ---------- 初期化 ----------
 selectedDateStr = null;
+renderLegend();
+renderCategoryPicker();
 loadEvents();
