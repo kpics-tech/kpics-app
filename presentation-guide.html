@@ -15,7 +15,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--black);overflow-x:clip;}
-body{background:var(--black);color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent;line-height:1.85;padding-bottom:48px;}
+body{background:var(--black);color:var(--text);font-family:"Noto Sans JP",sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent;line-height:1.85;padding-bottom:48px;word-break:keep-all;overflow-wrap:anywhere;}
 img{max-width:100%;display:block;}
 a{color:var(--orange);}
 ::-webkit-scrollbar{width:4px;height:4px;}
@@ -41,11 +41,11 @@ a:focus-visible,button:focus-visible,label:focus-within{outline:2px solid var(--
 
 section{padding:32px 0;border-bottom:1px solid var(--border);}
 section:last-of-type{border-bottom:none}
-h2{font-weight:900;font-size:19px;margin:0 0 14px;line-height:1.5;}
+h2{font-weight:900;font-size:19px;margin:0 0 14px;line-height:1.5;text-wrap:balance;}
 h3{font-weight:700;font-size:14.5px;margin:22px 0 8px;color:var(--orange);}
 p{margin:0 0 12px;font-size:14.5px;}
 .lead p{font-size:14.5px;}
-.lead .quote{font-weight:700;font-size:15.5px;border-left:3px solid var(--orange);padding:2px 0 2px 14px;margin:18px 0;color:var(--text);}
+.lead .quote{font-weight:700;font-size:15.5px;border-left:3px solid var(--orange);padding:2px 0 2px 14px;margin:18px 0;color:var(--text);text-wrap:balance;}
 
 /* KISS */
 .kiss{background:var(--orange);color:#0C0C0C;border-radius:18px;padding:26px 20px;margin:6px 0;}
@@ -94,9 +94,9 @@ figure{margin:14px 0;}
 figcaption{font-size:11.5px;color:var(--text-dim);margin-top:6px;}
 
 .ls{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
-.ls div{background:#fff;color:#0C0C0C;border-radius:9px;padding:12px 14px;font-weight:700;font-size:14px;}
-.ls .tight{line-height:1.05;}
-.ls .good{line-height:1.7;}
+.ls div{background:#fff;color:#0C0C0C;border-radius:9px;padding:10px 14px;font-weight:700;font-size:14px;}
+.ls .tight{line-height:.9;display:block;}
+.ls .good{line-height:2;}
 .ls p{margin:0 0 5px;font-size:11px;font-weight:700;color:#8a5a0e;}
 
 .brk{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
@@ -123,7 +123,7 @@ figcaption{font-size:11.5px;color:var(--text-dim);margin-top:6px;}
 .progress button{font-family:"Noto Sans JP",sans-serif;background:none;color:var(--text-dim);border:1px solid var(--border);border-radius:999px;padding:4px 13px;cursor:pointer;font-size:11.5px;}
 
 .propose{background:var(--orange);color:#0C0C0C;border-radius:18px;padding:24px 20px;margin-top:18px;}
-.propose .q{font-weight:900;font-size:clamp(18px,5vw,23px);line-height:1.4;margin:0;}
+.propose .q{font-weight:900;font-size:clamp(18px,5vw,23px);line-height:1.4;margin:0;text-wrap:balance;}
 .propose .a{font-family:"Bebas Neue",sans-serif;font-weight:400;font-size:46px;line-height:1;margin:6px 0 12px;}
 .propose p{font-weight:700;font-size:13.5px;}
 
@@ -152,9 +152,8 @@ footer .en{font-family:"Bebas Neue",sans-serif;color:var(--orange);font-size:17p
 
 <section id="intro" class="lead">
   <h2>前書き</h2>
-  <p>本質は、あくまで「中身」。なんやけど、、</p>
-  <p>数ヶ月、数年かけた研究を、学会でたった5分、初めて聞く人に伝える。本当に伝えたいと思うなら、少しでも伝わりやすくするために、言葉、話し方、スライドにまでこだわるはず。</p>
-  <p class="quote">だから、スライドへのこだわりは<br>「伝えたい」という想いの表れだと思う。</p>
+  <p>本質は、あくまで「中身」。とはいえ、数ヶ月、数年かけた研究を、学会でたった5分、初めて聞く人に伝える。本当に伝えたいと思うなら、少しでも伝わりやすくするために、言葉、話し方、スライドにまでこだわるはず。</p>
+  <p class="quote">だから、スライドへのこだわりは「伝えたい」という想いの表れだと思う。</p>
   <p>K-PICSの教材も同じ。ただ情報を載せるのではなく、「初学者／受講者にちゃんと伝えたい」からこそ、スライドにもこだわりたい。</p>
 </section>
 
@@ -301,7 +300,7 @@ footer .en{font-family:"Bebas Neue",sans-serif;color:var(--orange);font-size:17p
     <li><strong>自分の発表練習を録音して聞き返す。</strong>口語的な表現になっている、「えーと」が多いなど、自分のクセが見えてくる。</li>
   </ul>
   <div class="propose">
-    <p class="q">⭐️ プロポーズする時に、<br>原稿を読むか？</p>
+    <p class="q">⭐️ プロポーズする時に、原稿を読むか？</p>
     <p class="a">読まない。</p>
     <p style="margin:0">原稿を用意して下を見て読むのではなく、原稿は覚えて、何度も練習をし、会場全体に目線を向けて、堂々と発表をする。</p>
   </div>
