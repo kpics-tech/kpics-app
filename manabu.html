@@ -214,6 +214,39 @@ button{font-family:inherit;}
 .docbtn .cnt.zero{background:var(--border-light);color:var(--text-muted);}
 .subrow .docbtn{padding:6px 8px;flex-shrink:0;}
 
+/* コメントボタン（資料ボタンと同じ見た目） */
+.cmtbtn{
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  background:var(--orange-bg);border:1px solid rgba(232,160,32,.3);border-radius:10px;
+  padding:9px 12px;font-size:11.5px;font-weight:700;color:var(--orange-light);transition:background .15s;
+}
+.cmtbtn:active{background:rgba(232,160,32,.2);}
+.cmtbtn .cnt{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--black);background:var(--orange);border-radius:20px;padding:1px 7px;min-width:20px;text-align:center;}
+.cmtbtn .cnt.zero{background:var(--border-light);color:var(--text-muted);}
+.subrow .cmtbtn{padding:6px 8px;flex-shrink:0;}
+
+/* コメント一覧・投稿フォーム */
+.cmt-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 13px;margin-bottom:8px;}
+.cmt-item-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.cmt-item-name{font-size:11.5px;font-weight:700;color:var(--orange-light);}
+.cmt-item-name.anon{color:var(--text-muted);font-weight:600;}
+.cmt-item-date{font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;flex-shrink:0;}
+.cmt-item-body{font-size:13px;line-height:1.75;white-space:pre-wrap;word-break:break-word;color:var(--text);}
+.cmt-item-del{margin-top:9px;background:none;border:1px solid var(--border-light);color:var(--text-dim);border-radius:7px;font-size:10px;padding:4px 9px;cursor:pointer;}
+.cmt-item-del:active{color:#F06060;border-color:#F06060;}
+.cmt-empty{text-align:center;font-size:12px;color:var(--text-muted);padding:26px 10px;line-height:1.8;}
+.cmt-form{margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
+.cmt-form-label{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.cmt-textarea{width:100%;background:var(--card);border:1px solid var(--border-light);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;padding:10px 12px;resize:vertical;min-height:72px;}
+.cmt-textarea:focus{outline:none;border-color:var(--orange);}
+.cmt-textarea::placeholder{color:var(--text-dim);}
+.cmt-anon{display:flex;align-items:center;gap:8px;margin-top:11px;font-size:12px;color:var(--text-muted);cursor:pointer;}
+.cmt-anon input{width:16px;height:16px;accent-color:var(--orange);flex-shrink:0;}
+.cmt-submit-btn{margin-top:12px;width:100%;background:var(--orange);color:var(--black);border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;}
+.cmt-submit-btn:active{background:var(--orange-dark);}
+.cmt-submit-btn:disabled{opacity:.5;cursor:default;}
+.cmt-count-hint{font-size:11px;color:var(--text-dim);text-align:right;margin-top:6px;font-family:"JetBrains Mono",monospace;}
+
 .note-box{margin:18px 0 0;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.22);border-radius:14px;font-size:12.5px;line-height:1.85;color:var(--text);}
 
 /* ===== 独立コンテンツ（解剖） ===== */
@@ -573,6 +606,30 @@ button{font-family:inherit;}
         <input class="pdf-file" type="file" id="pdf-file-input" accept="application/pdf,.pdf">
       </div>
       <div class="pdf-status" id="pdf-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== コメントモーダル ===== -->
+<div class="overlay" id="cmt-modal">
+  <div class="pdf-box">
+    <div class="pdf-head">
+      <div>
+        <div class="pdf-head-title" id="cmt-title">コメント</div>
+        <div class="pdf-head-sub" id="cmt-sub"></div>
+      </div>
+      <div class="pdf-close" id="cmt-close">✕</div>
+    </div>
+    <div class="pdf-body">
+      <div id="cmt-list"></div>
+      <div class="cmt-form">
+        <div class="cmt-form-label">💬 コメントを書く</div>
+        <textarea class="cmt-textarea" id="cmt-text" maxlength="500" rows="3" placeholder="感想、質問、気づいたことなど、気軽にどうぞ"></textarea>
+        <div class="cmt-count-hint"><span id="cmt-len">0</span> / 500</div>
+        <label class="cmt-anon"><input type="checkbox" id="cmt-anon-check"><span>匿名で投稿する（名前は表示されません）</span></label>
+        <button type="button" class="cmt-submit-btn" id="cmt-submit">投稿する</button>
+      </div>
+      <div class="pdf-status" id="cmt-status"></div>
     </div>
   </div>
 </div>
@@ -1289,6 +1346,237 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
       return;
     }
     if(tries > 40) { loadCounts(); return; }
+    setTimeout(() => waitForLogin(tries + 1), 200);
+  })(0);
+})();
+
+/* ===== コメント機能 =====
+   ・PDF資料とは違い、ログインしている人なら誰でも投稿できる（コアメンバー限定ではない）
+   ・「匿名で投稿する」にチェックすると、名前を表示せず「匿名」として投稿される
+   ・自分のコメントはいつでも削除できる。コアメンバー・先生は他の人のコメントも削除できる
+   ・テーブル名は content_comments。Supabase側に以下を作成してください：
+
+     create table if not exists content_comments (
+       id uuid primary key default gen_random_uuid(),
+       content_key text not null,
+       body text not null check (char_length(body) between 1 and 500),
+       is_anonymous boolean not null default false,
+       author_id uuid references auth.users(id) on delete set null,
+       author_name text,
+       created_at timestamptz not null default now()
+     );
+     alter table content_comments enable row level security;
+     create policy "comments_select_all" on content_comments for select using (true);
+     create policy "comments_insert_own" on content_comments for insert with check (auth.uid() = author_id);
+     create policy "comments_delete_own_or_core" on content_comments for delete using (
+       auth.uid() = author_id
+       or exists (select 1 from profiles p where p.id = auth.uid() and (p.is_core_member or p.is_teacher))
+     );
+
+   ・表示名の取り出し方（プロフィールのカラム名がこちらの想定と違う場合は、
+     下の pickName() の候補リストにお使いのカラム名を足してください）
+*/
+(function(){
+  const CMT_TABLE = 'content_comments';
+  const MAX_LEN   = 500;
+
+  let cmtIsCore  = false;
+  let cmtProfile = null;
+  let openCmtKey = null;
+  let openCmtTitle = '';
+
+  const modal   = document.getElementById('cmt-modal');
+  const elTitle = document.getElementById('cmt-title');
+  const elSub   = document.getElementById('cmt-sub');
+  const elList  = document.getElementById('cmt-list');
+  const elText  = document.getElementById('cmt-text');
+  const elLen   = document.getElementById('cmt-len');
+  const elAnon  = document.getElementById('cmt-anon-check');
+  const elSubmit= document.getElementById('cmt-submit');
+  const elStat  = document.getElementById('cmt-status');
+
+  if(!modal) return;
+
+  function status(msg, kind){
+    if(!msg){ elStat.className = 'pdf-status'; elStat.textContent = ''; return; }
+    elStat.className = 'pdf-status show ' + (kind || 'info');
+    elStat.textContent = msg;
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function fmtDate(s){
+    if(!s) return '';
+    const d = new Date(s);
+    return d.getFullYear() + '/' + ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2) + ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
+  }
+
+  // プロフィールから表示名を取り出す。カラム名の候補は順に試す
+  function pickName(profile){
+    if(!profile) return 'メンバー';
+    return profile.display_name || profile.full_name || profile.name || profile.nickname || profile.username || 'メンバー';
+  }
+
+  async function fetchProfile(uid){
+    if(!uid) return null;
+    if(window.CURRENT_PROFILE && window.CURRENT_PROFILE.id === uid) return window.CURRENT_PROFILE;
+    try{
+      const { data, error } = await _supabase.from('profiles').select('*').eq('id', uid).maybeSingle();
+      if(error || !data) return null;
+      return data;
+    }catch(e){ return null; }
+  }
+
+  async function loadCommentCounts(){
+    try{
+      const { data, error } = await _supabase.from(CMT_TABLE).select('content_key');
+      if(error || !data) return;
+      const counts = {};
+      data.forEach(r => { counts[r.content_key] = (counts[r.content_key] || 0) + 1; });
+      document.querySelectorAll('.cmtbtn').forEach(btn => {
+        const n = counts[btn.dataset.cmt] || 0;
+        const cnt = btn.querySelector('.cnt');
+        cnt.textContent = n;
+        cnt.classList.toggle('zero', n === 0);
+      });
+    }catch(e){ /* テーブル未作成のときは何もしない */ }
+  }
+
+  async function renderList(){
+    elList.innerHTML = '<div class="cmt-empty">読み込み中…</div>';
+    let rows = [];
+    try{
+      const { data, error } = await _supabase.from(CMT_TABLE).select('*').eq('content_key', openCmtKey).order('created_at', { ascending: false });
+      if(error) throw error;
+      rows = data || [];
+    }catch(e){
+      elList.innerHTML = '<div class="cmt-empty">コメントを読み込めませんでした。<br>通信環境を確認して、開き直してみてください。</div>';
+      return;
+    }
+    if(!rows.length){
+      elList.innerHTML = '<div class="cmt-empty">まだコメントはありません。<br>いちばん最初のコメントを書いてみませんか？</div>';
+      return;
+    }
+    elList.innerHTML = rows.map(r => {
+      const canDelete = window.CURRENT_UID && (r.author_id === window.CURRENT_UID || cmtIsCore);
+      const nameHtml = r.is_anonymous
+        ? '<span class="cmt-item-name anon">匿名</span>'
+        : '<span class="cmt-item-name">' + esc(r.author_name || 'メンバー') + '</span>';
+      return `
+      <div class="cmt-item" data-id="${esc(r.id)}">
+        <div class="cmt-item-head">
+          ${nameHtml}
+          <span class="cmt-item-date">${fmtDate(r.created_at)}</span>
+        </div>
+        <div class="cmt-item-body">${esc(r.body)}</div>
+        ${canDelete ? '<button type="button" class="cmt-item-del">削除</button>' : ''}
+      </div>`;
+    }).join('');
+
+    elList.querySelectorAll('.cmt-item-del').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const item = btn.closest('.cmt-item');
+        if(!window.confirm('このコメントを削除します。よろしいですか？')) return;
+        status('削除しています…', 'info');
+        const { error } = await _supabase.from(CMT_TABLE).delete().eq('id', item.dataset.id);
+        if(error){ status('削除できませんでした。', 'ng'); return; }
+        status('削除しました。', 'ok');
+        await renderList();
+        await loadCommentCounts();
+      });
+    });
+  }
+
+  function updateLen(){
+    const n = elText.value.length;
+    elLen.textContent = n;
+    elLen.style.color = n > MAX_LEN ? '#F06060' : '';
+  }
+  if(elText) elText.addEventListener('input', updateLen);
+
+  async function submitComment(){
+    const body = elText.value.trim();
+    if(!body){ status('コメントを入力してください。', 'ng'); return; }
+    if(body.length > MAX_LEN){ status('コメントは' + MAX_LEN + '文字までにしてください。', 'ng'); return; }
+    if(!window.CURRENT_UID){ status('ログイン情報が読み込めていません。ページを開き直してみてください。', 'ng'); return; }
+
+    elSubmit.disabled = true;
+    status('投稿しています…', 'info');
+    try{
+      const isAnon = !!elAnon.checked;
+      let authorName = null;
+      if(!isAnon){
+        if(!cmtProfile) cmtProfile = await fetchProfile(window.CURRENT_UID);
+        authorName = pickName(cmtProfile);
+      }
+      const { error } = await _supabase.from(CMT_TABLE).insert({
+        content_key: openCmtKey,
+        body: body,
+        is_anonymous: isAnon,
+        author_id: window.CURRENT_UID,
+        author_name: authorName
+      });
+      if(error) throw error;
+
+      elText.value = '';
+      elAnon.checked = false;
+      updateLen();
+      status('投稿しました。', 'ok');
+      await renderList();
+      await loadCommentCounts();
+    }catch(e){
+      console.error('[K-PICS] comment insert error', e);
+      status('投稿できませんでした。時間をおいて、もう一度お試しください。', 'ng');
+    }finally{
+      elSubmit.disabled = false;
+    }
+  }
+  if(elSubmit) elSubmit.addEventListener('click', submitComment);
+
+  function openModal(key, title){
+    openCmtKey = key;
+    openCmtTitle = title || 'コメント';
+    elTitle.textContent = 'コメント';
+    elSub.textContent = openCmtTitle;
+    elText.value = '';
+    elAnon.checked = false;
+    updateLen();
+    status('');
+    modal.classList.add('show');
+    renderList();
+  }
+  function closeModal(){ modal.classList.remove('show'); openCmtKey = null; }
+
+  // 既存の「資料」ボタンの隣に、自動で「コメント」ボタンを差し込む
+  document.querySelectorAll('.docbtn[data-doc]').forEach(docBtn => {
+    const key   = docBtn.dataset.doc;
+    const title = docBtn.dataset.docTitle || '';
+    const compact = !!docBtn.closest('.subrow');
+    const btn = document.createElement('div');
+    btn.className = 'cmtbtn';
+    btn.dataset.cmt = key;
+    btn.dataset.cmtTitle = title;
+    const icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>';
+    btn.innerHTML = compact ? (icon + '  <span class="cnt zero">0</span>') : (icon + ' コメント <span class="cnt zero">0</span>');
+    docBtn.insertAdjacentElement('afterend', btn);
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault(); ev.stopPropagation();
+      openModal(key, title);
+    });
+  });
+
+  document.getElementById('cmt-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+  (function waitForLogin(tries){
+    if(window.CURRENT_UID){
+      fetchProfile(window.CURRENT_UID).then(p => { cmtProfile = p; });
+      _supabase.from('profiles').select('*').eq('id', window.CURRENT_UID).maybeSingle().then(({data}) => {
+        if(data) cmtIsCore = !!(data.is_core_member || data.is_teacher);
+        if(openCmtKey) renderList();
+      });
+      loadCommentCounts();
+      return;
+    }
+    if(tries > 40) { loadCommentCounts(); return; }
     setTimeout(() => waitForLogin(tries + 1), 200);
   })(0);
 })();
