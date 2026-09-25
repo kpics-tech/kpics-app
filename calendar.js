@@ -47,7 +47,7 @@ function catOf(e){
 // 色を薄くする（#E8A020 + "1A" → 10%くらいの薄い色）
 function tint(hex, aa){ return hex + aa; }
 let viewYear, viewMonth; // 0-indexed month
-let EVENTS = []; // 全イベント {id,title,event_date,event_time,location,description,created_by,created_by_name}
+let EVENTS = []; // 全イベント {id,title,event_date,event_time,location,description,created_by,created_by_name,capacity}
 let selectedDateStr = null;
 let currentDetailId = null;
 let editingId = null;
@@ -224,6 +224,7 @@ function openDetail(id){
     <div class="detail-meta-row"><span class="ic">📅</span> ${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${dow}）</div>
     ${e.event_time ? `<div class="detail-meta-row"><span class="ic">🕐</span> ${escapeHtml(e.event_time)}</div>` : ''}
     ${e.location ? `<div class="detail-meta-row"><span class="ic">📍</span> ${escapeHtml(e.location)}</div>` : ''}
+    ${e.capacity ? `<div class="detail-meta-row"><span class="ic">👥</span> 定員 ${e.capacity}人</div>` : ''}
     ${e.description ? `<div class="detail-desc">${escapeHtml(e.description)}</div>` : ''}
     ${e.created_by_name ? `<div class="detail-created">登録: ${escapeHtml(e.created_by_name)}</div>` : ''}
     <div class="att-section">
@@ -255,7 +256,7 @@ function openDetail(id){
   `;
   document.getElementById('detail-overlay').classList.add('open');
   loadImpressions(id);
-  loadAttendances(id, e.event_date);
+  loadAttendances(id, e);
 
   // 書きかけの感想があれば復元する
   const impInputEl = document.getElementById('imp-input-'+id);
@@ -263,8 +264,8 @@ function openDetail(id){
   restoreDraft(impInputEl, 'kpics_draft_impression_'+id);
 }
 
-// ---------- イベント出席（出席のみ・当日まで受付） ----------
-async function loadAttendances(eventId, eventDate){
+// ---------- イベント出席（出席のみ・当日まで受付・定員制） ----------
+async function loadAttendances(eventId, event){
   const {data, error} = await _supabase
     .from('event_attendances')
     .select('*')
@@ -275,26 +276,37 @@ async function loadAttendances(eventId, eventDate){
     if(listEl) listEl.innerHTML = `<div class="att-empty">出席情報の読み込みに失敗しました</div>`;
     return;
   }
-  renderAttendance(eventId, eventDate, data || []);
+  renderAttendance(eventId, event, data || []);
 }
 
-function renderAttendance(eventId, eventDate, rows){
+function renderAttendance(eventId, event, rows){
   const countEl  = document.getElementById('att-count-'+eventId);
   const actionEl = document.getElementById('att-action-'+eventId);
   const listEl   = document.getElementById('att-list-'+eventId);
   if(!countEl || !actionEl || !listEl) return;
 
+  const eventDate = event.event_date;
+  const capacity = event.capacity ? Number(event.capacity) : null;
   const amAttending = rows.some(r => r.user_id === CURRENT_UID);
   const isOpen = todayStr() < eventDate; // 前日まで受付（イベント当日は締切）
+  const isFull = capacity !== null && rows.length >= capacity;
 
-  countEl.textContent = rows.length ? `${rows.length}人が出席予定` : '';
-
-  if(isOpen){
-    actionEl.innerHTML = amAttending
-      ? `<button class="att-btn leave" onclick="toggleAttendance('${eventId}','${eventDate}')">出席をとりやめる</button>`
-      : `<button class="att-btn join" onclick="toggleAttendance('${eventId}','${eventDate}')">出席する</button>`;
+  if(capacity !== null){
+    countEl.textContent = `${rows.length}/${capacity}人`;
+    countEl.classList.toggle('full', isFull);
   } else {
+    countEl.textContent = rows.length ? `${rows.length}人が出席予定` : '';
+    countEl.classList.remove('full');
+  }
+
+  if(!isOpen){
     actionEl.innerHTML = `<div class="att-closed">出席の受付は締め切りました（前日締切）${amAttending ? '<span class="att-you">あなたは出席予定です</span>' : ''}</div>`;
+  } else if(amAttending){
+    actionEl.innerHTML = `<button class="att-btn leave" onclick="toggleAttendance('${eventId}')">出席をとりやめる</button>`;
+  } else if(isFull){
+    actionEl.innerHTML = `<button class="att-btn full" disabled>満席（定員${capacity}人に達しました）</button>`;
+  } else {
+    actionEl.innerHTML = `<button class="att-btn join" onclick="toggleAttendance('${eventId}')">出席する</button>`;
   }
 
   if(rows.length === 0){
@@ -308,13 +320,19 @@ function renderAttendance(eventId, eventDate, rows){
   }
 }
 
-async function toggleAttendance(eventId, eventDate){
+async function toggleAttendance(eventId){
   if(!CURRENT_UID){ location.href = 'index.html'; return; }
+  const event = EVENTS.find(x=>x.id===eventId);
+  if(!event) return;
+  const eventDate = event.event_date;
+  const capacity = event.capacity ? Number(event.capacity) : null;
+
   if(todayStr() >= eventDate){
     alert('出席の受付は締め切られています（前日締切）。');
-    await loadAttendances(eventId, eventDate);
+    await loadAttendances(eventId, event);
     return;
   }
+
   const {data:existing, error:selErr} = await _supabase
     .from('event_attendances')
     .select('id')
@@ -327,6 +345,19 @@ async function toggleAttendance(eventId, eventDate){
     const {error} = await _supabase.from('event_attendances').delete().eq('id', existing.id);
     if(error){ alert('取り消しに失敗しました: ' + error.message); return; }
   } else {
+    // 定員チェック（他の人と同時に登録される可能性があるので、登録直前に最新の人数を数え直す）
+    if(capacity !== null){
+      const {count, error:cntErr} = await _supabase
+        .from('event_attendances')
+        .select('id', {count:'exact', head:true})
+        .eq('event_id', eventId);
+      if(cntErr){ alert('出席人数の確認に失敗しました: ' + cntErr.message); return; }
+      if((count || 0) >= capacity){
+        alert('ちょうど定員に達してしまいました。満席です。');
+        await loadAttendances(eventId, event);
+        return;
+      }
+    }
     const {error} = await _supabase.from('event_attendances').insert({
       event_id: eventId,
       user_id: CURRENT_UID,
@@ -334,7 +365,7 @@ async function toggleAttendance(eventId, eventDate){
     });
     if(error){ alert('出席登録に失敗しました: ' + error.message); return; }
   }
-  await loadAttendances(eventId, eventDate);
+  await loadAttendances(eventId, event);
 }
 
 // ---------- イベントの感想 ----------
@@ -543,6 +574,7 @@ function openCreateModal(){
   document.getElementById('f-date').value = selectedDateStr || todayStr();
   document.getElementById('f-time').value = '';
   document.getElementById('f-location').value = '';
+  document.getElementById('f-capacity').value = '';
   document.getElementById('f-desc').value = '';
   document.getElementById('form-error').classList.remove('show');
   document.getElementById('form-submit-btn').textContent = '保存する';
@@ -561,6 +593,7 @@ function openEditModal(id){
   document.getElementById('f-date').value = e.event_date || '';
   document.getElementById('f-time').value = e.event_time || '';
   document.getElementById('f-location').value = e.location || '';
+  document.getElementById('f-capacity').value = e.capacity != null ? e.capacity : '';
   document.getElementById('f-desc').value = e.description || '';
   document.getElementById('form-error').classList.remove('show');
   document.getElementById('form-submit-btn').textContent = '更新する';
@@ -572,6 +605,7 @@ async function submitForm(){
   const date = document.getElementById('f-date').value;
   const time = document.getElementById('f-time').value.trim();
   const location = document.getElementById('f-location').value.trim();
+  const capacityRaw = document.getElementById('f-capacity').value.trim();
   const desc = document.getElementById('f-desc').value.trim();
   const errEl = document.getElementById('form-error');
   const btn = document.getElementById('form-submit-btn');
@@ -583,12 +617,23 @@ async function submitForm(){
     return;
   }
 
+  let capacity = null;
+  if(capacityRaw !== ''){
+    capacity = parseInt(capacityRaw, 10);
+    if(!Number.isFinite(capacity) || capacity < 1){
+      errEl.textContent = '定員は1以上の数字で入力してください（空欄なら人数制限なし）';
+      errEl.classList.add('show');
+      return;
+    }
+  }
+
   btn.disabled = true; btn.textContent = '保存中...';
 
   const payload = {
     title, event_date: date, event_time: time || null,
     location: location || null, description: desc || null,
     category: formCategory || DEFAULT_CATEGORY,
+    capacity: capacity,
   };
 
   let error;

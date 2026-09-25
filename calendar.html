@@ -205,6 +205,7 @@ button{font-family:inherit;}
 .field::placeholder{color:var(--text-dim);}
 .field-row{display:flex;gap:10px;}
 .field-row .field-col{flex:1;}
+.f-hint{font-size:10.5px;color:var(--text-dim);margin-top:5px;line-height:1.5;}
 .modal-error{
   font-size:11.5px;color:#F06060;background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);
   border-radius:6px;padding:9px 11px;margin-top:14px;display:none;line-height:1.5;
@@ -236,11 +237,13 @@ button{font-family:inherit;}
 .att-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .att-label{font-size:12.5px;font-weight:700;color:var(--text);}
 .att-count{font-size:11.5px;color:var(--orange);font-weight:700;}
+.att-count.full{color:var(--keep);}
 .att-btn{width:100%;padding:13px;border-radius:11px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s;}
 .att-btn:active{opacity:.8;}
 .att-btn.join{background:var(--orange);color:var(--black);}
 .att-btn.leave{background:var(--card);color:var(--text-muted);border:1px solid var(--border-light);}
 .att-btn:disabled{opacity:.55;cursor:default;}
+.att-btn.full{background:var(--card);color:var(--keep);border:1px solid rgba(240,96,96,.35);cursor:not-allowed;}
 .att-closed{font-size:12px;color:var(--text-dim);text-align:center;padding:10px;background:rgba(255,255,255,.02);border:1px dashed var(--border-light);border-radius:10px;}
 .att-you{display:block;margin-top:6px;color:var(--orange);font-weight:700;}
 .att-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
@@ -466,6 +469,10 @@ body.has-tabbar .main{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
 
     <div class="f-label">場所</div>
     <input class="field" id="f-location" placeholder="例：第3講義室 / Zoom">
+
+    <div class="f-label">定員</div>
+    <input class="field" type="number" min="1" step="1" id="f-capacity" placeholder="空欄なら人数制限なし">
+    <div class="f-hint">出席登録がこの人数に達すると、自動的に「満席」表示になります</div>
 
     <div class="f-label">詳しい説明</div>
     <textarea class="field" id="f-desc" rows="4" placeholder="案内文、Zoom ID、持ち物など"></textarea>
