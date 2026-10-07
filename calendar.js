@@ -372,10 +372,7 @@ async function toggleAttendance(eventId){
 async function ensureBadgesCal(userIds){
   const need = [...new Set(userIds)].filter(id => id && !(id in _calBadgeMap));
   if(need.length === 0) return;
-  const {data, error} = await _supabase
-    .from('profiles')
-    .select('id,is_teacher,is_core_member,is_certified')
-    .in('id', need);
+  const {data, error} = await _supabase.rpc('get_badges', { ids: need });
   if(error){ console.error('バッジ取得エラー', error); return; }
   (data || []).forEach(p => { _calBadgeMap[p.id] = p; });
 }
