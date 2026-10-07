@@ -135,6 +135,13 @@ footer .en{font-family:"Bebas Neue",sans-serif;color:var(--orange);font-size:17p
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://iarbwehytrdxuhyedsvi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KyOX0XzlSVLRklBmlOfi7A_sbUtfhha';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+<script src="auth-guard.js"></script>
 </head>
 <body>
 

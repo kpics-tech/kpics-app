@@ -467,6 +467,13 @@ footer{width:var(--wrap);margin:0 auto;padding:2.2rem 0 3.2rem;border-top:1px so
   .reveal{opacity:1;transform:none}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://iarbwehytrdxuhyedsvi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KyOX0XzlSVLRklBmlOfi7A_sbUtfhha';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+<script src="auth-guard.js"></script>
 </head>
 <body id="top">
 
