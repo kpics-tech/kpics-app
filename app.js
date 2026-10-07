@@ -1,7 +1,7 @@
 // ================================================================
 // K-PICS ホームアプリ ロジック
 // ================================================================
-const REVIEWER_INVITE_CODE = 'KPICS-REVIEWER-2026';
+// 確認者（reviewer）は、登録時には決めない。管理者がSupabaseのprofilesのroleを直接変更して設定する。
 // 部活の合言葉の確認は、Supabase側（Auth Hook: check_member_passphrase）で行う。
 // 合言葉そのものはコードに書かない（GitHubが公開のため）。
 
@@ -93,14 +93,12 @@ async function doSignup(){
   const email=document.getElementById('signup-email').value.trim();
   const password=document.getElementById('signup-password').value;
   const passphrase=document.getElementById('signup-passphrase').value.trim();
-  const invite=document.getElementById('signup-invite').value.trim();
   const errEl=document.getElementById('signup-error');
   const btn=document.getElementById('signup-btn');
   errEl.classList.remove('show');
   if(!name||!email||!password||!passphrase){ errEl.textContent='名前・メールアドレス・パスワード・部活の合言葉は必須です'; errEl.classList.add('show'); return; }
   if(password.length<6){ errEl.textContent='パスワードは6文字以上にしてください'; errEl.classList.add('show'); return; }
-  if(invite&&invite!==REVIEWER_INVITE_CODE){ errEl.textContent='招待コードが正しくありません'; errEl.classList.add('show'); return; }
-  const role=(invite===REVIEWER_INVITE_CODE)?'reviewer':'member';
+  const role='member';
   btn.disabled=true; btn.textContent='登録中...';
   const {data,error}=await _supabase.auth.signUp({email,password,options:{data:{passphrase:passphrase}}});
   if(error){ btn.disabled=false; btn.textContent='登録する'; errEl.textContent='登録に失敗しました: '+error.message; errEl.classList.add('show'); return; }
