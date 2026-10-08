@@ -2,7 +2,6 @@
 
 K-PICS 部員向けのスマホ用ウェブアプリ（PWA）です。GitHub Pages で公開し、ログインとデータは Supabase が担当します。
 
-- 公開URL: https://kpics-tech.github.io/kpics-app/
 - 詳しい引き継ぎ書: 「K-PICSアプリ 引き継ぎ書」（Claude Docs）
 - セキュリティ点検報告: 「K-PICSアプリ セキュリティ点検報告」
 
