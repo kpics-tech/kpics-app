@@ -1,74 +1,39 @@
-# K-PICS メインアプリ（kpics-app）
+# K-PICS アプリ
 
-K-PICSの部員専用ホームアプリ。ログイン後、認定試験・ポータルサイト・イベントカレンダーなど各リソースへの入口となる「ハブ」アプリです。
+K-PICS 部員向けのスマホ用ウェブアプリ（PWA）です。GitHub Pages で公開し、ログインとデータは Supabase が担当します。
 
-## ファイル構成
+- 公開URL: https://kpics-tech.github.io/kpics-app/
+- 詳しい引き継ぎ書: 「K-PICSアプリ 引き継ぎ書」（Claude Docs）
+- セキュリティ点検報告: 「K-PICSアプリ セキュリティ点検報告」
 
-```
-kpics-app/
-├── index.html                  ログイン画面 + ホームメニュー
-├── app.js                      ログイン・認証ロジック
-├── calendar.html               イベントカレンダー画面
-├── calendar.js                 カレンダーのロジック（Supabase連携）
-├── assets/
-│   ├── logo-icon.png            アイコン単体（ナビ・favicon・スプラッシュ用）
-│   ├── logo-full-light.png      フルロゴ・黒文字版（白〜明るい背景用）
-│   └── logo-full-dark.png       フルロゴ・白文字版（黒〜暗い背景用）
-└── supabase_events_table.sql   カレンダー用テーブル作成SQL（要実行）
-```
+## 画面（下部の4タブ）
 
-## 公開前にやること
+| タブ | ファイル |
+|---|---|
+| ホーム | index.html / app.js |
+| まなぶ | manabu.html（SPL・メディカルラリーの資料もここ） |
+| カレンダー | calendar.html / calendar.js |
+| チャット | questions.html / questions.js |
 
-### 1. Supabaseにカレンダー用テーブルを作る
+アカウント設定は、ホーム左上の丸いアイコン（account.html）から開きます。
 
-Supabaseのダッシュボード → SQL Editor を開き、`supabase_events_table.sql` の内容を貼り付けて実行してください。
-これで `events` テーブルが作られ、ログイン済みの部員なら誰でも閲覧・追加・編集・削除できるようになります（既存の認定アプリと同じSupabaseプロジェクト `iarbwehytrdxuhyedsvi` を使っています）。
+その他: technique.html / technique-detail.html（自主練ハンドブック）、shock-pocus-10days.html、presentation-guide.html、reset-password.html、basic.html（準備中）、auth-guard.js、tabbar.js、custom-links.js（未使用）、manifest.json、service-worker.js、assets/。
 
-### 2. GitHubリポジトリを作る
+## 仕組み
 
-新しいリポジトリ `kpics-app` を作成し、このフォルダの中身をそのままアップロードしてください（GitHub Pagesを有効化）。
+- 画面（HTML/JS）は GitHub Pages から配信されます。**リポジトリに置いたものは全世界から見えます。** 合言葉・個人情報・部外秘の資料を置かないでください。
+- データ・ログイン・PDF・画像は Supabase にあります（認定アプリ `requirements` と共用）。守っているのは Supabase の RLS・トリガーです。ボタンを隠すだけでは守れません。
+- 資料PDFはアプリ内（Supabase の content-pdfs）に置きます。Google ドライブへのリンクはありません。
+- 新規登録の合言葉は Supabase の Auth Hook（check_member_passphrase）で確認します。コードには書きません。
+- コアメンバー・先生・確認者は、管理者が Supabase の profiles を直接書き換えて設定します。
+- supabase-js は jsDelivr から `@supabase/supabase-js@2` で読み込んでいます（バージョン未固定）。**突然動かなくなったらまず疑ってください。**
 
-公開URLの想定：`https://wj-medtech.github.io/kpics-app/`
+## 画面を直して公開する
 
-### 3. ログインの動作確認
+GitHub でファイルを編集し「Commit changes」。1〜数分で反映されます。壊れたら History から戻せます。
 
-すでに認定アプリ（`https://wj-medtech.github.io/requirements/`）に登録している部員は、**同じメールアドレス・パスワードでこのアプリにもそのままログインできます**（同じSupabaseの認証システムを使っているため、再登録は不要です）。
+## 注意
 
-新しい部員はこのアプリの「新規登録」タブからアカウントを作れます（認定アプリ側にも自動的に同じアカウントでログインできるようになります）。
-
-## ロゴ画像について（他のリポジトリでの再利用方法）
-
-ロゴ画像は `assets/` フォルダ内にPNG（背景透過）として保存しています。base64で埋め込むとコードが膨大になるため、ファイルとして配置する方式にしました。
-
-認定アプリ（requirements）やポータルサイト（K-PICS）など、**他のリポジトリでも同じロゴを使いたい場合**は、わざわざ画像をコピーして置かなくても、以下のCDN経由のURLをそのまま `<img src="...">` に指定すれば表示できます（jsDelivrという無料CDNがGitHubのファイルをそのまま配信してくれます）。
-
-```html
-<!-- アイコン単体 -->
-<img src="https://cdn.jsdelivr.net/gh/wj-medtech/kpics-app@main/assets/logo-icon.png">
-
-<!-- フルロゴ（白背景向け・黒文字） -->
-<img src="https://cdn.jsdelivr.net/gh/wj-medtech/kpics-app@main/assets/logo-full-light.png">
-
-<!-- フルロゴ（黒背景向け・白文字） -->
-<img src="https://cdn.jsdelivr.net/gh/wj-medtech/kpics-app@main/assets/logo-full-dark.png">
-```
-
-この方法なら、ロゴを更新したいときに `kpics-app` リポジトリの画像を1回差し替えるだけで、リンクしている全てのアプリに反映されます。
-
-## デザインのポイント
-
-- カラーはK-PICSロゴのオレンジ（`#E8A020`）と黒をベースに、既存の認定アプリと完全に統一感のある配色にしています。
-- 起動時とログイン後に、ロゴが浮かび上がるスプラッシュアニメーション（約1.2秒）を挿入しています。画面遷移（ホーム⇄カレンダー）の際も同様にロゴが一瞬表示されます。
-- MAP1・MAP2（エコー手技マスター）は構想中とのことなので、現時点では「準備中」バッジ付きの非活性カードとして配置しています。内容が決まったら教えてください、リンク先を実装します。
-- イベントカレンダーは月表示＋下部にアジェンダ（リスト）を組み合わせた形式。日付をタップすると、その日の予定だけに絞り込めます。
-
-## イベントカレンダーの入力項目
-
-「＋」ボタンから追加できる項目は以下の4つです。
-
-1. イベント名（カレンダーに表示される）
-2. 日付・時間（時間は自由入力なので「19:00〜」「TBD」「随時」なども入力可能）
-3. 場所
-4. 詳しい説明（案内文、Zoom IDなど。改行も反映されます）
-
-部員であればログインしている全員が追加・編集・削除できます。
+- `service_role` キーは絶対にコードへ書かない。
+- 新しいテーブルは RLS をオンにし、読み取りは `to authenticated`、書き込みは `auth.uid() = user_id` を付ける。
+- 分かっていて残している弱点は、引き継ぎ書の「分かっていて残している弱点」を参照。
