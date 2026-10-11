@@ -456,6 +456,25 @@ button{font-family:inherit;}
 .cycle-title{font-size:13.5px;font-weight:700;margin-bottom:3px;}
 .cycle-desc{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
 .cycle-loop{margin-top:18px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--orange);opacity:.85;}
+.wish-card{margin-top:22px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card);}
+.wish-head{background:rgba(232,160,32,.16);border-bottom:1px solid rgba(232,160,32,.3);padding:11px 15px;font-size:14px;font-weight:900;color:var(--text);}
+.wish-head span{color:var(--orange);font-weight:700;font-size:12.5px;margin-left:4px;}
+.wish-body{padding:15px 16px 16px;}
+.wish-lead{font-size:14.5px;font-weight:800;color:var(--orange-light);margin-bottom:10px;}
+.wish-list{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.wish-list li{position:relative;padding-left:18px;font-size:13px;line-height:1.7;font-weight:500;}
+.wish-list li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--orange);border-radius:1px;}
+.cmt-wrap{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.cmt-label{font-size:12px;color:var(--orange);font-weight:700;margin-bottom:10px;}
+.cmt-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.cmt-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px;}
+.cmt-author{font-size:11.5px;font-weight:700;color:var(--orange-light);}
+.cmt-time{font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;}
+.cmt-body{font-size:13px;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
+.cmt-del{font-size:10.5px;color:var(--text-dim);background:none;border:none;cursor:pointer;margin-top:5px;padding:0;}
+.cmt-del:hover{color:#F06060;}
+.cmt-empty{font-size:12px;color:var(--text-muted);text-align:center;padding:10px 0 14px;}
+.cmt-form{margin-top:10px;}
 .purpose-note{
   margin-top:22px;background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.3);border-radius:10px;
   color:var(--text);font-size:12.5px;line-height:1.9;padding:15px 16px;text-align:center;
@@ -941,7 +960,7 @@ button{font-family:inherit;}
       </div>
       <div class="sheet-row" role="button" tabindex="0" onclick="closeSheet('sheet-about'); openDocs('app-howto','このアプリの使い方');">
         <div class="sheet-row-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-        <div class="sheet-row-body"><div class="sheet-row-title">このアプリの使い方</div><div class="sheet-row-desc">資料（PDF）で案内します。随時追加</div></div>
+        <div class="sheet-row-body"><div class="sheet-row-title">このアプリの使い方</div><div class="sheet-row-desc">資料（PDF）で案内します</div></div>
         <svg class="sheet-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
     </div>
@@ -957,7 +976,6 @@ button{font-family:inherit;}
       <div class="purpose-hero-tint"></div>
       <div class="purpose-hero-shade"></div>
       <div class="purpose-hero-copy">
-        <div class="purpose-eyebrow">このポータルの目的</div>
         <div class="purpose-title">学びを、<span class="accent">次の代へ。</span></div>
       </div>
     </div>
@@ -982,6 +1000,18 @@ button{font-family:inherit;}
         </div>
       </div>
       <div class="cycle-loop">↻ そしてまた、次の代へ</div>
+      <div class="wish-card">
+        <div class="wish-head">開発者の願い <span>～学びを、次の代へ。～</span></div>
+        <div class="wish-body">
+          <div class="wish-lead">学びは、積み重なり、巡っていく。</div>
+          <ul class="wish-list">
+            <li>学んだことを共有し、資料や教材を更新し続ける</li>
+            <li>生まれた時間で、新しい分野へ学びを広げる</li>
+            <li>教えることで、自分の学びも深まる</li>
+            <li>先輩から後輩へ、学びを土台にさらに先へ</li>
+          </ul>
+        </div>
+      </div>
       <div class="purpose-note">超音波を学ぶためだけに活動するのではなく、<br>地域と社会に貢献できる医療人になるために活動する。<br>それがK-PICSの理念です。</div>
     </div>
   </div>
@@ -1005,6 +1035,17 @@ button{font-family:inherit;}
         <input class="pdf-file" type="file" id="pdf-file-input" accept="application/pdf,.pdf">
       </div>
       <div class="pdf-status" id="pdf-status"></div>
+
+      <!-- コメント -->
+      <div class="cmt-wrap" id="cmt-wrap">
+        <div class="cmt-label">💬 コメント</div>
+        <div id="cmt-list"></div>
+        <div class="cmt-form">
+          <textarea class="announce-textarea" id="cmt-input" maxlength="500" placeholder="質問・感想・気づいたことなど、気軽に書いてください"></textarea>
+          <div class="auth-error" id="cmt-error"></div>
+          <button class="announce-post-btn" id="cmt-post-btn" onclick="submitComment()">コメントする</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1418,8 +1459,75 @@ function openDocs(key, title){
   document.getElementById('pdf-sub').textContent = key;
   document.getElementById('pdf-upload').style.display = _docsCanEdit() ? 'block' : 'none';
   _docsStatus('');
+  _cmtError('');
   document.getElementById('pdf-modal').classList.add('open');
   _docsRender();
+  _cmtRender();
+}
+
+// ===================== コメント（資料ごと） =====================
+// Supabase に content_comments テーブルが必要（作り方は別途お渡しするSQL）
+const CMT_TABLE = 'app_comments';
+function _cmtError(msg){
+  const el = document.getElementById('cmt-error');
+  el.textContent = msg || '';
+  el.classList.toggle('show', !!msg);
+}
+async function _cmtRender(){
+  const list = document.getElementById('cmt-list');
+  list.innerHTML = '<div class="cmt-empty">読み込み中…</div>';
+  const key = _docsKey;
+  let rows = [];
+  try{
+    const { data, error } = await _supabase.from(CMT_TABLE).select('*').eq('content_key', key).order('created_at', {ascending:true});
+    if(error) throw error;
+    rows = data || [];
+  }catch(e){
+    if(key !== _docsKey) return;
+    list.innerHTML = '<div class="cmt-empty">コメントを読み込めませんでした。</div>';
+    console.error('[K-PICS] comment load error', e);
+    return;
+  }
+  if(key !== _docsKey) return;
+  if(!rows.length){ list.innerHTML = '<div class="cmt-empty">まだコメントはありません。</div>'; return; }
+  const me = window.CURRENT_UID;
+  const canMod = _docsCanEdit();
+  list.innerHTML = rows.map(r => `
+    <div class="cmt-item" data-id="${_esc(r.id)}">
+      <div class="cmt-head">
+        <span class="cmt-author">${_esc(r.author_name || '部員')}</span>
+        <span class="cmt-time">${_fmtDate(r.created_at)}</span>
+      </div>
+      <div class="cmt-body">${_esc(r.body || '')}</div>
+      ${(me && r.user_id === me) || canMod ? '<button class="cmt-del">削除</button>' : ''}
+    </div>`).join('');
+  list.querySelectorAll('.cmt-del').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if(!window.confirm('このコメントを削除します。よろしいですか？')) return;
+      const id = btn.closest('.cmt-item').dataset.id;
+      const { error } = await _supabase.from(CMT_TABLE).delete().eq('id', id);
+      if(error){ _cmtError('削除できませんでした。'); return; }
+      _cmtError('');
+      _cmtRender();
+    });
+  });
+}
+async function submitComment(){
+  const input = document.getElementById('cmt-input');
+  const btn = document.getElementById('cmt-post-btn');
+  const body = input.value.trim();
+  if(!body){ _cmtError('コメントを入力してください。'); return; }
+  if(!window.CURRENT_UID){ _cmtError('ログイン情報が読み込めていません。ページを開き直してみてください。'); return; }
+  const p = window.CURRENT_PROFILE || {};
+  const name = p.name || p.full_name || p.display_name || '部員';
+  btn.disabled = true; _cmtError('');
+  const { error } = await _supabase.from(CMT_TABLE).insert({
+    content_key:_docsKey, body:body, author_name:name, user_id:window.CURRENT_UID
+  });
+  btn.disabled = false;
+  if(error){ _cmtError('投稿できませんでした。' + _friendlyError(error.message || error)); console.error('[K-PICS] comment post error', error); return; }
+  input.value = '';
+  _cmtRender();
 }
 function closeDocs(){
   document.getElementById('pdf-modal').classList.remove('open');
