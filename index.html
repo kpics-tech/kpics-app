@@ -169,7 +169,7 @@ button{font-family:inherit;}
 
 .home-header{
   position:relative;z-index:1;flex-shrink:0;
-  padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
+  padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
 }
 .home-header-top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;gap:8px;}
 .brand-mark{display:flex;align-items:center;gap:9px;min-width:0;flex-shrink:0;}
@@ -215,7 +215,8 @@ button{font-family:inherit;}
   position:relative;z-index:1;flex:1;
   display:flex;flex-direction:column;gap:10px;
   width:100%;max-width:640px;margin:0 auto;
-  padding:4px 16px calc(var(--tabbar-pad, 78px) + 8px + env(safe-area-inset-bottom));
+  /* 下の余白＝タブバーの実際の高さ（下のスクリプトで測る）＋ちょっとだけ */
+  padding:12px 16px calc(var(--home-pad, 96px) + 16px);
 }
 
 /* ホーム画面に追加バナー（細い1行） */
@@ -238,7 +239,7 @@ button{font-family:inherit;}
 /* ===== 主役：ECHO（エコー画面風） ===== */
 .echo-hero{
   position:relative;isolation:isolate;overflow:hidden;
-  min-height:178px;padding:20px 18px 16px;border-radius:22px;
+  flex:1 1 auto;min-height:178px;max-height:224px;padding:20px 18px 16px;border-radius:22px;
   background:
     radial-gradient(120% 140% at 100% 50%, rgba(232,160,32,.10), transparent 55%),
     #120F0B;
@@ -248,7 +249,7 @@ button{font-family:inherit;}
 .echo-hero:active{border-color:rgba(232,160,32,.7);}
 .echo-scan{
   position:absolute;z-index:-1;pointer-events:none;
-  right:-46px;top:50%;height:112%;width:auto;transform:translateY(-50%);
+  right:-64px;top:50%;height:236px;width:auto;transform:translateY(-50%);
 }
 /* 文字の背後だけ少し暗くして読みやすく */
 .echo-hero::before{
@@ -301,7 +302,7 @@ button{font-family:inherit;}
 
 /* ===== 練習と記録 ===== */
 .home-label{font-size:11.5px;font-weight:700;color:var(--muted);margin:8px 2px -2px;letter-spacing:.04em;}
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
 .tool{
   display:flex;align-items:center;gap:9px;min-width:0;
   padding:12px 11px;border-radius:14px;background:var(--surface);border:1px solid var(--line);
@@ -326,7 +327,7 @@ button{font-family:inherit;}
 /* ===== 一番下：アプリについて ===== */
 .home-foot{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-top:6px;padding:12px 4px 0;border-top:1px solid var(--line);
+  margin-top:auto;padding:12px 4px 0;border-top:1px solid var(--line);
   background:none;border-left:none;border-right:none;border-bottom:none;color:var(--muted);
   font-family:inherit;text-align:left;width:100%;
 }
@@ -1484,6 +1485,19 @@ button{font-family:inherit;}
 
 <script src="app.js"></script>
 <script src="tabbar.js"></script>
+<script>
+// ホームの下の余白を、タブバーの実際の高さ（iPhoneの下の余白ぶんも含む）に合わせる
+(function(){
+  function fit(){
+    var t = document.getElementById('main-tabbar');
+    if(t && t.offsetHeight) document.documentElement.style.setProperty('--home-pad', t.offsetHeight + 'px');
+  }
+  fit();
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+})();
+</script>
 <script>
 // ===================== ボトムシート（INPUT／ADVANCED／アプリについて） =====================
 function openSheet(id){
