@@ -17,7 +17,7 @@ function hideSplash(){
 }
 
 // ---------- 学年表示ラベル変換 ----------
-// DBには数字で保存する（1〜6=学年、7=先生、8=その他）。
+// DBには数字で保存する（1〜6=学年、7=先生、8=その他、9=研修医1年目、10=研修医2年目）。
 // 認定アプリ側の「学年<=4かどうか」という判定を壊さないよう、
 // 数値のまま扱う設計にしている。表示用のラベルだけここで変換する。
 function formatYearLabel(year){
@@ -25,6 +25,8 @@ function formatYearLabel(year){
   if(year >= 1 && year <= 6) return `${year}年生`;
   if(year === 7) return '先生';
   if(year === 8) return 'その他';
+  if(year === 9) return '研修医1年目';
+  if(year === 10) return '研修医2年目';
   return '';
 }
 function switchAuthTab(tab){
