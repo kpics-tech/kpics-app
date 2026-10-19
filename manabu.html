@@ -29,6 +29,7 @@
   --border:#2A2A2A; --border-light:#333; --text:#F0F0F0; --text-muted:#8C8C8C; --text-dim:#555;
   --spl:#D98A3D; --spl-bg:rgba(217,138,61,0.10);
   --ease:cubic-bezier(.16,1,.3,1);
+  --emg:#EF6B57; --emg-light:#F3A292;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:var(--black);overflow-x:clip;}
@@ -50,20 +51,36 @@ button{font-family:inherit;}
 }
 .top-header-row{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
 .th-title{font-family:"Bebas Neue",sans-serif;font-size:34px;letter-spacing:.04em;line-height:1;}
-.th-title span{color:var(--orange);}
+.th-title .hl{color:var(--orange);}
+.th-title .t-emg,.th-sub .t-emg{display:none;}
+body.side-emg .th-title .t-echo,body.side-emg .th-sub .t-echo{display:none;}
+body.side-emg .th-title .t-emg,body.side-emg .th-sub .t-emg{display:inline;}
 .th-sub{font-size:10px;color:var(--text-muted);font-family:"JetBrains Mono",monospace;letter-spacing:.12em;margin-top:5px;}
-.map-btn{
-  width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.04);
-  border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;
+/* 表・裏の切り替えボタン（右上） */
+.flip-btn{
+  height:42px;padding:0 13px 0 11px;border-radius:13px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border-light);display:flex;align-items:center;gap:7px;
   color:var(--orange-light);cursor:pointer;flex-shrink:0;
+  font-family:inherit;font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  transition:border-color .18s, background .18s, color .18s;
 }
-.map-btn:active{border-color:var(--orange);background:var(--orange-bg);}
+.flip-btn:active{border-color:var(--orange);background:var(--orange-bg);}
+.flip-btn svg{flex-shrink:0;}
+/* 裏面（救急・災害）の色味：ヘッダーとボタンを赤みのあるオレンジに */
+body.side-emg .top-header{background:linear-gradient(to bottom, rgba(239,107,87,.17), rgba(239,107,87,.06));}
+body.side-emg .th-title .hl{color:var(--emg-light);}
+body.side-emg .flip-btn{color:var(--emg-light);border-color:rgba(239,107,87,.38);}
+body.side-emg .flip-btn:active{border-color:var(--emg);background:rgba(239,107,87,.1);}
+.flip-stage{backface-visibility:hidden;-webkit-backface-visibility:hidden;}
 
 /* ===== ヒーロー：ドクターヘリ ===== */
 .hero{
   position:relative;overflow:hidden;
   min-height:320px;display:flex;align-items:flex-end;
 }
+/* エコー面は写真なし：やわらかいオレンジの光だけ */
+.face-echo .hero{min-height:230px;background:radial-gradient(ellipse 90% 80% at 15% 0%, rgba(232,160,32,.16), transparent 65%);}
+@media (min-width:640px){ .face-echo .hero{min-height:280px;} }
 @media (min-width:640px){ .hero{min-height:400px;} }
 .hero-img{
   position:absolute;left:50%;top:0;width:120%;max-width:none;height:118%;
@@ -246,6 +263,19 @@ button{font-family:inherit;}
 .cmt-submit-btn{margin-top:12px;width:100%;background:var(--orange);color:var(--black);border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;}
 .cmt-submit-btn:active{background:var(--orange-dark);}
 .cmt-submit-btn:disabled{opacity:.5;cursor:default;}
+.cmt-purpose{font-weight:700;font-size:10px;color:var(--orange-light);border:1px solid rgba(232,160,32,.35);border-radius:20px;padding:2px 8px;}
+.cmt-img-row{margin-top:10px;}
+.cmt-img-add{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:700;color:var(--orange-light);border:1px dashed rgba(232,160,32,.45);border-radius:10px;padding:8px 12px;}
+.cmt-img-add:active{background:var(--orange-bg);}
+.cmt-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.cmt-previews:empty{display:none;}
+.cmt-prev{position:relative;width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid var(--border-light);}
+.cmt-prev img{width:100%;height:100%;object-fit:cover;display:block;}
+.cmt-prev button{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.75);color:#fff;font-size:11px;line-height:1;cursor:pointer;}
+.cmt-imgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+.cmt-thumb{width:88px;height:88px;object-fit:cover;border-radius:9px;border:1px solid var(--border-light);cursor:zoom-in;background:var(--card);}
+.cmt-lightbox{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:16px;}
+.cmt-lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;}
 .cmt-count-hint{font-size:11px;color:var(--text-dim);text-align:right;margin-top:6px;font-family:"JetBrains Mono",monospace;}
 
 .note-box{margin:18px 0 0;padding:14px 16px;background:var(--orange-bg);border:1px solid rgba(232,160,32,.22);border-radius:14px;font-size:12.5px;line-height:1.85;color:var(--text);}
@@ -332,21 +362,27 @@ button{font-family:inherit;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
 
-/* ===== 全体マップ ===== */
+/* ===== モーダル共通 ===== */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:500;padding:24px;}
 .overlay.show{display:flex;}
-.minimap{width:100%;max-width:440px;max-height:82vh;overflow-y:auto;background:var(--dark);border:1px solid var(--orange-dark);border-radius:20px;padding:20px;}
-.minimap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.minimap-head h4{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:.04em;font-weight:400;}
-.minimap-head .close{font-size:20px;color:var(--text-dim);cursor:pointer;padding:4px;}
-.mm-sec{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--orange);letter-spacing:.2em;margin:14px 0 8px;}
-.mm-sec:first-of-type{margin-top:0;}
-.mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.mm-node{font-size:12px;font-weight:600;padding:10px 11px 10px 22px;background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;position:relative;line-height:1.35;}
-.mm-node::before{content:"";position:absolute;left:10px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--orange);}
-.mm-node.spl::before{background:var(--spl);}
-.mm-node:active{border-color:var(--orange);background:var(--card-hover);}
-.mm-note{margin-top:12px;font-size:10px;color:var(--text-dim);font-family:"JetBrains Mono",monospace;text-align:center;letter-spacing:.06em;}
+
+/* ===== 裏面：救急・災害（色味を赤みのあるオレンジに差し替え） ===== */
+.face-emg{--orange:#EF6B57;--orange-light:#F3A292;--orange-dark:#B8483A;--orange-bg:rgba(239,107,87,.08);}
+.face-emg .hero-shade{
+  background:
+    linear-gradient(to bottom, rgba(239,107,87,.14) 0%, rgba(239,107,87,0) 30%),
+    linear-gradient(to bottom, rgba(12,12,12,.92) 0%, rgba(12,12,12,.2) 34%, rgba(12,12,12,.62) 66%, var(--black) 96%);
+}
+.face-emg .acc.open{border-color:rgba(239,107,87,.45);box-shadow:0 14px 34px rgba(0,0,0,.4), inset 0 0 0 1px rgba(239,107,87,.06);}
+.face-emg .acc-ic{border-color:rgba(239,107,87,.22);}
+.face-emg .acc-link,.face-emg .docbtn,.face-emg .cmtbtn{border-color:rgba(239,107,87,.3);}
+.face-emg .tbadge{border-color:rgba(239,107,87,.35);}
+.face-emg .dyn-add-btn{border-color:rgba(239,107,87,.45);}
+.face-emg .invite-eyebrow{color:var(--emg);}
+
+/* 一覧から飛んできた小項目（ISLSなど）を光らせる */
+.subrow.flash{animation:flashRing 1.5s ease-out 1;}
+@media (prefers-reduced-motion: reduce){ .subrow.flash{animation:none;} }
 
 /* ===== PDF資料モーダル ===== */
 .pdf-box{width:100%;max-width:460px;max-height:84vh;display:flex;flex-direction:column;background:var(--dark);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
@@ -437,26 +473,23 @@ button{font-family:inherit;}
 <div class="status-shade" aria-hidden="true"></div>
 <div id="splash"><img class="splash-logo-img" src="assets/logo-icon-dark.png" alt="K-PICS"></div>
 
+<div class="flip-stage" id="flip-stage">
+
 <header class="top-header">
   <div class="top-header-row">
     <div>
-      <div class="th-title">まな<span>ぶ</span></div>
-      <div class="th-sub">K-PICS ー 部員専用ポータル</div>
+      <div class="th-title"><span class="t-echo">まな<span class="hl">ぶ</span></span><span class="t-emg">救急・<span class="hl">災害</span></span></div>
+      <div class="th-sub"><span class="t-echo">K-PICS ー 部員専用ポータル</span><span class="t-emg">K-PICS ー EMERGENCY ・ DISASTER</span></div>
     </div>
-    <div class="map-btn" id="map-open" aria-label="全体マップ"><svg class="" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+    <button type="button" class="flip-btn" id="flip-btn" aria-label="救急・災害の面に切り替える">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      <span class="flip-label" id="flip-label">救急・災害</span>
+    </button>
   </div>
 </header>
 
-<!-- ヒーロー：ドクターヘリ（スクロールで着地する） -->
-<div class="hero" id="hero">
-  <img class="hero-img" id="hero-img" src="assets/bg-heli.jpg" alt="">
-  <div class="hero-shade"></div>
-  <div class="hero-in">
-    <div class="hero-eyebrow">LEARNING MAP</div>
-    <h1 class="hero-title">さあ、降り立とう。<br><span>学びのフィールドへ。</span></h1>
-    <p class="hero-sub">基本のキから応用ルートまで。気になる項目をタップ。</p>
-  </div>
-</div>
+<!-- ================= 表面：エコー ================= -->
+<div class="face face-echo" id="face-echo">
 
 <!-- スティッキー目次 -->
 <nav class="snav" id="snav">
@@ -465,7 +498,7 @@ button{font-family:inherit;}
     <a href="#anatomy" data-sec="anatomy">ANATOMY</a>
     <a href="#advanced" data-sec="advanced">02 ADVANCED</a>
     <a href="#spl" data-sec="spl">SPL</a>
-    <a href="#emergency" data-sec="emergency">EMERGENCY</a>
+    <a href="#fields" data-sec="fields">FIELDS</a>
     <a href="#others" data-sec="others">OTHERS</a>
     <a href="#invite" data-sec="invite">SHARE</a>
   </div>
@@ -521,21 +554,12 @@ button{font-family:inherit;}
 <div class="spl-group"><div class="spl-group-label">SPL STOCK</div><div class="acc" id="spl-past"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div><div class="acc-ttl"><div class="acc-title">過去問</div><div class="acc-meta"><span>PAST EXAMS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>これまでのSPLで出題された問題のストックです。</p><div class="docbtn" data-doc="spl-past" data-doc-title="SPL ｜ 過去問"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div><div class="acc" id="spl-knowhow"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="acc-ttl"><div class="acc-title">先輩たちのノウハウ集</div><div class="acc-meta"><span>KNOW-HOW</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>出場した先輩が残してくれた、対策・コツ・反省。次に出る人が同じところでつまずかないように。</p><div class="docbtn" data-doc="spl-knowhow" data-doc-title="SPL ｜ 先輩たちのノウハウ集"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div>
   </section>
 
-  <div class="sec" style="margin-top:28px;">
+  <div class="sec" id="fields" style="margin-top:28px;">
     <div class="sec-eyebrow">FIELDS</div>
     <h2 class="sec-title" style="font-size:26px;">分野別</h2>
   </div>
   <div class="adv-list">
 <div class="acc" id="adv-neck"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></div><div class="acc-ttl"><div class="acc-title">頸部エコー</div><div class="acc-meta"><span>THYROID</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>甲状腺を中心に、頸部の描出と読み方。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">甲状腺</div><div class="docbtn" data-doc="neck-thyroid" data-doc-title="頸部エコー ｜ 甲状腺"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-abdomen"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div><div class="acc-ttl"><div class="acc-title">腹部エコー</div><div class="acc-meta"><span>PANCREAS ・ 6 APPROACH</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>基本の腹部から、一歩踏み込んだ内容です。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">膵臓</div><div class="docbtn" data-doc="abd-pancreas" data-doc-title="腹部エコー ｜ 膵臓"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">6アプローチ</div><div class="docbtn" data-doc="abd-6approach" data-doc-title="腹部エコー ｜ 6アプローチ"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-heart"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="acc-ttl"><div class="acc-title">心臓の詳細エコー</div><div class="acc-meta"><span>BEYOND POCUS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>POCUSの先へ。断面・計測・弁の評価まで。</p><div class="docbar"><div class="docbtn" data-doc="heart-advanced" data-doc-title="心臓の詳細エコー"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-msk"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></div><div class="acc-ttl"><div class="acc-title">運動器</div><div class="acc-meta"><span>REGIONS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">肩</div><div class="docbtn" data-doc="msk-shoulder" data-doc-title="運動器 ｜ 肩"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">肘</div><div class="docbtn" data-doc="msk-elbow" data-doc-title="運動器 ｜ 肘"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">膝</div><div class="docbtn" data-doc="msk-knee" data-doc-title="運動器 ｜ 膝"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">ゼロイチサイン</div><div class="docbtn" data-doc="msk-zeroichi" data-doc-title="運動器 ｜ ゼロイチサイン"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">乳児・新生児の股関節エコー</div><div class="docbtn" data-doc="msk-hip-infant" data-doc-title="運動器 ｜ 乳児・新生児の股関節エコー"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div><div class="acc" id="adv-rheuma"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-4 0v5M14 10V4a2 2 0 00-4 0v2M10 10.5V6a2 2 0 00-4 0v8"/><path d="M18 8a2 2 0 114 0v6a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 012.83-2.82L7 15"/></svg></div><div class="acc-ttl"><div class="acc-title">リウマチ</div><div class="acc-meta"><span>EXAM TO ECHO</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>診察〜エコーの活用まで。身体所見とエコーをつなげて考えます。</p><div class="docbar"><div class="docbtn" data-doc="rheumatology" data-doc-title="リウマチ ｜ 診察〜エコーの活用まで"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-vexus"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 12c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 18c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2"/></svg></div><div class="acc-ttl"><div class="acc-title">VExUS</div><div class="acc-meta"><span>VENOUS CONGESTION</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>静脈うっ血の評価。</p><div class="docbar"><div class="docbtn" data-doc="vexus" data-doc-title="VExUS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div><div class="acc" id="adv-cvc"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg></div><div class="acc-ttl"><div class="acc-title">中心静脈カテーテル</div><div class="acc-meta"><span>US-GUIDED</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>エコーガイド下穿刺の考え方と手順。</p><div class="docbar"><div class="docbtn" data-doc="cvc" data-doc-title="中心静脈カテーテル"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div></div></div></div></div>
-  </div>
-
-  <div class="sec" id="emergency" style="margin-top:34px;">
-    <div class="sec-eyebrow">EMERGENCY</div>
-    <h2 class="sec-title" style="font-size:26px;">救急・災害</h2>
-    <p class="sec-sub" style="margin-bottom:14px;">救急・災害医療の主なコースと、その学び方。</p>
-  </div>
-  <div class="adv-list">
-<div class="acc open" id="emg-courses"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="acc-ttl"><div class="acc-title">救急・災害コース</div><div class="acc-meta"><span>COURSES</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>救急・災害医療で広く知られているコース。各項目に資料とコメントを残せます。</p><div class="subrows"><div class="subrow"><span class="subrow-idx">01</span><div class="subrow-name">ISLS<span class="subrow-desc">脳卒中対応</span></div><div class="docbtn" data-doc="emg-isls" data-doc-title="救急・災害コース ｜ ISLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">02</span><div class="subrow-name">ICLS<span class="subrow-desc">心停止</span></div><div class="docbtn" data-doc="emg-icls" data-doc-title="救急・災害コース ｜ ICLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">03</span><div class="subrow-name">JPTEC<span class="subrow-desc">救急隊による外傷対応</span></div><div class="docbtn" data-doc="emg-jptec" data-doc-title="救急・災害コース ｜ JPTEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">04</span><div class="subrow-name">PEMEC<span class="subrow-desc">救急隊による内因性疾患対応</span></div><div class="docbtn" data-doc="emg-pemec" data-doc-title="救急・災害コース ｜ PEMEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">05</span><div class="subrow-name">MCLS<span class="subrow-desc">多数傷病者対応（災害、トリアージ、広域搬送などの基本的な考え方）</span></div><div class="docbtn" data-doc="emg-mcls" data-doc-title="救急・災害コース ｜ MCLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow"><span class="subrow-idx">06</span><div class="subrow-name">JATEC<span class="subrow-desc">外傷初期診療。医師にならないと正規のコースは受講できない。しかし学生でも自己学習だけならいける。</span></div><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急・災害コース ｜ JATEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div>
   </div>
 
   <div class="sec" id="others" style="margin-top:34px;">
@@ -567,53 +591,44 @@ button{font-family:inherit;}
 
 </main>
 
-<nav class="tabbar" id="main-tabbar"><a class="tabbar-item" data-tab="home" href="index.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="tb-label">ホーム</span></a><a class="tabbar-item" data-tab="manabu" href="manabu.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span class="tb-label">まなぶ</span></a><a class="tabbar-item" data-tab="calendar" href="calendar.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="tb-label">カレンダー</span></a><a class="tabbar-item" data-tab="other" href="questions.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="tb-label">チャット</span></a></nav>
+</div><!-- /face-echo -->
 
-<!-- ===== 全体マップ ===== -->
-<div class="overlay" id="mm">
-  <div class="minimap">
-    <div class="minimap-head">
-      <h4>全体マップ</h4>
-      <div class="close" id="mm-close">✕</div>
+<!-- ================= 裏面：救急・災害 ================= -->
+<div class="face face-emg" id="face-emg" hidden>
+
+  <div class="hero hero-emg" id="hero-emg">
+    <img class="hero-img" src="assets/bg-heli.jpg" alt="">
+    <div class="hero-shade"></div>
+    <div class="hero-in">
+      <div class="hero-eyebrow">EMERGENCY ・ DISASTER</div>
+      <h1 class="hero-title">いざという現場で、<br><span>動ける自分へ。</span></h1>
+      <p class="hero-sub">救急・災害医療の主なコースを、ここから。</p>
     </div>
-    <div class="mm-sec">01 BASIC</div>
-    <div class="mm-grid">
-      <div class="mm-node" data-jump="n1">① 理念・活動紹介</div>
-      <div class="mm-node" data-jump="n2">② 部員として</div>
-      <div class="mm-node" data-jump="n3">③ 基本のキ</div>
-      <div class="mm-node" data-jump="n4">④ 予習教材</div>
-      <div class="mm-node" data-jump="n5">⑤ セミナー</div>
-      <div class="mm-node" data-jump="n6">⑥ 自主練HB</div>
-      <div class="mm-node" data-jump="n7">⑦ 認定アプリ</div>
-      <div class="mm-node" data-jump="n8">⑧ waza-ari</div>
-      <div class="mm-node" data-jump="n9">⑨ 10日間で学ぶ！</div>
-      <div class="mm-node" data-jump="n10">⑩ 認定試験</div>
-      <div class="mm-node" data-jump="anatomy">解剖の理解</div>
-    </div>
-    <div class="mm-sec">02 ADVANCED</div>
-    <div class="mm-grid">
-      <div class="mm-node spl" data-jump="spl">SPL</div>
-      <div class="mm-node" data-jump="adv-neck">頸部エコー</div>
-      <div class="mm-node" data-jump="adv-abdomen">腹部エコー</div>
-      <div class="mm-node" data-jump="adv-heart">心臓の詳細</div>
-      <div class="mm-node" data-jump="adv-msk">運動器</div>
-      <div class="mm-node" data-jump="adv-rheuma">リウマチ</div>
-      <div class="mm-node" data-jump="adv-vexus">VExUS</div>
-      <div class="mm-node" data-jump="adv-cvc">中心静脈カテーテル</div>
-    </div>
-    <div class="mm-sec">EMERGENCY ー 救急・災害</div>
-    <div class="mm-grid">
-      <div class="mm-node" data-jump="emg-courses">救急・災害コース</div>
-    </div>
-    <div class="mm-sec">OTHERS ー その他</div>
-    <div class="mm-grid">
-      <div class="mm-node" data-jump="etc-fastjourney">FAST Journey</div>
-      <div class="mm-node" data-jump="etc-presentation">発表ノウハウ</div>
-      <div class="mm-node" data-jump="invite">みんなで増やす</div>
-    </div>
-    <div class="mm-note">タップでその場所へジャンプ</div>
   </div>
-</div>
+
+  <main class="main">
+
+  <section class="sec" id="emergency">
+    <div class="sec-eyebrow">CONTENTS</div>
+    <h2 class="sec-title">Contents</h2>
+    <p class="sec-sub">救急・災害医療の構成と、症例ストック。どれも資料の追加・項目の追加・コメントができます。</p>
+  </section>
+  <div class="adv-list">
+<div class="acc open" id="emg-courses"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="acc-ttl"><div class="acc-title">救急・災害の構成</div><div class="acc-meta"><span>10 COURSES</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>救急・災害医療で広く知られているコースなどの一覧。各項目に資料とコメントを残せます。項目そのものも、下から付け足せます。</p><div class="subrows"><div class="subrow" id="emg-sub-bls"><span class="subrow-idx">01</span><div class="subrow-name">BLS<span class="subrow-desc">一次救命処置</span></div><div class="docbtn" data-doc="emg-bls" data-doc-title="救急・災害の構成 ｜ BLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-icls"><span class="subrow-idx">02</span><div class="subrow-name">ICLS<span class="subrow-desc">心停止対応</span></div><div class="docbtn" data-doc="emg-icls" data-doc-title="救急・災害の構成 ｜ ICLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-jatec"><span class="subrow-idx">03</span><div class="subrow-name">JATEC<span class="subrow-desc">外傷初期診療</span></div><div class="docbtn" data-doc="rally-jatec" data-doc-title="救急・災害の構成 ｜ JATEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-jptec"><span class="subrow-idx">04</span><div class="subrow-name">JPTEC<span class="subrow-desc">外傷の病院前救護</span></div><div class="docbtn" data-doc="emg-jptec" data-doc-title="救急・災害の構成 ｜ JPTEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-mcls"><span class="subrow-idx">05</span><div class="subrow-name">MCLS<span class="subrow-desc">多数傷病者対応</span></div><div class="docbtn" data-doc="emg-mcls" data-doc-title="救急・災害の構成 ｜ MCLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-triage"><span class="subrow-idx">06</span><div class="subrow-name">トリアージ<span class="subrow-desc">START法・PAT法</span></div><div class="docbtn" data-doc="emg-triage" data-doc-title="救急・災害の構成 ｜ トリアージ"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-isls"><span class="subrow-idx">07</span><div class="subrow-name">ISLS<span class="subrow-desc">意識障害と脳卒中の初期診療</span></div><div class="docbtn" data-doc="emg-isls" data-doc-title="救急・災害の構成 ｜ ISLS"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-pemec"><span class="subrow-idx">08</span><div class="subrow-name">PEMEC<span class="subrow-desc">内因性疾患の病院前救護</span></div><div class="docbtn" data-doc="emg-pemec" data-doc-title="救急・災害の構成 ｜ PEMEC"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-pediatric"><span class="subrow-idx">09</span><div class="subrow-name">小児の診察と対応</div><div class="docbtn" data-doc="emg-pediatric" data-doc-title="救急・災害の構成 ｜ 小児の診察と対応"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div><div class="subrow" id="emg-sub-pregnancy"><span class="subrow-idx">10</span><div class="subrow-name">妊婦への対応</div><div class="docbtn" data-doc="emg-pregnancy" data-doc-title="救急・災害の構成 ｜ 妊婦への対応"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>  <span class="cnt zero">0</span></div></div></div></div></div></div></div>
+<div class="acc" id="emg-rally"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></div><div class="acc-ttl"><div class="acc-title">メディカルラリー症例ストック</div><div class="acc-meta"><span>CASE STOCK</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>メディカルラリーで使える症例のストックです。症例の資料をここに集めていきます。個別の症例は、下から項目として付け足せます。</p><div class="docbar"><div class="docbtn" data-doc="emg-rally" data-doc-title="メディカルラリー症例ストック"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div><div class="subrows"></div></div></div></div></div>
+<div class="acc" id="emg-other"><div class="acc-head"><div class="acc-ic"><svg class="" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div><div class="acc-ttl"><div class="acc-title">その他</div><div class="acc-meta"><span>OTHERS</span><span class="m-doc" hidden></span></div></div><svg class="acc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-wrap"><div class="acc-body"><div class="acc-inner"><p>上の枠におさまらない、救急・災害に関する資料やメモ。必要な項目は、下から付け足せます。</p><div class="docbar"><div class="docbtn" data-doc="emg-other" data-doc-title="救急・災害 ｜ その他"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> 資料 <span class="cnt zero">0</span></div></div><div class="subrows"></div></div></div></div></div>
+  </div>
+
+
+    <div class="footer-note"><img src="assets/logo-icon-dark.png" alt="">K-PICS &nbsp;|&nbsp; 学びを、次の代へ。</div>
+
+  </main>
+
+</div><!-- /face-emg -->
+
+</div><!-- /flip-stage -->
+
+<nav class="tabbar" id="main-tabbar"><a class="tabbar-item" data-tab="home" href="index.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="tb-label">ホーム</span></a><a class="tabbar-item" data-tab="manabu" href="manabu.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span class="tb-label">まなぶ</span></a><a class="tabbar-item" data-tab="calendar" href="calendar.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="tb-label">カレンダー</span></a><a class="tabbar-item" data-tab="other" href="questions.html"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="tb-label">チャット</span></a></nav>
 
 <!-- ===== PDF資料モーダル ===== -->
 <div class="overlay" id="pdf-modal">
@@ -652,8 +667,10 @@ button{font-family:inherit;}
     <div class="pdf-body">
       <div id="cmt-list"></div>
       <div class="cmt-form">
-        <div class="cmt-form-label">💬 コメントを書く</div>
-        <textarea class="cmt-textarea" id="cmt-text" maxlength="500" rows="3" placeholder="感想、質問、気づいたことなど、気軽にどうぞ"></textarea>
+        <div class="cmt-form-label">💬 コメントを書く <span class="cmt-purpose">質問・訂正・補足</span></div>
+        <textarea class="cmt-textarea" id="cmt-text" maxlength="500" rows="3" placeholder="質問・訂正・補足など、気づいたことをどうぞ"></textarea>
+        <div class="cmt-img-row"><label class="cmt-img-add" for="cmt-img-input"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> 画像を追加（4枚まで）</label><input class="pdf-file" type="file" id="cmt-img-input" accept="image/*" multiple></div>
+        <div class="cmt-previews" id="cmt-previews"></div>
         <div class="cmt-count-hint"><span id="cmt-len">0</span> / 500</div>
         <label class="cmt-anon"><input type="checkbox" id="cmt-anon-check"><span>匿名で投稿する（名前は表示されません）</span></label>
         <button type="button" class="cmt-submit-btn" id="cmt-submit">投稿する</button>
@@ -912,16 +929,18 @@ const FAST_JOURNEY_URL        = 'https://wj-medtech.github.io/fast_journey/';   
 // スクロールに合わせて写真がゆっくり降りて、ヘリポートに着地するように見せる。
 // 「動きを減らす」設定の端末では動かさない。
 (function initHeliLanding(){
-  const hero = document.getElementById('hero');
-  const img  = document.getElementById('hero-img');
-  if(!hero || !img) return;
+  const heroes = Array.from(document.querySelectorAll('.hero')).filter(h => h.querySelector('.hero-img'));
+  if(!heroes.length) return;
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   let ticking = false;
   function update(){
     ticking = false;
-    const r = hero.getBoundingClientRect();
-    const t = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
-    img.style.transform = `translateX(-50%) translateY(${-8 + t*8}%) scale(${1.06 - t*0.06})`;
+    heroes.forEach(hero => {
+      const img = hero.querySelector('.hero-img');
+      const r = hero.getBoundingClientRect();
+      const t = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
+      img.style.transform = `translateX(-50%) translateY(${-8 + t*8}%) scale(${1.06 - t*0.06})`;
+    });
   }
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', onScroll, {passive:true});
@@ -959,13 +978,19 @@ function openAcc(acc){ if(acc && acc.querySelector('.acc-body')) acc.classList.a
 // その最中にスクロールしても効かない。表示されるのを待ってから動かす。
 // 目次が貼り付く位置＋高さ＋ゆとり。ジャンプ先を「目次の下に余裕をもって」置くための値。
 function navOffset(){
-  const nav = document.querySelector('.snav');
-  if(!nav) return 76;
+  // いま見えている面の目次（裏面には目次がないので、その場合はノッチぶん＋ゆとり）
+  const nav = document.querySelector('.face:not([hidden]) .snav');
+  if(!nav){
+    const shade = document.querySelector('.status-shade');
+    const notch = shade ? shade.getBoundingClientRect().height : 0;
+    return Math.round(notch + 24);
+  }
   const stuckTop = parseFloat(getComputedStyle(nav).top) || 0;   // ノッチぶん
   return Math.round(stuckTop + nav.getBoundingClientRect().height + 26);
 }
 (function syncNavOffset(){
   function apply(){ document.documentElement.style.setProperty('--nav-off', navOffset() + 'px'); }
+  window.__syncNavOffset = apply;   // 表裏を切り替えたときにも呼ぶ
   apply();
   window.addEventListener('load', apply);
   window.addEventListener('resize', apply);
@@ -993,8 +1018,12 @@ function navOffset(){
     const el = document.getElementById(id);
     if(!el) return;
 
+    // 裏面（救急・災害）にある項目なら、先に面を切り替えておく（アニメーションなし）
+    const face = el.closest('.face');
+    if(face && window.KPICS_flip) window.KPICS_flip(face.id === 'face-emg' ? 'emg' : 'echo', {instant:true, hash:false});
+
     // 先に開いて、隠れる演出も解除しておく（高さを確定させてから動かすため）
-    const acc = el.classList.contains('acc') ? el : el.querySelector('.acc');
+    const acc = el.closest('.acc') || el.querySelector('.acc');
     openAcc(acc);
     el.classList.add('in-view');
     el.querySelectorAll('.reveal').forEach(x => x.classList.add('in-view'));
@@ -1048,6 +1077,7 @@ function navOffset(){
   }
   let current = null;
   function update(){
+    if(!secs[0].offsetParent) return;   // 表面が隠れている（裏面を表示中）ときは何もしない
     let best = secs[0].id;
     const line = navOffset() + 24;
     for(const s of secs){ if(s.getBoundingClientRect().top <= line) best = s.id; }
@@ -1065,20 +1095,72 @@ function navOffset(){
   }));
 })();
 
-// ===================== 全体マップ =====================
-document.getElementById('map-open').addEventListener('click', () => document.getElementById('mm').classList.add('show'));
-document.getElementById('mm-close').addEventListener('click', () => document.getElementById('mm').classList.remove('show'));
-document.getElementById('mm').addEventListener('click', e => { if(e.target.id === 'mm') e.currentTarget.classList.remove('show'); });
-document.querySelectorAll('.mm-node').forEach(el => {
-  el.addEventListener('click', () => {
-    const target = document.getElementById(el.dataset.jump);
-    document.getElementById('mm').classList.remove('show');
-    if(!target) return;
-    openAcc(target.classList.contains('acc') ? target : target.querySelector('.acc'));
-    target.classList.add('in-view');
-    setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 150);
-  });
-});
+// ===================== 表・裏の切り替え（エコー ⇄ 救急・災害） =====================
+// 右上のボタンで、ページ全体がカードのようにくるっと反転する。
+// 「動きを減らす」設定の端末では、アニメーションなしで切り替える。
+(function initFlip(){
+  const stage    = document.getElementById('flip-stage');
+  const faceEcho = document.getElementById('face-echo');
+  const faceEmg  = document.getElementById('face-emg');
+  const btn      = document.getElementById('flip-btn');
+  const label    = document.getElementById('flip-label');
+  if(!stage || !faceEcho || !faceEmg || !btn) return;
+
+  let side = 'echo', busy = false;
+  const PERSP = 'perspective(1100px) ';
+
+  function apply(next){
+    side = next;
+    const emg = (next === 'emg');
+    document.body.classList.toggle('side-emg', emg);
+    faceEcho.hidden = emg;
+    faceEmg.hidden  = !emg;
+    label.textContent = emg ? 'エコー' : '救急・災害';
+    btn.setAttribute('aria-label', emg ? 'エコーの面に切り替える' : '救急・災害の面に切り替える');
+    if(window.__syncNavOffset) window.__syncNavOffset();
+  }
+  function setHash(next){
+    try{ history.replaceState(null, '', next === 'emg' ? '#emergency' : location.pathname + location.search); }catch(e){}
+  }
+  function flip(next, opts){
+    opts = opts || {};
+    if(next === side || busy) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(opts.instant || reduce){
+      apply(next);
+      window.scrollTo(0, 0);
+      if(opts.hash !== false) setHash(next);
+      return;
+    }
+    busy = true;
+    const vy = window.innerHeight / 2;
+    // 回転の軸は「いま画面に見えている真ん中」に置く（ページが縦に長いので、これをしないとゆがむ）
+    stage.style.transformOrigin = '50% ' + (window.scrollY + vy) + 'px';
+    stage.style.willChange = 'transform';
+    stage.style.transition = 'transform .22s cubic-bezier(.55,.05,.9,.5)';
+    stage.style.transform  = PERSP + 'rotateY(90deg)';
+    setTimeout(function(){
+      apply(next);
+      window.scrollTo(0, 0);
+      stage.style.transition = 'none';
+      stage.style.transformOrigin = '50% ' + vy + 'px';
+      stage.style.transform = PERSP + 'rotateY(-90deg)';
+      void stage.offsetWidth;                       // いったん描画を確定させてから、戻す動きを始める
+      stage.style.transition = 'transform .34s cubic-bezier(.16,1,.3,1)';
+      stage.style.transform  = PERSP + 'rotateY(0deg)';
+      setTimeout(function(){
+        // 終わったら transform を完全に外す（付けたままだと目次の貼り付きなどに影響するため）
+        stage.style.transition = ''; stage.style.transform = '';
+        stage.style.transformOrigin = ''; stage.style.willChange = '';
+        busy = false;
+      }, 360);
+    }, 230);
+    if(opts.hash !== false) setHash(next);
+  }
+
+  btn.addEventListener('click', function(){ flip(side === 'emg' ? 'echo' : 'emg'); });
+  window.KPICS_flip = flip;
+})();
 
 // ===================== 「部員として」モーダル =====================
 function switchGuideTab(index){
@@ -1398,6 +1480,7 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
      alter table content_comments enable row level security;
      create policy "comments_select_all" on content_comments for select using (true);
      create policy "comments_insert_own" on content_comments for insert with check (auth.uid() = author_id);
+     ※画像つきコメントには comment_images.sql も実行してください（image_paths 列と画像の置き場を作ります）
      create policy "comments_delete_own_or_core" on content_comments for delete using (
        auth.uid() = author_id
        or exists (select 1 from profiles p where p.id = auth.uid() and (p.is_core_member or p.is_teacher))
@@ -1409,6 +1492,9 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
 (function(){
   const CMT_TABLE = 'content_comments';
   const MAX_LEN   = 500;
+  const IMG_BUCKET = 'comment-images';
+  const MAX_IMGS   = 4;
+  let pending = [];   // 投稿前の画像 [{blob, url}]
 
   let cmtIsCore  = false;
   let cmtProfile = null;
@@ -1424,6 +1510,54 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
   const elAnon  = document.getElementById('cmt-anon-check');
   const elSubmit= document.getElementById('cmt-submit');
   const elStat  = document.getElementById('cmt-status');
+  const elImgIn = document.getElementById('cmt-img-input');
+  const elPrev  = document.getElementById('cmt-previews');
+
+  // ---- 画像：縮小して JPEG にそろえる（スマホ写真は重いので） ----
+  function shrink(file){
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const max = 1600, sc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(b => b ? resolve(b) : reject(new Error('toBlob')), 'image/jpeg', 0.85);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+      img.src = url;
+    });
+  }
+  function drawPreviews(){
+    elPrev.innerHTML = '';
+    pending.forEach((p, i) => {
+      const d = document.createElement('div'); d.className = 'cmt-prev';
+      d.innerHTML = '<img alt=""><button type="button" aria-label="この画像を外す">✕</button>';
+      d.querySelector('img').src = p.url;
+      d.querySelector('button').addEventListener('click', () => { URL.revokeObjectURL(p.url); pending.splice(i, 1); drawPreviews(); });
+      elPrev.appendChild(d);
+    });
+  }
+  function clearPending(){ pending.forEach(p => URL.revokeObjectURL(p.url)); pending = []; drawPreviews(); }
+  if(elImgIn) elImgIn.addEventListener('change', async () => {
+    const files = Array.from(elImgIn.files || []);
+    elImgIn.value = '';
+    for(const f of files){
+      if(pending.length >= MAX_IMGS){ status('画像は' + MAX_IMGS + '枚までです。', 'ng'); break; }
+      if(!/^image\//.test(f.type)){ status('画像ファイルを選んでください。', 'ng'); continue; }
+      try{ const blob = await shrink(f); pending.push({blob, url: URL.createObjectURL(blob)}); }
+      catch(e){ status('この画像は読み込めませんでした（HEICなどは非対応のことがあります）。', 'ng'); }
+    }
+    drawPreviews();
+  });
+  function openLightbox(src){
+    const lb = document.createElement('div'); lb.className = 'cmt-lightbox';
+    lb.innerHTML = '<img alt="">'; lb.querySelector('img').src = src;
+    lb.addEventListener('click', () => lb.remove());
+    document.body.appendChild(lb);
+  }
 
   if(!modal) return;
 
@@ -1482,10 +1616,20 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
       return;
     }
     if(!rows.length){
-      elList.innerHTML = '<div class="cmt-empty">まだコメントはありません。<br>いちばん最初のコメントを書いてみませんか？</div>';
+      elList.innerHTML = '<div class="cmt-empty">まだコメントはありません。<br>質問・訂正・補足があれば、気軽に書いてください。</div>';
       return;
     }
+    // 画像つきコメント：期限つきURLをまとめて発行
+    const urlMap = {};
+    const allPaths = [].concat(...rows.map(r => r.image_paths || []));
+    if(allPaths.length){
+      try{
+        const { data } = await _supabase.storage.from(IMG_BUCKET).createSignedUrls(allPaths, 3600);
+        (data || []).forEach(x => { if(x && x.signedUrl) urlMap[x.path] = x.signedUrl; });
+      }catch(e){ /* 画像だけ出せないときは、本文だけ表示 */ }
+    }
     elList.innerHTML = rows.map(r => {
+      const imgsHtml = (r.image_paths || []).map(p => urlMap[p] ? '<img class="cmt-thumb" loading="lazy" alt="添付画像" data-full="' + esc(urlMap[p]) + '" src="' + esc(urlMap[p]) + '">' : '').join('');
       const canDelete = window.CURRENT_UID && (r.author_id === window.CURRENT_UID || cmtIsCore);
       const nameHtml = r.is_anonymous
         ? '<span class="cmt-item-name anon">匿名</span>'
@@ -1496,16 +1640,20 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
           ${nameHtml}
           <span class="cmt-item-date">${fmtDate(r.created_at)}</span>
         </div>
-        <div class="cmt-item-body">${esc(r.body)}</div>
+        ${r.body && r.body.trim() ? '<div class="cmt-item-body">' + esc(r.body) + '</div>' : ''}
+        ${imgsHtml ? '<div class="cmt-imgs">' + imgsHtml + '</div>' : ''}
         ${canDelete ? '<button type="button" class="cmt-item-del">削除</button>' : ''}
       </div>`;
     }).join('');
 
+    elList.querySelectorAll('.cmt-thumb').forEach(im => im.addEventListener('click', () => openLightbox(im.dataset.full)));
     elList.querySelectorAll('.cmt-item-del').forEach(btn => {
       btn.addEventListener('click', async () => {
         const item = btn.closest('.cmt-item');
         if(!window.confirm('このコメントを削除します。よろしいですか？')) return;
         status('削除しています…', 'info');
+        const row = rows.find(x => String(x.id) === item.dataset.id);
+        if(row && row.image_paths && row.image_paths.length){ try{ await _supabase.storage.from(IMG_BUCKET).remove(row.image_paths); }catch(e){} }
         const { error } = await _supabase.from(CMT_TABLE).delete().eq('id', item.dataset.id);
         if(error){ status('削除できませんでした。', 'ng'); return; }
         status('削除しました。', 'ok');
@@ -1524,7 +1672,7 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
 
   async function submitComment(){
     const body = elText.value.trim();
-    if(!body){ status('コメントを入力してください。', 'ng'); return; }
+    if(!body && !pending.length){ status('コメントか画像を入れてください。', 'ng'); return; }
     if(body.length > MAX_LEN){ status('コメントは' + MAX_LEN + '文字までにしてください。', 'ng'); return; }
     if(!window.CURRENT_UID){ status('ログイン情報が読み込めていません。ページを開き直してみてください。', 'ng'); return; }
 
@@ -1537,15 +1685,25 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
         if(!cmtProfile) cmtProfile = await fetchProfile(window.CURRENT_UID);
         authorName = pickName(cmtProfile);
       }
+      const paths = [];
+      for(const p of pending){
+        status('画像をアップロードしています…（' + (paths.length + 1) + '/' + pending.length + '）', 'info');
+        const path = window.CURRENT_UID + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.jpg';
+        const up = await _supabase.storage.from(IMG_BUCKET).upload(path, p.blob, {contentType:'image/jpeg', upsert:false});
+        if(up && up.error){ if(paths.length) await _supabase.storage.from(IMG_BUCKET).remove(paths); throw up.error; }
+        paths.push(path);
+      }
       const { error } = await _supabase.from(CMT_TABLE).insert({
         content_key: openCmtKey,
         body: body,
         is_anonymous: isAnon,
         author_id: window.CURRENT_UID,
-        author_name: authorName
+        author_name: authorName,
+        image_paths: paths
       });
-      if(error) throw error;
+      if(error){ if(paths.length) await _supabase.storage.from(IMG_BUCKET).remove(paths); throw error; }
 
+      clearPending();
       elText.value = '';
       elAnon.checked = false;
       updateLen();
@@ -1568,6 +1726,7 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
     elSub.textContent = openCmtTitle;
     elText.value = '';
     elAnon.checked = false;
+    clearPending();
     updateLen();
     status('');
     modal.classList.add('show');
@@ -1625,7 +1784,7 @@ document.getElementById('member-guide-open').addEventListener('click', openGuide
 */
 (function(){
   const ITEM_TABLE = 'content_items';
-  const PARENTS    = ['adv-neck', 'adv-abdomen', 'adv-msk', 'emg-courses'];
+  const PARENTS    = ['adv-neck', 'adv-abdomen', 'adv-msk', 'emg-courses', 'emg-rally', 'emg-other'];
   const MAX_NAME   = 40;
   const DOC_ICON   = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>';
 
