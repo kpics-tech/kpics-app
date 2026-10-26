@@ -21,7 +21,9 @@
     'prep-detail.html': 'manabu',
     'wiki-detail.html': 'manabu'
   };
-  var EXTRA_VERSION = '20261026';
+  var EXTRA_VERSION = '20261026b';
+  var KP_VER = '2026-10-26 b';
+  var TOP_KEY = 'kp_top_px';
   var pageFile = window.location.pathname.split('/').pop();
 
   function highlightCurrentTab(){
@@ -49,6 +51,16 @@
   if(isIPad) root.classList.add('kp-ipad');
   if(isStandalone) root.classList.add('kp-standalone');
   if(pageFile === 'manabu.html') root.classList.add('kp-manabu');
+
+  // iPadの上の余白は、診断パネルで微調整できる（この端末だけに保存される）
+  function getTop(){ try { var v = parseInt(localStorage.getItem(TOP_KEY), 10); return isNaN(v) ? 72 : v; } catch(e){ return 72; } }
+  function setTop(n){
+    n = Math.max(0, Math.min(160, n));
+    try { localStorage.setItem(TOP_KEY, String(n)); } catch(e){}
+    root.style.setProperty('--kp-st', 'max(env(safe-area-inset-top,0px),' + n + 'px)');
+    return n;
+  }
+  if(isIPad && isStandalone) setTop(getTop());
 
   // ---------- 追加CSS ----------
   var css = document.createElement('style');
@@ -88,9 +100,11 @@
     '}' +
 
     /* 診断パネル */
-    '#kp-diag{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px;}' +
-    '#kp-diag .box{background:#141414;border:1px solid #333;border-radius:14px;padding:18px;max-width:420px;width:100%;color:#F0F0F0;font-family:sans-serif;}' +
+    '#kp-diag{position:fixed;inset:0;z-index:2000;background:transparent;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding:20px 20px 130px;}' +
+    '#kp-diag .box{pointer-events:auto;background:rgba(20,20,20,.97);border:1px solid #333;border-radius:14px;padding:18px;max-width:420px;width:100%;color:#F0F0F0;font-family:sans-serif;}' +
     '#kp-diag pre{white-space:pre-wrap;font-size:12px;line-height:1.7;margin:10px 0;color:#ddd;}' +
+    '#kp-diag .adj{display:flex;align-items:center;gap:8px;margin:8px 0 12px;flex-wrap:wrap;}' +
+    '#kp-diag .adj b{font-size:15px;min-width:64px;text-align:center;}' +
     '#kp-diag button{padding:9px 14px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;font-size:13px;margin-right:8px;}';
   (document.head || document.documentElement).appendChild(css);
 
@@ -171,6 +185,7 @@
     var top = cs.paddingTop, bottom = cs.paddingBottom;
     document.body.removeChild(probe);
     var lines = [
+      'tabbar.js 版: ' + KP_VER,
       '画面: ' + window.innerWidth + ' x ' + window.innerHeight,
       '画面(端末): ' + screen.width + ' x ' + screen.height,
       '倍率: ' + window.devicePixelRatio,
@@ -183,9 +198,20 @@
     ];
     var d = document.createElement('div');
     d.id = 'kp-diag';
-    d.innerHTML = '<div class="box"><b>表示の診断</b><pre></pre><button type="button" id="kp-diag-close">閉じる</button></div>';
+    var adj = (isIPad && isStandalone)
+      ? '<div>上の余白の調整（この端末だけ）</div><div class="adj"><button type="button" id="kp-up">▲ 上へ</button><b id="kp-val"></b><button type="button" id="kp-down">▼ 下へ</button><button type="button" id="kp-reset">戻す</button></div>'
+      : '';
+    d.innerHTML = '<div class="box"><b>表示の診断</b><pre></pre>' + adj + '<button type="button" id="kp-diag-close">閉じる</button></div>';
     d.querySelector('pre').textContent = lines.join('\n');
-    d.addEventListener('click', function(ev){ if(ev.target === d || ev.target.id === 'kp-diag-close') d.remove(); });
+    var val = d.querySelector('#kp-val');
+    if(val){
+      var show = function(){ val.textContent = getTop() + 'px'; };
+      show();
+      d.querySelector('#kp-up').addEventListener('click', function(){ setTop(getTop() - 8); show(); });
+      d.querySelector('#kp-down').addEventListener('click', function(){ setTop(getTop() + 8); show(); });
+      d.querySelector('#kp-reset').addEventListener('click', function(){ setTop(72); show(); });
+    }
+    d.querySelector('#kp-diag-close').addEventListener('click', function(){ d.remove(); });
     document.body.appendChild(d);
   }
   function bindDiag(){
