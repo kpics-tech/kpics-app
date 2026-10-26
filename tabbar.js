@@ -61,9 +61,10 @@
     'text-align:center;font-family:"JetBrains Mono",monospace;box-sizing:border-box;pointer-events:none;}' +
     '.kp-tab-badge[hidden]{display:none;}' +
 
-    /* iPad（ホーム画面から開いたとき）：ステータスバーに隠れないよう、上の余白を最低24px確保。
-       もともとの余白が24px以上ならそのまま（＝変化なし）。 */
-    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),24px);}' +
+    /* iPad（ホーム画面から開いたとき）：画面の一番上は、iPadOS側が「ぼかし」をかける帯になっている。
+       その帯にヘッダーの文字が入ってボヤけるので、上の余白を最低92px確保して帯の下から始める。
+       数字(92px)を大きくすると下がり、小さくすると上がる。 */
+    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),92px);}' +
     'html.kp-ipad.kp-standalone .top-header{padding-top:var(--kp-st)!important;}' +
     'html.kp-ipad.kp-standalone.kp-manabu .top-header{padding-top:calc(18px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .home-header{padding-top:calc(14px + var(--kp-st))!important;}' +
@@ -76,6 +77,14 @@
     '.tabbar{left:50%!important;right:auto!important;width:min(100%,720px);transform:translateX(-50%);' +
     'border-left:1px solid var(--border,#2A2A2A);border-right:1px solid var(--border,#2A2A2A);border-radius:18px 18px 0 0;}' +
     '.fab{right:max(20px,calc(50% - 340px))!important;}' +
+    '}' +
+
+    /* 広い画面のホーム：中身を少し広げ、縦の余白を使ってゆったり見せる（スマホは対象外） */
+    '@media (min-width:768px) and (min-height:900px){' +
+    '.home-header-top,.home-body{max-width:760px!important;}' +
+    '.home-body{gap:14px!important;}' +
+    '.echo-hero{min-height:300px!important;max-height:380px!important;}' +
+    '.pillar{min-height:210px!important;}' +
     '}' +
 
     /* 診断パネル */
