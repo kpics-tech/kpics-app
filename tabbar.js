@@ -21,8 +21,8 @@
     'prep-detail.html': 'manabu',
     'wiki-detail.html': 'manabu'
   };
-  var EXTRA_VERSION = '20261026b';
-  var KP_VER = '2026-10-26 b';
+  var EXTRA_VERSION = '20261026c';
+  var KP_VER = '2026-10-26 c';
   var TOP_KEY = 'kp_top_px';
   var pageFile = window.location.pathname.split('/').pop();
 
@@ -53,7 +53,7 @@
   if(pageFile === 'manabu.html') root.classList.add('kp-manabu');
 
   // iPadの上の余白は、診断パネルで微調整できる（この端末だけに保存される）
-  function getTop(){ try { var v = parseInt(localStorage.getItem(TOP_KEY), 10); return isNaN(v) ? 72 : v; } catch(e){ return 72; } }
+  function getTop(){ try { var v = parseInt(localStorage.getItem(TOP_KEY), 10); return isNaN(v) ? 64 : v; } catch(e){ return 64; } }
   function setTop(n){
     n = Math.max(0, Math.min(160, n));
     try { localStorage.setItem(TOP_KEY, String(n)); } catch(e){}
@@ -74,11 +74,11 @@
     '.kp-tab-badge[hidden]{display:none;}' +
 
     /* iPad（ホーム画面から開いたとき）：画面の一番上は、iPadOS側が「ぼかし」をかける帯になっている。
-       その帯にヘッダーの文字が入ってボヤけるので、上の余白を最低72px確保して帯の下から始める。
-       数字(72px)を大きくすると下がり、小さくすると上がる。 */
-    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),72px);}' +
+       その帯にヘッダーの文字が入ってボヤけるので、上の余白を最低64px確保して帯の下から始める。
+       数字(64px)を大きくすると下がり、小さくすると上がる。 */
+    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),64px);}' +
     'html.kp-ipad.kp-standalone .top-header{padding-top:var(--kp-st)!important;}' +
-    'html.kp-ipad.kp-standalone.kp-manabu .top-header{padding-top:var(--kp-st)!important;}' +
+    'html.kp-ipad.kp-standalone.kp-manabu .top-header{padding-top:calc(18px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .home-header{padding-top:calc(14px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .hp-top{padding-top:calc(10px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .snav{top:var(--kp-st)!important;}' +
@@ -209,7 +209,7 @@
       show();
       d.querySelector('#kp-up').addEventListener('click', function(){ setTop(getTop() - 8); show(); });
       d.querySelector('#kp-down').addEventListener('click', function(){ setTop(getTop() + 8); show(); });
-      d.querySelector('#kp-reset').addEventListener('click', function(){ setTop(72); show(); });
+      d.querySelector('#kp-reset').addEventListener('click', function(){ setTop(64); show(); });
     }
     d.querySelector('#kp-diag-close').addEventListener('click', function(){ d.remove(); });
     document.body.appendChild(d);
