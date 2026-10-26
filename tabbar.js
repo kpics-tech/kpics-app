@@ -62,11 +62,11 @@
     '.kp-tab-badge[hidden]{display:none;}' +
 
     /* iPad（ホーム画面から開いたとき）：画面の一番上は、iPadOS側が「ぼかし」をかける帯になっている。
-       その帯にヘッダーの文字が入ってボヤけるので、上の余白を最低92px確保して帯の下から始める。
-       数字(92px)を大きくすると下がり、小さくすると上がる。 */
-    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),92px);}' +
+       その帯にヘッダーの文字が入ってボヤけるので、上の余白を最低72px確保して帯の下から始める。
+       数字(72px)を大きくすると下がり、小さくすると上がる。 */
+    'html.kp-ipad.kp-standalone{--kp-st:max(env(safe-area-inset-top,0px),72px);}' +
     'html.kp-ipad.kp-standalone .top-header{padding-top:var(--kp-st)!important;}' +
-    'html.kp-ipad.kp-standalone.kp-manabu .top-header{padding-top:calc(18px + var(--kp-st))!important;}' +
+    'html.kp-ipad.kp-standalone.kp-manabu .top-header{padding-top:var(--kp-st)!important;}' +
     'html.kp-ipad.kp-standalone .home-header{padding-top:calc(14px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .hp-top{padding-top:calc(10px + var(--kp-st))!important;}' +
     'html.kp-ipad.kp-standalone .snav{top:var(--kp-st)!important;}' +
