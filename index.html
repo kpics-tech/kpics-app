@@ -669,6 +669,8 @@ button{font-family:inherit;}
 .gm-list.check .gm-list-item::before{content:"";left:0;top:3px;width:13px;height:13px;border-radius:3px;background:transparent;border:1.5px solid var(--orange);}
 .gm-sublabel{font-size:12.5px;font-weight:700;color:var(--text);margin:0 0 8px;padding-left:2px;}
 .gm-list + .gm-sublabel{margin-top:16px;}
+.gm-list.num .gm-list-item{padding-left:0;}
+.gm-list.num .gm-list-item::before{display:none;}
 
 /* インストール手順モーダル */
 .guide-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;align-items:flex-end;justify-content:center;}
@@ -734,6 +736,47 @@ button{font-family:inherit;}
 .tabbar-item .tb-label{font-size:10px;font-weight:700;letter-spacing:.02em;}
 .tabbar-item.active{color:var(--orange);}
 .tabbar-item:active{opacity:.7;}
+
+/* ===================== はじめの確認（地域枠・県民枠／自主練ルール） ===================== */
+.onb-overlay{
+  display:none;position:fixed;inset:0;z-index:820;background:rgba(0,0,0,.82);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.onb-overlay.open{display:flex;}
+@media (min-width:560px){ .onb-overlay{align-items:center;padding:20px;} }
+.onb-box{
+  width:100%;max-width:520px;max-height:92vh;max-height:92dvh;
+  background:var(--dark);border:1px solid var(--border);border-bottom:none;border-radius:20px 20px 0 0;
+  display:flex;flex-direction:column;overflow:hidden;animation:sheetUp .34s cubic-bezier(.16,1,.3,1) both;
+}
+@media (min-width:560px){ .onb-box{border-radius:18px;border-bottom:1px solid var(--border);} }
+.onb-pane{display:none;flex-direction:column;min-height:0;flex:1;}
+.onb-pane.active{display:flex;}
+.onb-head{padding:20px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.onb-step{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--orange);}
+.onb-title{font-size:19px;font-weight:800;line-height:1.4;margin-top:6px;}
+.onb-scroll{padding:16px 20px 8px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;min-height:0;}
+.onb-text{font-size:12.5px;color:var(--text-muted);line-height:1.85;}
+.onb-choices{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+.onb-choice{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+  padding:15px 14px;border-radius:14px;background:var(--card);border:1px solid var(--border);color:var(--text);
+  font-family:inherit;transition:border-color .15s, background .15s;
+}
+.onb-choice:active{transform:scale(.985);}
+.onb-choice:disabled{opacity:.5;cursor:wait;}
+.onb-choice-mark{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;border:1.5px solid var(--border-light);color:var(--text-muted);
+}
+.onb-choice.yes .onb-choice-mark{border-color:#6CC79A;color:#6CC79A;background:rgba(108,199,154,.1);}
+.onb-choice-body b{display:block;font-size:15px;font-weight:800;}
+.onb-choice-body span{display:block;font-size:11px;color:var(--text-muted);margin-top:2px;}
+.onb-foot{font-size:11px;color:var(--text-dim);line-height:1.7;margin-top:14px;}
+.onb-actions{padding:12px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--border);flex-shrink:0;}
+.onb-actions .gm-ack-btn{margin-top:0;}
+.onb-actions .gm-ack-btn:disabled{background:var(--border);color:var(--text-dim);cursor:wait;transform:none;}
 
 </style>
 </head>
@@ -1254,14 +1297,14 @@ button{font-family:inherit;}
     <div class="gm-tabs" role="tablist" aria-label="K-PICSの部員として">
       <button class="gm-tab active" role="tab" aria-selected="true"  aria-controls="gm-pane-0" id="gm-tab-0" onclick="switchGuideTab(0)">活動ルール</button>
       <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-1" id="gm-tab-1" onclick="switchGuideTab(1)">注意事項</button>
-      <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-2" id="gm-tab-2" onclick="switchGuideTab(2)">チェック</button>
+      <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-2" id="gm-tab-2" onclick="switchGuideTab(2)">自主練</button>
       <button class="gm-tab"        role="tab" aria-selected="false" aria-controls="gm-pane-3" id="gm-tab-3" onclick="switchGuideTab(3)">大事なこと</button>
     </div>
 
     <div class="guide-modal-body" id="guide-modal-body">
 
       <section class="gm-pane active" role="tabpanel" id="gm-pane-0" aria-labelledby="gm-tab-0">
-        <div class="gm-date">最終更新：2026/09/08</div>
+        <div class="gm-date">最終更新：2026/10/30</div>
         <div class="gm-lead">
           K-PICSでは、地域医療支援センターを利用する地域枠学生をはじめ、東棟3階で働く職員の皆さんと気持ちよく共存し、安全に活動を継続できるよう、以下のルールで活動します。<br><br>
           状況に応じて変更する場合があります。変更がある場合は、Slack等で随時お知らせします。
@@ -1270,8 +1313,8 @@ button{font-family:inherit;}
           <div class="gm-section-title"><span class="gm-icon">📅</span>活動日</div>
           <div class="gm-list">
             <div class="gm-list-item">原則として、火曜日・水曜日のいずれか1日に、セミナー・認定試験・勉強会などのK-PICS活動を行います</div>
-            <div class="gm-list-item">もう一方の曜日は、希望がある場合に自主練習日として活動できます（自主練希望者は代表・副代表に事前連絡をお願いします）</div>
-            <div class="gm-list-item">それ以外の曜日に活動を希望する場合は、事前に担当教員へ相談してください</div>
+            <div class="gm-list-item">もう一方の曜日は、希望がある場合に自主練習日として活動できます（申し込み方法は「自主練」タブを確認してください）</div>
+            <div class="gm-list-item">火・水以外に自主練をしたい場合も、「自主練」タブの方法で事前に連絡してください。自主練以外の活動を希望する場合は、事前に担当教員へ相談してください</div>
           </div>
         </div>
         <div class="gm-section">
@@ -1326,7 +1369,7 @@ button{font-family:inherit;}
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">💬</span>相談・連絡</div>
           <div class="gm-list">
-            <div class="gm-list-item">「自主練をしたい」「新しい内容に挑戦したい」「活動で困っている」などの希望や相談があれば、代表、副代表または担当教員へ連絡してください</div>
+            <div class="gm-list-item">「新しい内容に挑戦したい」「活動で困っている」などの希望や相談があれば、代表、副代表または担当教員へ連絡してください</div>
           </div>
         </div>
         <div class="gm-note">学びたい気持ちを大切にしながら、施設を利用する地域枠学生・職員にも配慮し、無理なく継続できる活動を一緒につくっていきましょう。</div>
@@ -1385,15 +1428,48 @@ button{font-family:inherit;}
       </section>
 
       <section class="gm-pane" role="tabpanel" id="gm-pane-2" aria-labelledby="gm-tab-2">
-        <div class="gm-pane-title">自主練習時のチェックリスト</div>
-        <div class="gm-lead">次に使用する人が気持ちよく練習できるよう、<strong>練習後は必ず片付け</strong>をお願いします。また、退出前に以下の項目をすべて確認してください。</div>
-        <div class="gm-section">
-          <div class="gm-section-title"><span class="gm-icon">📅</span>自主練習時のルール</div>
-          <div class="gm-list check">
-            <div class="gm-list-item">原則、火・水曜日以外に自主練習をする場合、<strong>事前に予約してください</strong></div>
-            <div class="gm-list-item">原則、<strong>19時までに退出</strong>してください</div>
+        <div class="gm-pane-title">自主練習のしかた</div>
+        <div class="gm-date">最終更新：2026/10/30</div>
+
+        <!-- ▼ ここ（jishuren-rules）の中身は、アプリを開いたときの「自主練ルールの確認」画面にもそのまま表示されます。
+             ルールを変えるときは、ここを書きかえて、下のスクリプトの JISHUREN_RULES_VERSION の日付も新しくしてください（全員にもう一度確認画面が出ます）。 -->
+        <div id="jishuren-rules">
+          <div class="gm-lead">自主練の申し込み方法が変わりました。「基本のキ」セミナー1回目で説明した内容から変更になっています。</div>
+          <div class="gm-section">
+            <div class="gm-section-title"><span class="gm-icon">📝</span>自主練の申し込み方法</div>
+            <div class="gm-list num">
+              <div class="gm-list-item"><strong>① K-PICSアプリで出席登録</strong>をする</div>
+              <div class="gm-list-item"><strong>② Slackの「自主練」チャンネル</strong>で、<strong>多田先生をメンション</strong>して、次の4つを送る</div>
+            </div>
+            <div class="gm-list check" style="margin-top:8px;">
+              <div class="gm-list-item">練習開始予定時間</div>
+              <div class="gm-list-item">参加者の中に<strong>地域枠・県民枠の学生</strong>がいるか</div>
+              <div class="gm-list-item"><strong>指導者（バッジ組）</strong>が必要か</div>
+              <div class="gm-list-item"><strong>被検者（男性）</strong>が必要か</div>
+            </div>
           </div>
+          <div class="gm-section">
+            <div class="gm-section-title"><span class="gm-icon">⚠️</span>自主練ができない場合</div>
+            <div class="gm-list">
+              <div class="gm-list-item">地域医療支援センターで、急に会議が入った場合</div>
+              <div class="gm-list-item">指導者（バッジ組）や被検者（男性）が確保できない場合</div>
+            </div>
+            <div class="gm-lead" style="margin:8px 2px 0;font-size:11.5px;">上の場合は自主練を実施できません。あらかじめご了承ください🙇</div>
+          </div>
+          <div class="gm-section">
+            <div class="gm-section-title"><span class="gm-icon">📅</span>火・水以外に自主練したい場合</div>
+            <div class="gm-lead" style="margin-bottom:10px;">アプリに登録されていない日程で自主練をしたいときは、次のルールで行います。</div>
+            <div class="gm-list">
+              <div class="gm-list-item">Slackの「自主練」チャンネルで、<strong>多田先生に事前連絡</strong>する</div>
+              <div class="gm-list-item"><strong>地域枠・県民枠の学生と一緒に入室</strong>する</div>
+              <div class="gm-list-item"><strong>自習室奥を静かに利用</strong>する（会議がない場合のみ）</div>
+              <div class="gm-list-item"><strong>研究室は使えません</strong>（多田先生が不在のため）</div>
+            </div>
+          </div>
+          <div class="gm-note" style="margin-top:0;margin-bottom:20px;">わからないことがあれば、気軽にコアメンバーへ質問してください。</div>
         </div>
+        <!-- ▲ ここまでが自主練ルール -->
+
         <div class="gm-section">
           <div class="gm-section-title"><span class="gm-icon">🧾</span>練習後のチェックリスト</div>
           <div class="gm-list check">
@@ -1405,6 +1481,7 @@ button{font-family:inherit;}
             <div class="gm-list-item">練習中に出たゴミは、<strong>ゴミ箱に捨てました</strong>か？</div>
             <div class="gm-list-item">照明は<strong>消しました</strong>か？</div>
             <div class="gm-list-item"><strong>忘れ物</strong>はありませんか？</div>
+            <div class="gm-list-item"><strong>19時までに退出</strong>できますか？</div>
           </div>
         </div>
         <div class="gm-note">📣 最後にもう一度、<strong>練習前と同じ状態に戻っているか確認</strong>してから退出してください。皆さんが気持ちよく練習できる環境を保つため、ご協力よろしくお願いします！</div>
@@ -1480,6 +1557,45 @@ button{font-family:inherit;}
       <div class="guide-step-body"><div class="guide-step-text">確認画面が出たら「インストール」または「追加」をタップすれば完了です。</div></div>
     </div>
     <div class="guide-note">すでに追加したアイコンが正しく表示されない場合は、一度そのアイコンを削除してから、Chromeのタブを閉じて開き直し、もう一度この手順をやり直してください。</div>
+  </div>
+</div>
+
+<!-- ===== はじめの確認：①地域枠・県民枠か ②自主練ルール（答えたら次回から出ない） ===== -->
+<div class="onb-overlay" id="onb-overlay" aria-hidden="true">
+  <div class="onb-box" role="dialog" aria-modal="true">
+
+    <section class="onb-pane" id="onb-regional">
+      <div class="onb-head">
+        <div class="onb-step" id="onb-regional-step">はじめに確認させてください</div>
+        <div class="onb-title">地域枠・県民枠の学生ですか？</div>
+      </div>
+      <div class="onb-scroll">
+        <div class="onb-text">東棟への入館や、火・水以外の自主練では、地域枠・県民枠の学生がいるかどうかが大切になります。部員同士で分かるように、名前の横に表示します。</div>
+        <div class="onb-choices">
+          <button class="onb-choice yes" type="button" onclick="onbAnswerRegional(true)">
+            <span class="onb-choice-mark">✓</span>
+            <span class="onb-choice-body"><b>はい</b><span>地域枠・県民枠です</span></span>
+          </button>
+          <button class="onb-choice" type="button" onclick="onbAnswerRegional(false)">
+            <span class="onb-choice-mark">−</span>
+            <span class="onb-choice-body"><b>いいえ</b><span>地域枠・県民枠ではありません</span></span>
+          </button>
+        </div>
+        <div class="onb-foot">間違えて選んだときは、コアメンバーに伝えてください。</div>
+      </div>
+    </section>
+
+    <section class="onb-pane" id="onb-rules">
+      <div class="onb-head">
+        <div class="onb-step" id="onb-rules-step">お知らせ</div>
+        <div class="onb-title">自主練のルールが変わりました</div>
+      </div>
+      <div class="onb-scroll" id="onb-rules-body"></div>
+      <div class="onb-actions">
+        <button class="gm-ack-btn" id="onb-rules-btn" type="button" onclick="onbAckRules()">確認しました</button>
+      </div>
+    </section>
+
   </div>
 </div>
 
@@ -2018,6 +2134,125 @@ window.addEventListener('pageshow', forceRepaint);
 document.addEventListener('visibilitychange', function(){
   if(document.visibilityState === 'visible') forceRepaint();
 });
+
+// ===================== はじめの確認（地域枠・県民枠／自主練ルール） =====================
+// ・答えは Supabase の profiles に保存する（is_regional／jishuren_rules_ack）
+//   保存には set_my_onboarding という関数を使う（SQLは別にお渡ししています）
+// ・Supabase の準備がまだでも毎回出ないように、うまく保存できなかったときは端末にも覚えておく
+// ・自主練ルールを変えたら、下の日付を新しくする → 全員にもう一度「確認しました」画面が出る
+const JISHUREN_RULES_VERSION = '2026-10-30';
+let ONB_QUEUE = [];
+let ONB_TOTAL = 0;
+
+function _onbLocalKey(){ return 'kpics_onb_' + (window.CURRENT_UID || ''); }
+function _onbLocalGet(){
+  try{ return JSON.parse(localStorage.getItem(_onbLocalKey()) || '{}') || {}; }catch(e){ return {}; }
+}
+function _onbLocalSet(patch){
+  try{
+    const cur = _onbLocalGet();
+    localStorage.setItem(_onbLocalKey(), JSON.stringify(Object.assign(cur, patch)));
+  }catch(e){}
+}
+
+// Supabase に保存。だめなら端末に保存。
+async function _onbSave(isRegional, rulesAck){
+  let ok = false;
+  try{
+    const { data, error } = await _supabase.rpc('set_my_onboarding', {
+      p_is_regional: (isRegional === undefined ? null : isRegional),
+      p_rules_ack:   (rulesAck   === undefined ? null : rulesAck)
+    });
+    ok = !error && data === 1;
+    if(error) console.warn('[K-PICS] onboarding save error', error);
+    else if(data !== 1) console.warn('[K-PICS] onboarding: profiles の行が見つかりませんでした', data);
+  }catch(e){ console.warn('[K-PICS] onboarding save error', e); }
+  if(!ok){
+    const patch = {};
+    if(isRegional !== undefined) patch.is_regional = isRegional;
+    if(rulesAck   !== undefined) patch.rules_ack   = rulesAck;
+    _onbLocalSet(patch);
+  }
+  // ほかの画面（名前の横の表示など）でもすぐ使えるように
+  if(window.CURRENT_PROFILE){
+    if(isRegional !== undefined) window.CURRENT_PROFILE.is_regional = isRegional;
+    if(rulesAck   !== undefined) window.CURRENT_PROFILE.jishuren_rules_ack = rulesAck;
+  }
+  return ok;
+}
+
+async function onbCheck(){
+  const p = window.CURRENT_PROFILE || {};
+  if(p.is_teacher) return;   // 先生には出さない
+
+  let isRegional = p.is_regional;
+  let rulesAck   = p.jishuren_rules_ack;
+  try{
+    const { data, error } = await _supabase.from('profiles')
+      .select('is_regional, jishuren_rules_ack').eq('id', window.CURRENT_UID).maybeSingle();
+    if(!error && data){ isRegional = data.is_regional; rulesAck = data.jishuren_rules_ack; }
+    else if(error) console.warn('[K-PICS] onboarding read error（列がまだ無い？）', error);
+  }catch(e){ console.warn('[K-PICS] onboarding read error', e); }
+
+  const local = _onbLocalGet();
+  if((isRegional === null || isRegional === undefined) && typeof local.is_regional === 'boolean') isRegional = local.is_regional;
+  if(rulesAck !== JISHUREN_RULES_VERSION && local.rules_ack === JISHUREN_RULES_VERSION) rulesAck = local.rules_ack;
+  if(window.CURRENT_PROFILE && typeof isRegional === 'boolean') window.CURRENT_PROFILE.is_regional = isRegional;
+
+  ONB_QUEUE = [];
+  if(typeof isRegional !== 'boolean') ONB_QUEUE.push('regional');
+  if(rulesAck !== JISHUREN_RULES_VERSION) ONB_QUEUE.push('rules');
+  ONB_TOTAL = ONB_QUEUE.length;
+  if(ONB_TOTAL) _onbShowNext();
+}
+
+function _onbShowNext(){
+  const ov = document.getElementById('onb-overlay');
+  const step = ONB_QUEUE.shift();
+  document.querySelectorAll('#onb-overlay .onb-pane').forEach(el => el.classList.remove('active'));
+  if(!step){ ov.classList.remove('open'); ov.setAttribute('aria-hidden','true'); return; }
+  const num = ONB_TOTAL - ONB_QUEUE.length;
+  const label = ONB_TOTAL > 1 ? ('確認 ' + num + ' / ' + ONB_TOTAL) : null;
+  if(step === 'regional'){
+    document.getElementById('onb-regional-step').textContent = label || 'はじめに確認させてください';
+    document.querySelectorAll('#onb-regional .onb-choice').forEach(b => b.disabled = false);
+    document.getElementById('onb-regional').classList.add('active');
+  }else{
+    document.getElementById('onb-rules-step').textContent = label || 'お知らせ';
+    // 「K-PICSの部員として」→「自主練」タブの中身をそのまま写す（内容を1か所で管理するため）
+    const src = document.getElementById('jishuren-rules');
+    const body = document.getElementById('onb-rules-body');
+    body.innerHTML = src ? src.innerHTML : '';
+    body.scrollTop = 0;
+    document.getElementById('onb-rules-btn').disabled = false;
+    document.getElementById('onb-rules').classList.add('active');
+  }
+  ov.classList.add('open'); ov.setAttribute('aria-hidden','false');
+}
+
+async function onbAnswerRegional(yes){
+  document.querySelectorAll('#onb-regional .onb-choice').forEach(b => b.disabled = true);
+  await _onbSave(!!yes, undefined);
+  _onbShowNext();
+}
+async function onbAckRules(){
+  document.getElementById('onb-rules-btn').disabled = true;
+  await _onbSave(undefined, JISHUREN_RULES_VERSION);
+  _onbShowNext();
+}
+
+// ログインが終わってホーム画面が出たら、1回だけ確認する
+(function(){
+  let done = false;
+  const timer = setInterval(function(){
+    if(done) return;
+    const home = document.getElementById('home-screen');
+    if(home && home.classList.contains('active') && window.CURRENT_UID && window.CURRENT_PROFILE){
+      done = true; clearInterval(timer);
+      onbCheck();
+    }
+  }, 400);
+})();
 </script>
 </body>
 </html>
