@@ -843,6 +843,12 @@ button{font-family:inherit;}
           <option value="7">先生</option>
           <option value="8">その他</option>
         </select>
+        <div class="auth-field-label">地域枠・県民枠ですか？ <span style="color:#F06060;">*</span></div>
+        <select class="field" id="signup-regional">
+          <option value="">選択してください</option>
+          <option value="yes">はい（地域枠・県民枠）</option>
+          <option value="no">いいえ（先生・研修医・その他の方もこちら）</option>
+        </select>
         <div class="auth-field-label">メールアドレス</div>
         <input class="field" type="email" id="signup-email" placeholder="example@med.ac.jp" autocomplete="username">
         <div class="auth-field-label">パスワード（6文字以上。8文字以上を推奨します）</div>
@@ -1570,7 +1576,7 @@ button{font-family:inherit;}
         <div class="onb-title">地域枠・県民枠の学生ですか？</div>
       </div>
       <div class="onb-scroll">
-        <div class="onb-text">東棟への入館や、火・水以外の自主練では、地域枠・県民枠の学生がいるかどうかが大切になります。部員同士で分かるように、名前の横に表示します。</div>
+        <div class="onb-text">東棟への入館や、火・水以外の自主練では、地域枠・県民枠の学生がいるかどうかが大切になります。カレンダーの出席登録の一覧で分かるように表示します。</div>
         <div class="onb-choices">
           <button class="onb-choice yes" type="button" onclick="onbAnswerRegional(true)">
             <span class="onb-choice-mark">✓</span>

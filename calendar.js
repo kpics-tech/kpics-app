@@ -52,6 +52,18 @@ let selectedDateStr = null;
 let currentDetailId = null;
 let editingId = null;
 let _calBadgeMap = {}; // user_id -> {is_teacher, is_core_member, is_certified}
+let _calRegionalMap = {}; // user_id -> true（地域枠・県民枠）/ false
+
+// 出席一覧の「地域・県民」の印の見た目（calendar.html を触らずに済むよう、ここで追加）
+(function(){
+  const st = document.createElement('style');
+  st.textContent =
+    '.att-reg{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:999px;' +
+    'color:#4FC3C7;background:rgba(79,195,199,.12);border:1px solid rgba(79,195,199,.45);vertical-align:1px;}' +
+    '.att-reg-sum{width:100%;font-size:11px;color:var(--text-muted);margin-top:4px;}' +
+    '.att-reg-sum b{color:#4FC3C7;}';
+  document.head.appendChild(st);
+})();
 
 const today = new Date();
 viewYear = today.getFullYear();
@@ -276,7 +288,18 @@ async function loadAttendances(eventId, event){
     if(listEl) listEl.innerHTML = `<div class="att-empty">出席情報の読み込みに失敗しました</div>`;
     return;
   }
+  await ensureRegionalCal((data || []).map(r => r.user_id));
   renderAttendance(eventId, event, data || []);
+}
+
+// 出席者が地域枠・県民枠かどうかを Supabase から取ってくる（get_regional_flags 関数を使う）
+async function ensureRegionalCal(userIds){
+  const need = [...new Set(userIds)].filter(id => id && !(id in _calRegionalMap));
+  if(need.length === 0) return;
+  const {data, error} = await _supabase.rpc('get_regional_flags', { ids: need });
+  if(error){ console.error('地域枠・県民枠の取得エラー', error); return; }
+  need.forEach(id => { _calRegionalMap[id] = false; });
+  (data || []).forEach(p => { _calRegionalMap[p.id] = !!p.is_regional; });
 }
 
 function renderAttendance(eventId, event, rows){
@@ -312,11 +335,14 @@ function renderAttendance(eventId, event, rows){
   if(rows.length === 0){
     listEl.innerHTML = `<div class="att-empty">まだ出席予定の人はいません</div>`;
   } else {
+    const regCount = rows.filter(r => _calRegionalMap[r.user_id] === true).length;
     listEl.innerHTML = rows.map(r => {
       const you = r.user_id === CURRENT_UID;
       const name = r.user_name || '部員';
-      return `<div class="att-chip ${you ? 'you' : ''}">${escapeHtml(name)}${you ? '（あなた）' : ''}</div>`;
-    }).join('');
+      const reg = _calRegionalMap[r.user_id] === true;
+      return `<div class="att-chip ${you ? 'you' : ''}">${escapeHtml(name)}${you ? '（あなた）' : ''}${reg ? '<span class="att-reg">地域・県民</span>' : ''}</div>`;
+    }).join('') +
+    `<div class="att-reg-sum">${regCount ? `地域枠・県民枠の人：<b>${regCount}人</b>` : '地域枠・県民枠の人：まだいません'}</div>`;
   }
 }
 

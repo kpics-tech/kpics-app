@@ -95,10 +95,12 @@ async function doSignup(){
   const email=document.getElementById('signup-email').value.trim();
   const password=document.getElementById('signup-password').value;
   const passphrase=document.getElementById('signup-passphrase').value.trim();
+  const regionalRaw=(document.getElementById('signup-regional')||{}).value||'';
   const errEl=document.getElementById('signup-error');
   const btn=document.getElementById('signup-btn');
   errEl.classList.remove('show');
   if(!name||!email||!password||!passphrase){ errEl.textContent='名前・メールアドレス・パスワード・部活の合言葉は必須です'; errEl.classList.add('show'); return; }
+  if(!regionalRaw){ errEl.textContent='地域枠・県民枠かどうかを選んでください'; errEl.classList.add('show'); return; }
   if(password.length<6){ errEl.textContent='パスワードは6文字以上にしてください'; errEl.classList.add('show'); return; }
   const role='member';
   btn.disabled=true; btn.textContent='登録中...';
@@ -117,7 +119,7 @@ async function doSignup(){
   let pErr=null;
   for(let attempt=0;attempt<3;attempt++){
     if(attempt>0) await new Promise(r=>setTimeout(r,800));
-    const {error:e}=await _supabase.from('profiles').upsert({id:uid,name,year:isNaN(year)?null:year,role},{onConflict:'id'});
+    const {error:e}=await _supabase.from('profiles').upsert({id:uid,name,year:isNaN(year)?null:year,role,is_regional:(regionalRaw==='yes')},{onConflict:'id'});
     pErr=e;
     if(!pErr) break;
   }
